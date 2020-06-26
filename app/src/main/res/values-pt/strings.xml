@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="search">Procurar…</string>
+    <string name="select_country">Selecione o pais</string>
+    <string name="not_found">Nenhum artigo encontrado</string>
+    <string name="page_title">Notícia</string>
+    <string name="content_description_search">pesquisar notícias</string>
+    <string name="more">Mais</string>
+    <string name="articles_found">artigos encontrados</string>
+    <string name="content_description_more">Mais</string>
+    <string name="title_activity_main2">Atividade principal</string>
+
+
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+
+
+    <string name="menu_general">Geral</string>
+    <string name="menu_business">O negócio</string>
+    <string name="menu_entertainment">Entretenimento</string>
+    <string name="menu_health">Saúde</string>
+    <string name="menu_science">Ciência</string>
+    <string name="menu_sports">Esportes</string>
+    <string name="menu_technology">Tecnologia</string>
+    <string name="menu_corona">Covid-19</string>
+
+
+    <string name="action_settings">Configurações</string>
+    <string name="action_share">Compartilhe o aplicativo</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+
+    <string name="feedback">Enviar comentários</string>
+    <string name="feedback_summary">Relatar problemas técnicos ou sugerir novos recursos</string>
+
+
+    <string name="country">País</string>
+    <string name="country_summary">alterar país selecionado</string>
+
+    <string name="share">Compartilhar</string>
+    <string name="share_summary">compartilhe este ap com seus amigos</string>
+
+    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+
+    <string name="share_app">Baixe o aplicativo Swen e receba as últimas notícias de qualquer lugar do mundo, é grátis!</string>
+
+
+    <string name="rate">Avaliar</string>
+    <string name="rate_summary">Avalie este aplicativo na loja do Google Play</string>
+
+    <string name="color">Cor</string>
+    <string name="color_summary">altere a cor do tema do aplicativo de claro para escuro</string>
+
+
+    <string name="theme_title">Temas:</string>
+    <string name="light_theme">Tema escuro</string>
+    <string name="dark_theme">Tema claro</string>
+</resources>

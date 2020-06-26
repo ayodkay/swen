@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto">
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:orientation="vertical">
+
+           <ImageView
+               android:id="@+id/dImage"
+               android:layout_width="match_parent"
+               android:layout_height="179dp"
+               />
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:orientation="vertical"
+               android:padding="14dp">
+
+               <TextView
+                   android:id="@+id/dTitle"
+                   android:textAppearance="?attr/textAppearanceHeadline6"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"/>
+
+
+               <TextView
+                   android:id="@+id/dSource"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:textAppearance="?attr/textAppearanceBody2"
+                   android:textColor="?android:attr/textColorSecondary"
+                   android:layout_marginTop="32dp"/>
+
+
+               <TextView
+                   android:id="@+id/content"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginTop="10dp"/>
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:padding="20dp"
+                   android:orientation="horizontal">
+
+                   <ImageView
+                       android:id="@+id/thumbs_up"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_margin="10dp"
+                       android:src="@drawable/ic_thumb_up"/>
+
+                   <ImageView
+                       android:id="@+id/thumbs_down"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_margin="10dp"
+                       android:src="@drawable/ic_thumb_down"/>
+
+                   <ImageView
+                       android:id="@+id/share"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_margin="10dp"
+                       android:src="@drawable/ic_share"/>
+               </LinearLayout>
+
+               <com.google.android.gms.ads.AdView
+                   android:id="@+id/adView"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   ads:adSize="BANNER"
+                   ads:adUnitId="ca-app-pub-7312232171503509/9944933005" />
+           </LinearLayout>
+
+
+       </LinearLayout>
+
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='utf8'?>
+<resources>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="search">Поиск…</string>
+    <string name="select_country">выберите страну</string>
+    <string name="not_found">Статья не найдена</string>
+    <string name="page_title">Новости</string>
+    <string name="content_description_search">поиск новостей</string>
+    <string name="more">Больше</string>
+    <string name="articles_found">статьи найдены</string>
+    <string name="content_description_more">Больше</string>
+    <string name="title_activity_main2">Основное занятие</string>
+
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+
+
+    <string name="menu_general">Общее</string>
+    <string name="menu_business">Бизнес</string>
+    <string name="menu_entertainment">Развлекательная программа</string>
+    <string name="menu_health">Здоровье</string>
+    <string name="menu_science">Наука</string>
+    <string name="menu_sports">Виды спорта</string>
+    <string name="menu_technology">Технология</string>
+    <string name="menu_corona">COVID-19</string>
+
+
+    <string name="action_settings">Настройки</string>
+    <string name="action_share">Поделиться приложением</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+
+    <string name="feedback">Отправить отзыв</string>
+    <string name="feedback_summary">Сообщить о технических проблемах или предложить новые функции</string>
+
+
+    <string name="country">Страна</string>
+    <string name="country_summary">изменить выбранную страну</string>
+
+    <string name="share">Доля</string>
+    <string name="share_summary">поделитесь этим ap со своими друзьями</string>
+
+    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+
+    <string name="share_app">Скачайте приложение Swen и получайте последние новости из любой точки мира бесплатно!</string>
+
+
+    <string name="rate">Оценить</string>
+    <string name="rate_summary">Оцените это приложение в Google Play Store</string>
+
+    <string name="color">Цвет</string>
+    <string name="color_summary">изменить цвет темы этого приложения со светлого на темный</string>
+
+
+    <string name="theme_title">Темы:</string>
+    <string name="light_theme">Темная тема</string>
+    <string name="dark_theme">Светлая тема</string>
+</resources>

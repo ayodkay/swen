@@ -1,0 +1,34 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/action_settings">
+        <EditTextPreference
+            app:key="feedback"
+            app:title="@string/feedback"
+            app:summary="@string/feedback_summary"/>
+
+        <Preference
+            app:key="country"
+            app:title="@string/country"
+            app:summary="@string/country_summary"/>
+
+
+        <Preference
+            app:key="share"
+            app:title="@string/share"
+            app:summary="@string/share_summary"/>
+
+        <Preference
+            app:key="rate"
+            app:title="@string/rate"
+            app:summary="@string/rate_summary"/>
+
+
+        <Preference
+            app:key="color"
+            app:title="@string/color"
+            app:summary="@string/color_summary"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

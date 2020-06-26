@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='utf8'?>
+<resources>
+    <string name="app_name" translatable="false">Cuidado</string>
+    <string name="search">Buscar…</string>
+    <string name="select_country">seleccionar país</string>
+    <string name="not_found">Ningún artículo encontrado</string>
+    <string name="page_title">Noticias</string>
+    <string name="content_description_search">buscar noticias</string>
+    <string name="more">más</string>
+    <string name="articles_found">artículos encontrados</string>
+    <string name="content_description_more">más</string>
+    <string name="title_activity_main2">Actividad principal</string>
+
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+
+
+    <string name="menu_general">General</string>
+    <string name="menu_business">Negocio</string>
+    <string name="menu_entertainment">Entretenimiento</string>
+    <string name="menu_health">Salud</string>
+    <string name="menu_science">Ciencias</string>
+    <string name="menu_sports">Deportes</string>
+    <string name="menu_technology">Tecnología</string>
+    <string name="menu_corona">COVID-19</string>
+
+
+    <string name="action_settings">Configuraciones</string>
+    <string name="action_share">Compartir aplicación</string>
+    <string name="title_activity_settings">ConfiguracionesActividad</string>
+
+
+    <string name="feedback">Enviar comentarios</string>
+    <string name="feedback_summary">Informar problemas técnicos o sugerir nuevas funciones</string>
+
+
+    <string name="country">País</string>
+    <string name="country_summary">cambiar país seleccionado</string>
+
+    <string name="share">Compartir</string>
+    <string name="share_summary">comparte este ap con tus amigos</string>
+
+    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+
+    <string name="share_app">Descargue la aplicación Swen y obtenga las últimas noticias de última hora desde cualquier parte del mundo, ¡es gratis!</string>
+
+
+    <string name="rate">Evaluar</string>
+    <string name="rate_summary">califica esta aplicación en Google Play Store</string>
+
+    <string name="color">Color</string>
+    <string name="color_summary">cambia el color del tema de esta aplicación de claro a oscuro</string>
+
+
+    <string name="theme_title">Temas:</string>
+    <string name="light_theme">Tema oscuro</string>
+    <string name="dark_theme">Tema ligero</string>
+</resources>

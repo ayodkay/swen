@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_main"
+            android:icon="@drawable/ic_general"
+            android:title="@string/menu_general" />
+
+        <item
+            android:id="@+id/nav_business"
+            android:icon="@drawable/ic_business"
+            android:title="@string/menu_business" />
+
+
+        <item
+            android:id="@+id/nav_entertainment"
+            android:icon="@drawable/ic_entertainment"
+            android:title="@string/menu_entertainment" />
+
+
+        <item
+            android:id="@+id/nav_health"
+            android:icon="@drawable/ic_health"
+            android:title="@string/menu_health" />
+
+
+        <item
+            android:id="@+id/nav_science"
+            android:icon="@drawable/ic_science"
+            android:title="@string/menu_science" />
+
+
+        <item
+            android:id="@+id/nav_sports"
+            android:icon="@drawable/ic_sports"
+            android:title="@string/menu_sports" />
+
+
+        <item
+            android:id="@+id/nav_technology"
+            android:icon="@drawable/ic_technology"
+            android:title="@string/menu_technology" />
+
+        <item
+            android:id="@+id/nav_corona"
+            android:icon="@drawable/ic_virus"
+            android:title="@string/menu_corona" />
+    </group>
+</menu>
