@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Pflege</string>
+    <string name="app_name" translatable="false">Swen</string>
     <string name="search">Suche…</string>
     <string name="select_country">Land auswählen</string>
     <string name="not_found">Kein Artikel gefunden</string>

@@ -1,6 +1,5 @@
-<?xml version='1.0' encoding='utf8'?>
 <resources>
-    <string name="app_name" translatable="false">Cuidado</string>
+    <string name="app_name" translatable="false">Swen</string>
     <string name="search">Buscar…</string>
     <string name="select_country">seleccionar país</string>
     <string name="not_found">Ningún artículo encontrado</string>
