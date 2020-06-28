@@ -31,8 +31,8 @@ class AskLocation : AppCompatActivity() {
         select_country.setOnClickListener {
             val picker =
                 CountryPicker.getInstance("Select Country", object : CountryPickerListener {
-                    override fun onSelectCountry(name: String?, code: String?, iso: String?) {
-                        Toast.makeText(this@AskLocation, "Name: $iso", Toast.LENGTH_SHORT).show()
+                    override fun onSelectCountry(name: String?, code: String?, iso: String?, language: String?) {
+                        Toast.makeText(this@AskLocation, "Name: $language", Toast.LENGTH_SHORT).show()
 
                         runOnUiThread {
                             val db = Room.databaseBuilder(
@@ -40,7 +40,7 @@ class AskLocation : AppCompatActivity() {
                                 AppDatabase::class.java, "country"
                             ).allowMainThreadQueries().build()
                             db.countryDao().delete()
-                            db.countryDao().insertAll(Country(iso!!))
+                            db.countryDao().insertAll(Country(iso!!,language!!))
                         }
                         val dialogFragment: DialogFragment? =
                             supportFragmentManager.findFragmentByTag("CountryPicker") as DialogFragment?

@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/top"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_main"
             android:icon="@drawable/ic_general"
@@ -48,5 +50,19 @@
             android:id="@+id/nav_corona"
             android:icon="@drawable/ic_virus"
             android:title="@string/menu_corona" />
+
+        <item
+            android:id="@+id/nav_beauty"
+            android:icon="@drawable/ic_cosmetics"
+            android:title="@string/menu_beautyy" />
+    </group>
+
+    <group
+        android:id="@+id/bottom"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/action_settings" />
     </group>
 </menu>

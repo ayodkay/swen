@@ -54,4 +54,6 @@
     <string name="theme_title">Temas:</string>
     <string name="light_theme">Tema oscuro</string>
     <string name="dark_theme">Tema ligero</string>
+    <string name="menu_beauty">belleza+moda</string>
+    <string name="menu_beautyy">Belleza &amp; Moda</string>
 </resources>

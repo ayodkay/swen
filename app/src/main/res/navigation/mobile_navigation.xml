@@ -57,4 +57,17 @@
         android:label="@string/menu_corona"
         tools:layout="@layout/fragment_main" />
 
+
+    <fragment
+        android:id="@+id/nav_beauty"
+        android:name="com.ayodkay.apps.swen.view.beauty.BeautyFragment"
+        android:label="@string/menu_beautyy"
+        tools:layout="@layout/fragment_main" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.ayodkay.apps.swen.view.settings.SettingsFragment"
+        android:label="@string/action_settings"
+        tools:layout="@layout/settings_activity" />
+
 </navigation>

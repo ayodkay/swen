@@ -75,37 +75,14 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_science,
                 R.id.nav_sports,
                 R.id.nav_technology,
-                R.id.nav_corona
+                R.id.nav_corona,
+                R.id.nav_beauty,
+                R.id.settings
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main_activity2, menu)
-
-        return true
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> {
-
-                startActivity(
-                    Intent(
-                        this, SettingsActivity::class.java
-                    )
-                )
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)

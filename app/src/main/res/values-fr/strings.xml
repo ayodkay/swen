@@ -44,7 +44,6 @@
     <string name="share_app" >Téléchargez l application Swen et obtenez les dernières nouvelles de dernière minute de partout dans le monde, c est gratuit!</string>
 
 
-    <string name="rate">Évaluer</string>
     <string name="rate_summary">Évaluez cette application sur le Google Play Store</string>
 
     <string name="color">Couleur</string>
@@ -54,4 +53,7 @@
     <string name="theme_title">Thèmes:</string>
     <string name="light_theme">Thème sombre</string>
     <string name="dark_theme">Thème léger</string>
+    <string name="rate">Evaluer</string>
+    <string name="menu_beauty">beauté+mode</string>
+    <string name="menu_beautyy">Beauté &amp; Mode</string>
 </resources>

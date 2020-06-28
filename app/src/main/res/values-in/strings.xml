@@ -54,4 +54,6 @@
     <string name="theme_title">Tema:</string>
     <string name="light_theme">Tema gelap</string>
     <string name="dark_theme">Tema ringan</string>
+    <string name="menu_beauty">kecantikan+mode</string>
+    <string name="menu_beautyy">Kecantikan &amp; Mode</string>
 </resources>

@@ -22,6 +22,8 @@
     <string name="menu_sports">Sports</string>
     <string name="menu_technology">Technology</string>
     <string name="menu_corona">Covid-19</string>
+    <string name="menu_beauty">beauty+fashion</string>
+    <string name="menu_beautyy">Beauty &amp; Fashion</string>
 
 
     <string name="action_settings">Settings</string>
@@ -54,4 +56,6 @@
     <string name="theme_title">Themes:</string>
     <string name="light_theme">Dark theme</string>
     <string name="dark_theme">Light theme</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>

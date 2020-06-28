@@ -142,6 +142,7 @@ class CountryPicker : DialogFragment() {
                     country.code = countryCode
                     country.name = Locale("", countryCode).displayName
                     country.iso = Locale("", countryCode).isO3Country.substring(0, 2)
+                    country.language = Locale.getDefault().language
                     countries.add(country)
                 }
                 return countries
@@ -155,6 +156,7 @@ class CountryPicker : DialogFragment() {
                     country.code = countryCode
                     country.name = Locale("", countryCode).displayName
                     country.iso = Locale("", countryCode).isO3Country.substring(0, 2)
+                    country.language = Locale("", countryCode).isO3Language
                     countries.add(country)
                 }
                 Log.d("country",countries.toString())

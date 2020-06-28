@@ -1,18 +1,21 @@
 package com.ayodkay.apps.swen.view.settings
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.view.AskLocation
 import com.ayodkay.apps.swen.view.ThemeActivity
+import com.ayodkay.apps.swen.view.main.MainActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.settings_activity.*
@@ -130,5 +133,12 @@ class SettingsActivity : AppCompatActivity() {
 
 
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+        startActivity(Intent(this,MainActivity::class.java))
+        finish()
     }
 }

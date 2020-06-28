@@ -19,7 +19,7 @@ class SplashScreen : AppCompatActivity() {
             val db = Room.databaseBuilder(
                 this,
                 AppDatabase::class.java, "country"
-            ).allowMainThreadQueries().build()
+            ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
             if (db.countryDao().getAll() != null) {
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()

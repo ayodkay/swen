@@ -54,4 +54,6 @@
     <string name="theme_title">Темы:</string>
     <string name="light_theme">Темная тема</string>
     <string name="dark_theme">Светлая тема</string>
+    <string name="menu_beauty">красота+мода</string>
+    <string name="menu_beautyy">красота &amp; мода</string>
 </resources>

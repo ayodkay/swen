@@ -10,6 +10,8 @@ class Country : Parcelable, Comparable<Country> {
     var name: String? = null
     @JvmField
     var iso: String? = null
+    @JvmField
+    var language: String? = null
     override fun describeContents(): Int {
         return 0
     }
@@ -18,6 +20,7 @@ class Country : Parcelable, Comparable<Country> {
         dest.writeString(code)
         dest.writeString(name)
         dest.writeString(iso)
+        dest.writeString(language)
     }
 
     override fun compareTo(other: Country): Int {
@@ -31,6 +34,7 @@ class Country : Parcelable, Comparable<Country> {
                 country.code = source.readString()
                 country.name = source.readString()
                 country.iso = source.readString()
+                country.language = source.readString()
                 return country
             }
 
