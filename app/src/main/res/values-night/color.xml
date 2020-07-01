@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="colorPrimary">#121212</color>
-    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#121212</color>
     <color name="colorAccent">#D81B60</color>
 
     <color name="textPrimary">#FFFFFF</color>
@@ -9,4 +9,7 @@
 
 
     <color name="toolbar">#121212</color>
+    <color name="invert">#ffffff</color>
+
+
 </resources>

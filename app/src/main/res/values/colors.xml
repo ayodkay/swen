@@ -12,4 +12,7 @@
 
     <color name="toolbar">#ffffff</color>
 
+
+    <color name="invert">#121212</color>
+
 </resources>

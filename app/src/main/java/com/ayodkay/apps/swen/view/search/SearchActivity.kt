@@ -1,6 +1,7 @@
 package com.ayodkay.apps.swen.view.search
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -28,6 +29,20 @@ import org.json.JSONObject
 
 
 class SearchActivity : AppCompatActivity() {
+
+    override fun onStart() {
+        super.onStart()
+
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+
+            } // Night mode is not active, we're using the light theme
+            Configuration.UI_MODE_NIGHT_YES -> {
+                setTheme(R.style.AppThemeNight)
+            } // Night mode is active, we're using dark theme
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

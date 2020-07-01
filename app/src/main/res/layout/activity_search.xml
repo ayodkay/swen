@@ -8,16 +8,25 @@
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context=".view.search.SearchActivity">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchBar"
+
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:searchIcon="@drawable/ic_search"
-        app:queryHint="@string/search"
-        android:layoutDirection="rtl"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="jelly_bean_mr1" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:searchIcon="@drawable/ic_search"
+            app:queryHint="@string/search"
+            android:layoutDirection="rtl"
+            tools:targetApi="jelly_bean_mr1" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+
 
     <TextView
         android:id="@+id/totalResults"
