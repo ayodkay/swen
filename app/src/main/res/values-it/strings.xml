@@ -61,4 +61,5 @@
     <string name="dark_theme">Tema leggero</string>
     
     <string name="hello_blank_fragment" translatable="false">Ciao frammento vuoto</string>
+    <string name="full_article">visualizza l\'articolo completo</string>
 </resources>

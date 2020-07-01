@@ -36,8 +36,8 @@
     <string name="country">Land</string>
     <string name="country_summary">Ausgewähltes Land ändern</string>
 
-    <string name="share">Aktie</string>
-    <string name="share_summary">teile diese ap mit deinen freunden</string>
+    <string name="share">Teilen</string>
+    <string name="share_summary">teile diese app mit deinen freunden</string>
 
     <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
 
@@ -56,4 +56,6 @@
     <string name="dark_theme">Lichtthema</string>
     <string name="menu_beauty">schönheit+mode</string>
     <string name="menu_beautyy">Schönheit &amp; Mode</string>
+    <string name="full_article">vollständigen artikel anzeigen</string>
+
 </resources>

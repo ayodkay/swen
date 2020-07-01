@@ -32,8 +32,6 @@ class AskLocation : AppCompatActivity() {
             val picker =
                 CountryPicker.getInstance("Select Country", object : CountryPickerListener {
                     override fun onSelectCountry(name: String?, code: String?, iso: String?, language: String?) {
-                        Toast.makeText(this@AskLocation, "Name: $language", Toast.LENGTH_SHORT).show()
-
                         runOnUiThread {
                             val db = Room.databaseBuilder(
                                 applicationContext,

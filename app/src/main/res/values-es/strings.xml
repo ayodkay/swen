@@ -37,7 +37,7 @@
     <string name="country_summary">cambiar país seleccionado</string>
 
     <string name="share">Compartir</string>
-    <string name="share_summary">comparte este ap con tus amigos</string>
+    <string name="share_summary">comparte este app con tus amigos</string>
 
     <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
 
@@ -56,4 +56,5 @@
     <string name="dark_theme">Tema ligero</string>
     <string name="menu_beauty">belleza+moda</string>
     <string name="menu_beautyy">Belleza &amp; Moda</string>
+    <string name="full_article">ver artículo completo</string>
 </resources>

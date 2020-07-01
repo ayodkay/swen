@@ -42,7 +42,7 @@
     <string name="country_summary">change selected country</string>
 
     <string name="share">Share</string>
-    <string name="share_summary">share this ap with your friends</string>
+        <string name="share_summary">share this app with your friends</string>
 
     <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
 
@@ -61,4 +61,7 @@
     <string name="dark_theme">Light theme</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="full_article">view full article</string>
+
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
 </resources>

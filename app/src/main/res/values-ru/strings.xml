@@ -37,7 +37,7 @@
     <string name="country_summary">изменить выбранную страну</string>
 
     <string name="share">Доля</string>
-    <string name="share_summary">поделитесь этим ap со своими друзьями</string>
+    <string name="share_summary">поделитесь этим app со своими друзьями</string>
 
     <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
 
@@ -56,4 +56,5 @@
     <string name="dark_theme">Светлая тема</string>
     <string name="menu_beauty">красота+мода</string>
     <string name="menu_beautyy">красота &amp; мода</string>
+    <string name="full_article">просмотреть статью полностью</string>
 </resources>
