@@ -4,9 +4,9 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -16,11 +16,10 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.view.settings.SettingsActivity
+import com.ayodkay.apps.swen.view.search.SearchActivity
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.nav_header_main.*
-import kotlinx.android.synthetic.main.news_list_card.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,18 +48,22 @@ class MainActivity : AppCompatActivity() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
 
-        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        when (currentNightMode) {
-            Configuration.UI_MODE_NIGHT_NO -> {
 
-            } // Night mode is not active, we're using the light theme
-            Configuration.UI_MODE_NIGHT_YES -> {
-                val headerView: View = navView.getHeaderView(0)
 
-                val imageView = headerView.findViewById<ImageView>(R.id.imageView);
-                imageView.visibility = View.GONE
 
-            } // Night mode is active, we're using dark theme
+        toolbar.setOnMenuItemClickListener {menuItem->
+            when (menuItem.itemId) {
+                R.id.search -> {
+                    startActivity(
+                        Intent(
+                            this, SearchActivity::class.java
+                        )
+                    )
+                    true
+                }
+
+                else -> false
+            }
         }
 
         val navController = findNavController(R.id.nav_host_fragment)
@@ -82,6 +85,13 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.top_app_bar, menu)
+
+        return true
     }
 
     override fun onSupportNavigateUp(): Boolean {

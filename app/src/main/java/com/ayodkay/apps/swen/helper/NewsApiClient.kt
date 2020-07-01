@@ -32,7 +32,7 @@ class NewsApiClient {
     }
 
 
-    private fun getDatabase(context: Context): AppDatabase {
+    fun getDatabase(context: Context): AppDatabase {
         val db = Room.databaseBuilder(
             context,
             AppDatabase::class.java, "country"
@@ -163,8 +163,6 @@ class NewsApiClient {
             adFrag.loadAd(adRequest)
 
             val db = newsApiClient.getDatabase(frag.requireContext())
-
-            Log.d(TAG, "setupEveryThingFragment: ${db.countryDao().getAll().iso}")
 
             newsViewModel.getNews(
                 getEverything(

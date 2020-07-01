@@ -1,5 +1,6 @@
 package com.ayodkay.apps.swen.viewmodel
 
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +22,8 @@ class NewsViewModel : ViewModel(){
             _news = MutableLiveData()
             loadNews(url)
         }
+
+        Log.d("TAG", "getNews: $url")
         return _news!!
     }
 

@@ -48,18 +48,23 @@ class NewsAdapter internal constructor(private val newsList: ArrayList<News>,pri
         holder.title.text = userPosition.title
         holder.description.text = userPosition.description
 
-        Picasso.get().load(userPosition.urlToImage).into(holder.image, object : Callback {
-            override fun onSuccess() {
-                holder.progressBar.visibility = View.GONE
-            }
+        try {
+            Picasso.get().load(userPosition.urlToImage).into(holder.image, object : Callback {
+                override fun onSuccess() {
+                    holder.progressBar.visibility = View.GONE
+                }
 
-            override fun onError(e: Exception?) {
-                holder.progressBar.visibility = View.GONE
-                holder.image.setImageDrawable(context.resources.getDrawable(R.drawable.ic_undraw_page_not_found_su7k))
-            }
+                override fun onError(e: Exception?) {
+                    holder.progressBar.visibility = View.GONE
+                    holder.image.setImageDrawable(context.resources.getDrawable(R.drawable.ic_undraw_page_not_found_su7k))
+                }
 
 
-        })
+            })
+        }catch (e:Exception){
+            holder.progressBar.visibility = View.GONE
+            holder.image.setImageDrawable(context.resources.getDrawable(R.drawable.ic_undraw_page_not_found_su7k))
+        }
 
 
         holder.itemView.setOnClickListener {

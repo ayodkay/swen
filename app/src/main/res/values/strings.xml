@@ -10,6 +10,9 @@
     <string name="content_description_more">more</string>
     <string name="title_activity_main2">MainActivity</string>
 
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
     <string name="facebook_app_id" translatable="false">559676741602917</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
 

@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/undraw_newspaper_k72w"
+        android:src="@drawable/ic_undraw_newspaper_k72w"
         app:layout_constraintBottom_toTopOf="@+id/select_country"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

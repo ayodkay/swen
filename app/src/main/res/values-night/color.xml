@@ -6,4 +6,7 @@
 
     <color name="textPrimary">#FFFFFF</color>
     <color name="textSecondary">#CCCCCC</color>
+
+
+    <color name="toolbar">#121212</color>
 </resources>
