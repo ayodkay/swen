@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="search">Ricerca…</string>
+    <string name="select_country">Seleziona il paese</string>
+    <string name="not_found">Nessun articolo trovato</string>
+    <string name="page_title">Notizia</string>
+    <string name="content_description_search">cerca notizie</string>
+    <string name="more">Di Più</string>
+    <string name="articles_found">articoli trovati</string>
+    <string name="content_description_more">Di Più</string>
+    <string name="title_activity_main2">Attività principale</string>
+
+    <string name="navigation_drawer_open" translatable="false">Apri il cassetto di navigazione</string>
+    <string name="navigation_drawer_close" translatable="false">Chiudi il riquadro di navigazione</string>
+
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+
+
+    <string name="menu_general">Generale</string>
+    <string name="menu_business">Attività Commerciale</string>
+    <string name="menu_entertainment">Divertimento</string>
+    <string name="menu_health">Salute</string>
+    <string name="menu_science">Scienza</string>
+    <string name="menu_sports">Gli sport</string>
+    <string name="menu_technology">Tecnologia</string>
+    <string name="menu_corona">Covid-19</string>
+    <string name="menu_beauty">moda+bellezza</string>
+    <string name="menu_beautyy">Bellezza</string>
+
+
+    <string name="action_settings">Impostazioni</string>
+    <string name="action_share">Condividi app</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+
+    <string name="feedback">Invia feedback</string>
+    <string name="feedback_summary">segnala problemi tecnici o suggerisci nuove funzionalità</string>
+
+
+    <string name="country">Nazione</string>
+    <string name="country_summary">cambia il paese selezionato</string>
+
+    <string name="share">Condividere</string>
+    <string name="share_summary">condividi questa app con i tuoi amici</string>
+
+    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+
+    <string name="share_app">Scarica l app Swen e ricevi le ultime notizie da qualsiasi parte del mondo, è gratis!</string>
+
+
+    <string name="rate">Valutare</string>
+    <string name="rate_summary">valuta questa app sul Google Play Store</string>
+
+    <string name="color">Colore</string>
+    <string name="color_summary">cambia il colore di questo tema dell app da chiaro a scuro</string>
+
+
+    <string name="theme_title">Temi:</string>
+    <string name="light_theme">Tema scuro</string>
+    <string name="dark_theme">Tema leggero</string>
+    
+    <string name="hello_blank_fragment" translatable="false">Ciao frammento vuoto</string>
+</resources>
