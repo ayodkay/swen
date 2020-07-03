@@ -3,18 +3,12 @@ package com.ayodkay.apps.swen.view.search
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.widget.Toast
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.SearchView.OnQueryTextListener
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.ayodkay.apps.swen.R
@@ -23,8 +17,8 @@ import com.ayodkay.apps.swen.helper.adapter.NewsAdapter
 import com.ayodkay.apps.swen.viewmodel.NewsViewModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
-import com.mancj.materialsearchbar.MaterialSearchBar
 import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.news_list_card.*
 import org.json.JSONObject
 
 
@@ -87,8 +81,13 @@ class SearchActivity : AppCompatActivity() {
             null,
             Response.Listener<JSONObject> {
                 if (it.getInt("totalResults") == 0) {
-
+                    empty.visibility = View.VISIBLE
+                    searchRecycle.visibility = View.GONE
+                    totalResults.visibility = View.GONE
                 } else {
+                    empty.visibility = View.GONE
+                    searchRecycle.visibility = View.VISIBLE
+                    totalResults.visibility = View.VISIBLE
                     totalResults.text = "${it.getInt("totalResults").toString()} ${resources.getString(R.string.articles_found)}"
                     searchRecycle.apply {
                         layoutManager = LinearLayoutManager(this@SearchActivity)
@@ -98,7 +97,7 @@ class SearchActivity : AppCompatActivity() {
                 }
             },
             Response.ErrorListener {
-                Toast.makeText(this, it.message.toString(),Toast.LENGTH_LONG).show()
+
             }
 
 

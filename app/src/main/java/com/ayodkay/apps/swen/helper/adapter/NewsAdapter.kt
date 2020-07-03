@@ -92,7 +92,7 @@ class NewsAdapter internal constructor(private val newsList: ArrayList<News>,pri
             share.setOnClickListener {
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, "${context.resources.getString(R.string.share_app)}\n\n${userPosition.title}\n${userPosition.url}")
+                    putExtra(Intent.EXTRA_TEXT, "${context.resources.getString(R.string.share_app)} ${context.resources.getString(R.string.bit_ly)}\n\n${userPosition.title}\n${userPosition.url}")
                     type = "text/plain"
                 }
 

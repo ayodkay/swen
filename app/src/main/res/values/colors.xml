@@ -15,4 +15,6 @@
 
     <color name="invert">#121212</color>
 
+    <color name="background">#DEE1E1</color>
+
 </resources>
