@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="search">검색…</string>
+    <string name="select_country">국가를 선택하십시오</string>
+    <string name="not_found">기사를 찾을 수 없습니다</string>
+    <string name="page_title">뉴스</string>
+    <string name="content_description_search">뉴스 검색</string>
+    <string name="more">더</string>
+    <string name="articles_found">기사를 찾았습니다</string>
+    <string name="content_description_more">더</string>
+    <string name="title_activity_main2">주요 활동</string>
+
+    <string name="menu_general">일반</string>
+    <string name="menu_business">사업</string>
+    <string name="menu_entertainment">환대</string>
+    <string name="menu_health">건배</string>
+    <string name="menu_science">과학</string>
+    <string name="menu_sports">스포츠</string>
+    <string name="menu_technology">과학 기술</string>
+    <string name="menu_corona">코로나 19</string>
+
+
+    <string name="action_settings">설정</string>
+    <string name="action_share">앱 공유</string>
+    <string name="title_activity_settings">설정 활동</string>
+
+
+    <string name="feedback">의견 보내기</string>
+    <string name="feedback_summary">기술적 인 문제를보고하거나 새로운 기능을 제안하십시오</string>
+
+
+    <string name="country">국가</string>
+    <string name="country_summary">선택한 국가 변경</string>
+
+    <string name="share">공유하기</string>
+    <string name="share_summary">이 앱을 친구들과 공유</string>
+
+    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+
+    <string name="share_app">Swen 앱을 다운로드하여 전 세계 어디서나 최신 뉴스를 받아보십시오. 무료입니다!</string>
+
+
+    <string name="rate">평가하기</string>
+    <string name="rate_summary">Google Play 스토어에서이 앱을 평가</string>
+
+    <string name="color">오호</string>
+    <string name="color_summary">앱 테마의 색상을 밝은 색에서 어두운 색으로 변경</string>
+
+
+    <string name="theme_title">주제 :</string>
+    <string name="light_theme">어두운 테마</string>
+    <string name="dark_theme">명확한 테마</string>
+    <string name="menu_beauty">뷰티 패션</string>
+    <string name="menu_beautyy">아름다움</string>
+    <string name="full_article">전체 기사보기</string>
+    <string name="notification_name">뉴스 업데이트 알림</string>
+    <string name="notification_description">뉴스 업데이트를 놓치지 않도록 알려 드리겠습니다.</string>
+    <string name="news_update">최신 뉴스보기</string>
+    <string name="notification_id">케어 뉴스</string>
+
+    <string name="text_copied">클립 보드에 텍스트가 복사되었습니다.</string>
+    <string name="support">지원하다</string>
+    <string name="dev_support">광고를보고 앱 개발자를 지원</string>
+</resources>

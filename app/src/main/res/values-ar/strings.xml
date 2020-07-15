@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="search">بحث…</string>
+    <string name="select_country">حدد الدولة</string>
+    <string name="not_found">لم يتم العثور على مقال</string>
+    <string name="page_title">أخبار</string>
+    <string name="content_description_search">بحث في الأخبار</string>
+    <string name="more">أكثر</string>
+    <string name="articles_found">تم العثور على مقالات</string>
+    <string name="content_description_more">أكثر</string>
+    <string name="title_activity_main2">النشاط الرئيسي</string>
+
+    <string name="navigation_drawer_open" translatable="false">افتح درج التنقل</string>
+    <string name="navigation_drawer_close" translatable="false">إغلاق درج التنقل</string>
+
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+
+
+    <string name="menu_general">جنرال لواء</string>
+    <string name="menu_business">اعمال</string>
+    <string name="menu_entertainment">وسائل الترفيه</string>
+    <string name="menu_health">الصحة</string>
+    <string name="menu_science">علم</string>
+    <string name="menu_sports">رياضات</string>
+    <string name="menu_technology">تقنية</string>
+    <string name="menu_corona">كوفيد -19</string>
+    <string name="menu_beauty">أزياء الجمال</string>
+    <string name="menu_beautyy">جمال</string>
+
+
+    <string name="action_settings">الإعدادات</string>
+    <string name="action_share">شارك التطبيق</string>
+    <string name="title_activity_settings">إعدادات النشاط</string>
+
+
+    <string name="feedback">ارسل رأيك</string>
+    <string name="feedback_summary">الإبلاغ عن مشاكل فنية أو اقتراح ميزات جديدة</string>
+
+
+    <string name="country">بلد</string>
+    <string name="country_summary">تغيير الدولة المختارة</string>
+
+    <string name="share">شارك</string>
+    <string name="share_summary">شارك هذا التطبيق مع أصدقائك</string>
+
+    <string name="google_play">https://play.google.com/store/apps/details؟id=com.ayodkay.apps.swen</string>
+
+    <string name="share_app">قم بتنزيل تطبيق Swen واحصل على آخر الأخبار العاجلة من أي مكان في العالم ، مجانًا!</string>
+
+
+    <string name="rate">لتقييم</string>
+    <string name="rate_summary">قيم هذا التطبيق في متجر جوجل بلاي</string>
+
+    <string name="color">اللون</string>
+    <string name="color_summary">تغيير لون مظهر التطبيق هذا من الفاتح إلى الغامق</string>
+
+
+    <string name="theme_title">الموضوعات:</string>
+    <string name="light_theme">مظهر داكن</string>
+    <string name="dark_theme">موضوع فاتح</string>
+    
+    <string name="full_article">عرض المقال كاملا</string>
+
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="notification_name">إخطار تحديث الأخبار</string>
+    <string name="notification_description">اسمح لنا بإخطارك حتى لا تفوتك تحديث الأخبار</string>
+    <string name="news_update">انظر آخر تحديث الأخبار</string>
+    <string name="notification_id">أخبار الرعاية</string>
+
+    
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="text_copied">تم نسخ النص إلى الحافظة.</string>
+    <string name="support">الدعم</string>
+    <string name="dev_support">دعم مطور التطبيق بمشاهدة إعلان</string>
+</resources>

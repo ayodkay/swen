@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="search">検索する…</string>
+    <string name="select_country">国を選択</string>
+    <string name="not_found">記事は見つかりませんでした</string>
+    <string name="page_title">ニュース</string>
+    <string name="content_description_search">ニュースを検索</string>
+    <string name="more">もっと</string>
+    <string name="articles_found">見つかった記事</string>
+    <string name="content_description_more">もっと</string>
+    <string name="title_activity_main2">主な活動</string>
+
+
+    <string name="menu_general">一般的な</string>
+    <string name="menu_business">ビジネス</string>
+    <string name="menu_entertainment">エンターテインメント</string>
+    <string name="menu_health">乾杯</string>
+    <string name="menu_science">理科</string>
+    <string name="menu_sports">スポーツ</string>
+    <string name="menu_technology">技術</string>
+    <string name="menu_corona">COVID-19</string>
+
+
+    <string name="action_settings">設定</string>
+    <string name="action_share">アプリを共有する</string>
+    <string name="title_activity_settings">設定アクティビティ</string>
+
+
+    <string name="feedback">フィードバックを送信する</string>
+    <string name="feedback_summary">技術的な問題を報告するか、新機能を提案する</string>
+
+
+    <string name="country">国</string>
+    <string name="country_summary">選択した国を変更</string>
+
+    <string name="share">共有する</string>
+    <string name="share_summary">このアプリを友達と共有する</string>
+
+    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+
+    <string name="share_app">Swenアプリをダウンロードして、世界中のどこからでも最新のニュースを入手してください。無料です！</string>
+
+
+    <string name="rate">評価します</string>
+    <string name="rate_summary">Google Playストアでこのアプリを評価してください</string>
+
+    <string name="color">色</string>
+    <string name="color_summary">アプリのテーマの色を明るい色から暗い色に変更します</string>
+
+
+    <string name="theme_title">トピック：</string>
+    <string name="light_theme">暗いテーマ</string>
+    <string name="dark_theme">明確なテーマ</string>
+    <string name="menu_beauty">美容ファッション</string>
+    <string name="menu_beautyy">美しさ</string>
+    <string name="full_article">記事全体を見る</string>
+    <string name="notification_name">ニュース更新通知</string>
+    <string name="notification_description">ニュースの更新を見逃さないように、お知らせいたします</string>
+    <string name="news_update">最新のニュースを見る</string>
+    <string name="notification_id">ケアニュース</string>
+
+    <string name="text_copied">クリップボードにコピーされたテキスト。</string>
+    <string name="support">サポート</string>
+    <string name="dev_support">広告を見てアプリ開発者をサポートする</string>
+</resources>

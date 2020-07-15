@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name" translatable="false">לְטַפֵּל</string>
+    <string name="search">לחפש אחר…</string>
+    <string name="select_country">בחר מדינה</string>
+    <string name="not_found">לא נמצאו מאמרים</string>
+    <string name="page_title">חֲדָשׁוֹת</string>
+    <string name="content_description_search">חיפוש חדשות</string>
+    <string name="more">יותר</string>
+    <string name="articles_found">מאמרים שנמצאו</string>
+    <string name="content_description_more">יותר</string>
+    <string name="title_activity_main2">פעילות עיקרית</string>
+
+    <string name="menu_general">כללי</string>
+    <string name="menu_business">העסק</string>
+    <string name="menu_entertainment">בידור</string>
+    <string name="menu_health">לחיים</string>
+    <string name="menu_science">מַדָע</string>
+    <string name="menu_sports">ספורט</string>
+    <string name="menu_technology">טֶכנוֹלוֹגִיָה</string>
+    <string name="menu_corona">Covid-19</string>
+
+
+    <string name="action_settings">הגדרות</string>
+    <string name="action_share">שתף את האפליקציה</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+
+    <string name="feedback">שלח משוב</string>
+    <string name="feedback_summary">דווח על בעיות טכניות או הצע תכונות חדשות</string>
+
+
+    <string name="country">מדינה</string>
+    <string name="country_summary">שנה את המדינה שנבחרה</string>
+
+    <string name="share">לשתף</string>
+    <string name="share_summary">שתף את האפליקציה הזו עם חבריך</string>
+
+    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+
+    <string name="share_app">הורד את אפליקציית Swen וקבל את החדשות האחרונות מכל מקום בעולם, זה בחינם!</string>
+
+
+    <string name="rate">להעריך</string>
+    <string name="rate_summary">דרג אפליקציה זו בחנות Google Play</string>
+
+    <string name="color">צֶבַע</string>
+    <string name="color_summary">שנה את צבע נושא האפליקציה מאור לחושך</string>
+
+
+    <string name="theme_title">נושאים:</string>
+    <string name="light_theme">ערכת נושא כהה</string>
+    <string name="dark_theme">נושא ברור</string>
+    <string name="menu_beauty">אופנת יופי</string>
+    <string name="menu_beautyy">יוֹפִי</string>
+    <string name="full_article">ראה מאמר מלא</string>
+    <string name="notification_name">הודעה על עדכון חדשות</string>
+    <string name="notification_description">הרשה לנו להודיע ​​לך כדי שלא תחמיץ עדכון חדשותי</string>
+    <string name="news_update">ראה את החדשות האחרונות</string>
+    <string name="notification_id">אכפת חדשות</string>
+
+    <string name="text_copied">טקסט שהועתק ללוח.</string>
+    <string name="support">תמיכה</string>
+    <string name="dev_support">תומך במפתח האפליקציות על ידי צפייה במודעה</string>
+</resources>
