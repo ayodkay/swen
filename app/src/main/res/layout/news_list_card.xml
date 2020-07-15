@@ -4,10 +4,10 @@
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="12dp"
-    app:cardCornerRadius="8dp"
+    app:cardElevation="16dp"
+    app:cardCornerRadius="12dp"
     android:background="#FFFFFF"
-    android:layout_margin="8dp">
+    android:layout_margin="12dp">
 
     <LinearLayout
         android:layout_width="match_parent"

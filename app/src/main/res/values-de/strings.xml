@@ -57,5 +57,12 @@
     <string name="menu_beauty">schönheit+mode</string>
     <string name="menu_beautyy">Schönheit &amp; Mode</string>
     <string name="full_article">vollständigen artikel anzeigen</string>
+    <string name="notification_name">Benachrichtigung über Neuigkeiten</string>
+    <string name="notification_description">Lassen Sie sich von uns benachrichtigen, damit Sie kein News-Update verpassen</string>
+    <string name="news_update">Siehe das neueste Nachrichten-Update</string>
+    <string name="notification_id">swen news</string>
 
+    <string name = "text_copied">In die Zwischenablage kopierter Text.</string>
+    <string name = "support">Unterstützung</string>
+    <string name = "dev_support">unterstützt den App-Entwickler durch Ansehen einer Anzeige</string>
 </resources>

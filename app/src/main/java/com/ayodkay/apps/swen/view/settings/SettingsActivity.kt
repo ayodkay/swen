@@ -3,19 +3,22 @@ package com.ayodkay.apps.swen.view.settings
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.view.AskLocation
 import com.ayodkay.apps.swen.view.ThemeActivity
 import com.ayodkay.apps.swen.view.main.MainActivity
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.settings_activity.*
 
@@ -52,19 +55,23 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     class SettingsFragment : PreferenceFragmentCompat() {
+        private lateinit var mInterstitialAd: InterstitialAd
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
-
 
             val feedback: EditTextPreference? = findPreference("feedback")
             val country: Preference? = findPreference("country")
             val share: Preference? = findPreference("share")
             val rate: Preference? = findPreference("rate")
             val color: Preference? = findPreference("color")
+            val support: Preference? = findPreference("support")
 
 
-            feedback?.setOnPreferenceChangeListener { preference, newValue ->
+            setupAds(support)
+
+
+            feedback?.setOnPreferenceChangeListener { _, newValue ->
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.type = "message/rfc822"
                 intent.putExtra(Intent.EXTRA_TEXT, newValue.toString())
@@ -130,9 +137,57 @@ class SettingsActivity : AppCompatActivity() {
                 true
             }
 
+            support?.setOnPreferenceClickListener {
+                if (mInterstitialAd.isLoaded) {
+                    mInterstitialAd.show()
+                } else {
+                   AppLog.Log("TAG", "The interstitial wasn't loaded yet.")
+                }
+                true
+            }
+
 
         }
+
+        private fun setupAds(support: Preference?) {
+            MobileAds.initialize(requireContext()) {}
+            mInterstitialAd = InterstitialAd(requireContext())
+            mInterstitialAd.adUnitId = resources.getString(R.string.interstitial_ad_unit_id)
+            mInterstitialAd.loadAd(AdRequest.Builder().build())
+
+            mInterstitialAd.adListener = object: AdListener() {
+                override fun onAdLoaded() {
+                    support?.isEnabled = true
+                }
+
+                override fun onAdFailedToLoad(errorCode: Int) {
+                    support?.isEnabled = false
+                    mInterstitialAd.loadAd(AdRequest.Builder().build())
+                }
+
+                override fun onAdOpened() {
+                    support?.isEnabled = false
+                    mInterstitialAd.loadAd(AdRequest.Builder().build())
+                }
+
+                override fun onAdClicked() {
+                    support?.isEnabled = false
+                    mInterstitialAd.loadAd(AdRequest.Builder().build())
+                }
+
+                override fun onAdLeftApplication() {
+                    support?.isEnabled = false
+                    mInterstitialAd.loadAd(AdRequest.Builder().build())
+                }
+
+                override fun onAdClosed() {
+                    support?.isEnabled = false
+                    mInterstitialAd.loadAd(AdRequest.Builder().build())
+                }
+            }
+        }
     }
+
 
     override fun onBackPressed() {
         super.onBackPressed()

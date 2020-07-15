@@ -11,10 +11,6 @@
     <string name="title_activity_main2">Atividade principal</string>
 
 
-    <string name="facebook_app_id" translatable="false">559676741602917</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
-
-
     <string name="menu_general">Geral</string>
     <string name="menu_business">O negócio</string>
     <string name="menu_entertainment">Entretenimento</string>
@@ -38,7 +34,7 @@
     <string name="country_summary">alterar país selecionado</string>
 
     <string name="share">Compartilhar</string>
-    <string name="share_summary">compartilhe este ap com seus amigos</string>
+    <string name="share_summary">compartilhe este aplicativo com seus amigos</string>
 
     <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
 
@@ -58,4 +54,12 @@
     <string name="menu_beauty">beleza+moda</string>
     <string name="menu_beautyy">Beleza &amp; Moda</string>
     <string name="full_article">ver artigo completo</string>
+    <string name="notification_name">Notificação de atualização de notícias</string>
+    <string name="notification_description">Permita-nos notificá-lo para que você não perca uma atualização de notícias</string>
+    <string name="news_update">Veja as últimas notícias</string>
+    <string name="notification_id">swen news</string>
+
+    <string name="text_copied">Texto copiado para a área de transferência.</string>
+    <string name="support">Apoio</string>
+    <string name="dev_support">apoiar o desenvolvedor de aplicativos assistindo a um anúncio</string>
 </resources>

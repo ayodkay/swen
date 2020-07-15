@@ -57,4 +57,12 @@
     <string name="menu_beauty">kecantikan+mode</string>
     <string name="menu_beautyy">Kecantikan &amp; Mode</string>
     <string name="full_article">lihat artikel lengkap</string>
+    <string name="notification_name">Pemberitahuan Pembaruan Berita</string>
+    <string name="notification_description">Izinkan kami memberi tahu Anda sehingga Anda tidak akan ketinggalan pembaruan berita</string>
+    <string name="news_update">Lihat pembaruan berita terbaru</string>
+    <string name="notification_id">swen news</string>
+
+    <string name = "text_copied"> Teks disalin ke clipboard. </string>
+    <string name = "support">Dukung</string>
+    <string name = "dev_support">mendukung pengembang aplikasi dengan menonton iklan</string>
 </resources>

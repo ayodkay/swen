@@ -41,7 +41,7 @@
 
     <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
 
-    <string name="share_app" >Téléchargez l application Swen et obtenez les dernières nouvelles de dernière minute de partout dans le monde, c est gratuit!</string>
+    <string name="share_app" >Téléchargez l\'application Swen et obtenez les dernières nouvelles de dernière minute de partout dans le monde, c est gratuit!</string>
 
 
     <string name="rate_summary">Évaluez cette application sur le Google Play Store</string>
@@ -57,4 +57,12 @@
     <string name="menu_beauty">beauté+mode</string>
     <string name="menu_beautyy">Beauté &amp; Mode</string>
     <string name="full_article">voir l\'article complet</string>
+    <string name="notification_name">Notification de mise à jour des nouvelles</string>
+    <string name="notification_description">Permettez-nous de vous informer afin que vous ne manquiez pas une mise à jour de nouvelles</string>
+    <string name="news_update">Voir la dernière mise à jour des nouvelles</string>
+    <string name="notification_id">swen news</string>
+
+    <string name = "text_copied">Texte copié dans le presse-papiers.</string>
+    <string name = "support">soutien</string>
+    <string name = "dev_support"> soutenez le développeur de l\'application en regardant une annonce </string>
 </resources>

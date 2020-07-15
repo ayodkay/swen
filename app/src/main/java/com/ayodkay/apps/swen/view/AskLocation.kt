@@ -30,7 +30,7 @@ class AskLocation : AppCompatActivity() {
 
         select_country.setOnClickListener {
             val picker =
-                CountryPicker.getInstance("Select Country", object : CountryPickerListener {
+                CountryPicker.getInstance(resources.getString(R.string.select_country), object : CountryPickerListener {
                     override fun onSelectCountry(name: String?, code: String?, iso: String?, language: String?) {
                         runOnUiThread {
                             val db = Room.databaseBuilder(

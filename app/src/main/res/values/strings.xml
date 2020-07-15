@@ -42,7 +42,7 @@
     <string name="country_summary">change selected country</string>
 
     <string name="share">Share</string>
-        <string name="share_summary">share this app with your friends</string>
+    <string name="share_summary">share this app with your friends</string>
 
     <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
 
@@ -60,10 +60,22 @@
     <string name="light_theme">Dark theme</string>
     <string name="dark_theme">Light theme</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="full_article">view full article</string>
 
     <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
 
     <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="notification_name">News Update Notification</string>
+    <string name="notification_description">Allow us to notify you so you wont miss a news update</string>
+    <string name="news_update">See latest news update</string>
+    <string name="notification_id">swen news</string>
+
+    <!-- -
+        This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
+        For more information, see https://support.google.com/admob/answer/3052638
+    <!- -->
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="text_copied">Text copied to clipboard.</string>
+    <string name="support">Support</string>
+    <string name="dev_support">support the app developer by watching an advertisement</string>
 </resources>

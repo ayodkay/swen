@@ -29,6 +29,12 @@
             app:title="@string/color"
             app:summary="@string/color_summary"/>
 
+        <Preference
+            app:key="support"
+            app:title="@string/support"
+            android:enabled="false"
+            app:summary="@string/dev_support"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
