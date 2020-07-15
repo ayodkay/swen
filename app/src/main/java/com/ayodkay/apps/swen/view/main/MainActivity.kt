@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -13,9 +14,11 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.view.search.SearchActivity
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.material.navigation.NavigationView
+import java.io.File
 
 
 class MainActivity : AppCompatActivity() {
@@ -98,5 +101,10 @@ class MainActivity : AppCompatActivity() {
         val logger = AppEventsLogger.newLogger(this)
 
         logger.logEvent("sentFriendRequest")
+    }
+
+    override fun onDestroy() {
+        cacheDir.deleteRecursively()
+        super.onDestroy()
     }
 }

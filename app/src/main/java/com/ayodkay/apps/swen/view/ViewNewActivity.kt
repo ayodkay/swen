@@ -70,7 +70,7 @@ class ViewNewActivity : AppCompatActivity() {
         val article = findViewById<MaterialButton>(R.id.full_article)
 
         share.setOnClickListener {
-            if (image.isBlank()){
+            if (!image.isBlank()){
                 Picasso.get().load(image).into(object : Target {
                     override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
                         val shareNews = Intent(Intent.ACTION_SEND)
