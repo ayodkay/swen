@@ -2,6 +2,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory app:title="@string/action_settings">
+
+        <Preference
+            app:key="saved"
+            app:title="@string/bookmarks"
+            app:summary="@string/bookmark_summary"/>
+
         <EditTextPreference
             app:key="feedback"
             app:title="@string/feedback"

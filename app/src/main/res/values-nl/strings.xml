@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf8'?>
+<resources>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="google_play" translatable="false">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+    <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
+    <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
+    <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+    <string name="msg_token_fmt" translatable="false" />
+
+
+    <string name="search">Zoeken naar…</string>
+    <string name="select_country">Selecteer land</string>
+    <string name="not_found">Geen artikelen gevonden</string>
+    <string name="page_title">Nieuws</string>
+    <string name="content_description_search">zoek nieuws</string>
+    <string name="more">Meer</string>
+    <string name="articles_found">artikelen gevonden</string>
+    <string name="content_description_more">Meer</string>
+    <string name="menu_general">Algemeen</string>
+    <string name="menu_business">Het bedrijf</string>
+    <string name="menu_entertainment">Vermaak</string>
+    <string name="menu_health">Proost</string>
+    <string name="menu_science">Wetenschap</string>
+    <string name="menu_sports">sport-</string>
+    <string name="menu_technology">Technologie</string>
+    <string name="menu_corona">Covid-19</string>
+    <string name="menu_beauty">schoonheid + mode</string>
+    <string name="menu_beautyy">Schoonheid en mode</string>
+    <string name="action_settings">instellingen</string>
+    <string name="action_share">Deel de app</string>
+    <string name="title_activity_settings">Instellingen Activiteit</string>
+    <string name="feedback">Feedback verzenden</string>
+    <string name="feedback_summary">meld technische problemen of stel nieuwe suggesties voor</string>
+    <string name="country">land</string>
+    <string name="country_summary">verander het geselecteerde land</string>
+    <string name="share">Delen</string>
+    <string name="share_summary">deel deze app met je vrienden</string>
+    <string name="share_app">Download de Swen-app en ontvang het laatste nieuws van overal ter wereld, het is gratis!</string>
+    <string name="rate">Evalueren</string>
+    <string name="rate_summary">beoordeel deze app in Google Play Store</string>
+    <string name="color">Kleur</string>
+    <string name="color_summary">verander de kleur van het applicatiethema van licht naar donker</string>
+    <string name="theme_title">Onderwerpen:</string>
+    <string name="light_theme">Donker thema</string>
+    <string name="dark_theme">Duidelijk thema</string>
+    <string name="full_article">zie volledig artikel</string>
+    <string name="notification_name">Nieuwsupdate melding</string>
+    <string name="notification_description">Sta ons toe u op de hoogte te stellen, zodat u geen updates mist</string>
+    <string name="news_update">Bekijk het laatste nieuws</string>
+    <string name="notification_id">zorg nieuws</string>
+    <string name="text_copied">Tekst gekopieerd naar het klembord.</string>
+    <string name="support">Ondersteuning</string>
+    <string name="dev_support">ondersteun de app-ontwikkelaar door een advertentie te bekijken</string>
+    <string name="permission_granted">toestemming verleend, probeer opnieuw te delen</string>
+    <string name="permission_not_granted">je moet toestemming accepteren om te delen</string>
+    <string name="sort">bestellen</string>
+    <string name="popularity">populariteit</string>
+    <string name="newest">de nieuwste</string>
+    <string name="relevancy">relevantie</string>
+    <string name="sort_news">bestellen</string>
+    <string name="native_privacy_information_icon_image">Afbeelding van het pictogram voor privacyinformatie</string>
+    <string name="learn_more">Om meer te weten</string>
+    <string name="native_main_image">native_main_image</string>
+    <string name="update_available">update is beschikbaar</string>
+    <string name="updating">Downloaden !!!</string>
+    <string name="updated">Gedownload !!!</string>
+    <string name="feedback_suggestions">feedback en suggesties</string>
+    <string name="bookmarks">Bladwijzers</string>
+    <string name="bookmark_summary">bekijk al je favoriete nieuws</string>
+    <string name="share_news">Deel nieuws</string>
+</resources>

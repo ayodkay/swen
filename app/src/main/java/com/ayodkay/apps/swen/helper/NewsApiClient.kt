@@ -1,9 +1,7 @@
 package com.ayodkay.apps.swen.helper
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,14 +14,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.adapter.NewsAdapter
-import com.ayodkay.apps.swen.helper.room.info.AppDatabase
+import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
+import com.ayodkay.apps.swen.helper.room.country.AppDatabase
 import com.ayodkay.apps.swen.model.News
 import com.ayodkay.apps.swen.viewmodel.NewsViewModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import org.json.JSONObject
+import java.util.*
+
 
 class NewsApiClient {
 
@@ -33,12 +33,10 @@ class NewsApiClient {
 
 
     fun getDatabase(context: Context): AppDatabase {
-        val db = Room.databaseBuilder(
+        return Room.databaseBuilder(
             context,
             AppDatabase::class.java, "country"
         ).allowMainThreadQueries().build()
-
-        return db
     }
 
 
@@ -93,7 +91,8 @@ class NewsApiClient {
                         results.getString("url"),
                         results.getString("urlToImage"),
                         results.getString("publishedAt"),
-                        results.getString("content")
+                        results.getString("content"),
+                        results.getString("publishedAt")
                     )
                 )
             }
@@ -132,15 +131,13 @@ class NewsApiClient {
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
                 } else {
                     root.findViewById<TextView>(R.id.totalResults).text = "${it.getInt("totalResults")} ${frag.resources.getString(R.string.articles_found) }"
+
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
                         layoutManager = LinearLayoutManager(frag.context)
                         hasFixedSize()
-                        adapter = NewsAdapter(handleJson(it), frag.requireContext())
-
+                        adapter = AdsRecyclerView(handleJson(it),frag ,frag.viewLifecycleOwner,frag.requireContext())
                     }
                 }
-
-
             })
             return root
         }
@@ -153,9 +150,7 @@ class NewsApiClient {
 
             val newsViewModel: NewsViewModel = ViewModelProvider(frag).get(NewsViewModel::class.java)
             val root = inflater.inflate(R.layout.fragment_main, container, false)
-
             val adFrag = root.findViewById<AdView>(R.id.adFrag)
-
             val newsApiClient = NewsApiClient()
 
             MobileAds.initialize(frag.context)
@@ -168,8 +163,9 @@ class NewsApiClient {
                 getEverything(
                     newsApiClient,
                     q = q,
-                    sort_by = "popularity",
-                    language = db.countryDao().getAll().iso
+                    sort_by = "newest",
+                    language = db.countryDao().getAll().iso,
+                    page = 5
                 )
             ).observe(frag.viewLifecycleOwner, Observer {
                 if (it.getInt("totalResults") == 0) {
@@ -177,16 +173,15 @@ class NewsApiClient {
                     root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
                 } else {
-                    root.findViewById<TextView>(R.id.totalResults).text = "${it.getInt("totalResults")} ${frag.resources.getString(R.string.articles_found) }"
+                    val getResult = handleJson(it)
+                    root.findViewById<TextView>(R.id.totalResults).text = "${getResult.size} ${frag.resources.getString(R.string.articles_found) }"
+
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
                         layoutManager = LinearLayoutManager(frag.context)
                         hasFixedSize()
-                        adapter = NewsAdapter(handleJson(it), frag.requireContext())
-
+                        adapter = AdsRecyclerView(getResult,frag, frag.viewLifecycleOwner, frag.requireContext())
                     }
                 }
-
-
             })
             return root
         }

@@ -1,5 +1,18 @@
 <resources>
     <string name="app_name" translatable="false">Swen</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="google_play" translatable="false">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+    <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
+    <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
+    <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+
+
     <string name="search">Search&#8230;</string>
     <string name="select_country">select country</string>
     <string name="not_found">No Article Found</string>
@@ -8,15 +21,6 @@
     <string name="more">more</string>
     <string name="articles_found">articles found</string>
     <string name="content_description_more">more</string>
-    <string name="title_activity_main2">MainActivity</string>
-
-    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
-    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-
-    <string name="facebook_app_id" translatable="false">559676741602917</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
-
-
     <string name="menu_general">General</string>
     <string name="menu_business">Business</string>
     <string name="menu_entertainment">Entertainment</string>
@@ -27,55 +31,47 @@
     <string name="menu_corona">Covid-19</string>
     <string name="menu_beauty">beauty+fashion</string>
     <string name="menu_beautyy">Beauty &amp; Fashion</string>
-
-
     <string name="action_settings">Settings</string>
     <string name="action_share">Share App</string>
     <string name="title_activity_settings">SettingsActivity</string>
-
-
     <string name="feedback">Send feedback</string>
-    <string name="feedback_summary">Report technical issues or suggest new features</string>
-
-
+    <string name="feedback_summary">report technical issues or suggest new features</string>
     <string name="country">Country</string>
     <string name="country_summary">change selected country</string>
-
     <string name="share">Share</string>
     <string name="share_summary">share this app with your friends</string>
-
-    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
-
     <string name="share_app">Download the Swen app and get the latest breaking news from anywhere in the world, its free!</string>
-
-
     <string name="rate">Rate</string>
     <string name="rate_summary">rate this app in google play store</string>
-
     <string name="color">Color</string>
     <string name="color_summary">change this app theme color from light to dark</string>
-
-
     <string name="theme_title">Themes:</string>
     <string name="light_theme">Dark theme</string>
     <string name="dark_theme">Light theme</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="full_article">view full article</string>
-
-    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
-
-    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
     <string name="notification_name">News Update Notification</string>
     <string name="notification_description">Allow us to notify you so you wont miss a news update</string>
     <string name="news_update">See latest news update</string>
     <string name="notification_id">swen news</string>
-
-    <!-- -
-        This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
-        For more information, see https://support.google.com/admob/answer/3052638
-    <!- -->
-    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
     <string name="text_copied">Text copied to clipboard.</string>
     <string name="support">Support</string>
     <string name="dev_support">support the app developer by watching an advertisement</string>
+    <string name="permission_granted">permission granted try sharing again</string>
+    <string name="permission_not_granted">you need to accept permission to share</string>
+    <string name="sort">sort</string>
+    <string name="popularity">popularity</string>
+    <string name="newest">newest</string>
+    <string name="relevancy">relevancy</string>
+    <string name="sort_news">sort news</string>
+    <string name="msg_token_fmt" translatable="false" />
+    <string name="native_privacy_information_icon_image">Privacy Information Icon image</string>
+    <string name="learn_more">Learn More</string>
+    <string name="native_main_image">native_main_image</string>
+    <string name="update_available">update is available</string>
+    <string name="updating">Downloading!!!</string>
+    <string name="updated">Downloaded!!!</string>
+    <string name="feedback_suggestions">feedback and suggestions</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="bookmark_summary">check all bookmarked news</string>
+    <string name="share_news">Share News</string>
 </resources>

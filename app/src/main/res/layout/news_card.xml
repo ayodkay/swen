@@ -45,7 +45,7 @@
                         android:id="@+id/dSource"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginTop="32dp"/>
 
@@ -54,6 +54,7 @@
                         android:id="@+id/content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBody1"
                         android:layout_marginTop="10dp"/>
 
                     <LinearLayout
@@ -99,12 +100,7 @@
                         ads:adSize="BANNER"
                         ads:adUnitId="ca-app-pub-7312232171503509/9944933005" />
                 </LinearLayout>
-
-
             </LinearLayout>
-
-
-
         </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,20 @@
+<?xml version='1.0' encoding='utf8'?>
 <resources>
-    <string name="app_name" translatable="false">לְטַפֵּל</string>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="google_play" translatable="false">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+    <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
+    <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
+    <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+    <string name="msg_token_fmt" translatable="false" />
+
+
     <string name="search">לחפש אחר…</string>
     <string name="select_country">בחר מדינה</string>
     <string name="not_found">לא נמצאו מאמרים</string>
@@ -8,8 +23,6 @@
     <string name="more">יותר</string>
     <string name="articles_found">מאמרים שנמצאו</string>
     <string name="content_description_more">יותר</string>
-    <string name="title_activity_main2">פעילות עיקרית</string>
-
     <string name="menu_general">כללי</string>
     <string name="menu_business">העסק</string>
     <string name="menu_entertainment">בידור</string>
@@ -18,47 +31,48 @@
     <string name="menu_sports">ספורט</string>
     <string name="menu_technology">טֶכנוֹלוֹגִיָה</string>
     <string name="menu_corona">Covid-19</string>
-
-
+    <string name="menu_beauty">יופי + אופנה</string>
+    <string name="menu_beautyy">יופי ואופנה</string>
     <string name="action_settings">הגדרות</string>
     <string name="action_share">שתף את האפליקציה</string>
     <string name="title_activity_settings">SettingsActivity</string>
-
-
     <string name="feedback">שלח משוב</string>
-    <string name="feedback_summary">דווח על בעיות טכניות או הצע תכונות חדשות</string>
-
-
+    <string name="feedback_summary">דווח על בעיות טכניות או הצע הצעות חדשות</string>
     <string name="country">מדינה</string>
     <string name="country_summary">שנה את המדינה שנבחרה</string>
-
     <string name="share">לשתף</string>
-    <string name="share_summary">שתף את האפליקציה הזו עם חבריך</string>
-
-    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
-
+    <string name="share_summary">שתף את היישום הזה עם חבריך</string>
     <string name="share_app">הורד את אפליקציית Swen וקבל את החדשות האחרונות מכל מקום בעולם, זה בחינם!</string>
-
-
     <string name="rate">להעריך</string>
     <string name="rate_summary">דרג אפליקציה זו בחנות Google Play</string>
-
     <string name="color">צֶבַע</string>
-    <string name="color_summary">שנה את צבע נושא האפליקציה מאור לחושך</string>
-
-
+    <string name="color_summary">שנה את צבע נושא היישום מאור לחושך</string>
     <string name="theme_title">נושאים:</string>
     <string name="light_theme">ערכת נושא כהה</string>
     <string name="dark_theme">נושא ברור</string>
-    <string name="menu_beauty">אופנת יופי</string>
-    <string name="menu_beautyy">יוֹפִי</string>
     <string name="full_article">ראה מאמר מלא</string>
     <string name="notification_name">הודעה על עדכון חדשות</string>
-    <string name="notification_description">הרשה לנו להודיע ​​לך כדי שלא תחמיץ עדכון חדשותי</string>
+    <string name="notification_description">הרשה לנו להודיע ​​לך כדי שלא תחמיץ עדכונים</string>
     <string name="news_update">ראה את החדשות האחרונות</string>
     <string name="notification_id">אכפת חדשות</string>
-
     <string name="text_copied">טקסט שהועתק ללוח.</string>
     <string name="support">תמיכה</string>
     <string name="dev_support">תומך במפתח האפליקציות על ידי צפייה במודעה</string>
+    <string name="permission_granted">הרשאה שניתנה, נסה לשתף שוב</string>
+    <string name="permission_not_granted">אתה צריך לקבל אישור לשיתוף</string>
+    <string name="sort">להזמין</string>
+    <string name="popularity">פּוֹפּוּלָרִיוּת</string>
+    <string name="newest">החדש ביותר</string>
+    <string name="relevancy">רלוונטיות</string>
+    <string name="sort_news">להזמין</string>
+    <string name="native_privacy_information_icon_image">תמונה של סמל פרטי הפרטיות</string>
+    <string name="learn_more">לדעת יותר</string>
+    <string name="native_main_image">native_main_image</string>
+    <string name="update_available">עדכון זמין</string>
+    <string name="updating">מוריד !!!</string>
+    <string name="updated">הורדת !!!</string>
+    <string name="feedback_suggestions">משוב והצעות</string>
+    <string name="bookmarks">סימניות</string>
+    <string name="bookmark_summary">בדוק את כל החדשות המועדפות עליך</string>
+    <string name="share_news">שתף חדשות</string>
 </resources>

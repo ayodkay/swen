@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf8'?>
+<resources>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="google_play" translatable="false">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+    <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
+    <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
+    <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+    <string name="msg_token_fmt" translatable="false" />
+
+
+    <string name="search">搜索…</string>
+    <string name="select_country">选择国家</string>
+    <string name="not_found">找不到文章</string>
+    <string name="page_title">新闻</string>
+    <string name="content_description_search">搜索新闻</string>
+    <string name="more">更多</string>
+    <string name="articles_found">找到文章</string>
+    <string name="content_description_more">更多</string>
+    <string name="menu_general">一般</string>
+    <string name="menu_business">这生意</string>
+    <string name="menu_entertainment">娱乐</string>
+    <string name="menu_health">干杯</string>
+    <string name="menu_science">科学</string>
+    <string name="menu_sports">体育</string>
+    <string name="menu_technology">技术</string>
+    <string name="menu_corona">新冠肺炎</string>
+    <string name="menu_beauty">美容+时尚</string>
+    <string name="menu_beautyy">美丽与时尚</string>
+    <string name="action_settings">设定</string>
+    <string name="action_share">分享应用</string>
+    <string name="title_activity_settings">设置活动</string>
+    <string name="feedback">发送反馈</string>
+    <string name="feedback_summary">报告技术问题或提出新建议</string>
+    <string name="country">国家</string>
+    <string name="country_summary">更改所选国家</string>
+    <string name="share">分享</string>
+    <string name="share_summary">与你的朋友分享这个程序</string>
+    <string name="share_app">下载Swen应用程序并从世界任何地方免费获取最新新闻！</string>
+    <string name="rate">评估</string>
+    <string name="rate_summary">在Google Play商店中对此应用评分</string>
+    <string name="color">颜色</string>
+    <string name="color_summary">将应用程序主题颜色从浅色更改为深色</string>
+    <string name="theme_title">主题：</string>
+    <string name="light_theme">黑暗主题</string>
+    <string name="dark_theme">清晰的主题</string>
+    <string name="full_article">查看全文</string>
+    <string name="notification_name">新闻更新通知</string>
+    <string name="notification_description">让我们通知您，以免您错过任何更新</string>
+    <string name="news_update">查看最新消息</string>
+    <string name="notification_id">护理新闻</string>
+    <string name="text_copied">文本已复制到剪贴板。</string>
+    <string name="support">支持</string>
+    <string name="dev_support">通过观看广告来支持应用开发人员</string>
+    <string name="permission_granted">已授予权限，请尝试再次共享</string>
+    <string name="permission_not_granted">您需要接受许可才能共享</string>
+    <string name="sort">订购</string>
+    <string name="popularity">人气</string>
+    <string name="newest">最新的</string>
+    <string name="relevancy">关联</string>
+    <string name="sort_news">订购</string>
+    <string name="native_privacy_information_icon_image">隐私信息图标的图片</string>
+    <string name="learn_more">了解更多</string>
+    <string name="native_main_image">native_main_image</string>
+    <string name="update_available">有可用的更新</string>
+    <string name="updating">正在下载！！！</string>
+    <string name="updated">下载!!!</string>
+    <string name="feedback_suggestions">反馈和建议</string>
+    <string name="bookmarks">书签</string>
+    <string name="bookmark_summary">查看所有您喜欢的新闻</string>
+    <string name="share_news">分享新闻</string>
+</resources>

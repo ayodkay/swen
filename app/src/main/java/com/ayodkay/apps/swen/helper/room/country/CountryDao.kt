@@ -1,4 +1,4 @@
-package com.ayodkay.apps.swen.helper.room.info
+package com.ayodkay.apps.swen.helper.room.country
 
 import androidx.room.Dao
 import androidx.room.Insert

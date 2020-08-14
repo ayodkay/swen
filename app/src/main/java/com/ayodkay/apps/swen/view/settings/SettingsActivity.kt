@@ -1,12 +1,12 @@
 package com.ayodkay.apps.swen.view.settings
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
@@ -14,6 +14,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.view.AskLocation
+import com.ayodkay.apps.swen.view.SaveNews
 import com.ayodkay.apps.swen.view.ThemeActivity
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.google.android.gms.ads.AdListener
@@ -61,6 +62,7 @@ class SettingsActivity : AppCompatActivity() {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
             val feedback: EditTextPreference? = findPreference("feedback")
+            val saved: Preference? = findPreference("saved")
             val country: Preference? = findPreference("country")
             val share: Preference? = findPreference("share")
             val rate: Preference? = findPreference("rate")
@@ -75,7 +77,7 @@ class SettingsActivity : AppCompatActivity() {
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.type = "message/rfc822"
                 intent.putExtra(Intent.EXTRA_TEXT, newValue.toString())
-                intent.putExtra(Intent.EXTRA_SUBJECT, "feedback and suggestions")
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedback_suggestions))
                 intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("ayodelekayode51@yahoo.com"))
                 val mailer = Intent.createChooser(intent, null)
                 startActivity(mailer)
@@ -83,6 +85,10 @@ class SettingsActivity : AppCompatActivity() {
             }
 
 
+            saved?.setOnPreferenceClickListener {
+                startActivity(Intent(this.context,SaveNews::class.java))
+                true
+            }
             country?.setOnPreferenceClickListener {
 
                 startActivity(Intent(this.context,AskLocation::class.java))
@@ -105,28 +111,7 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             rate?.setOnPreferenceClickListener {
-
-                val uri: Uri = Uri.parse("market://details?id=" + context?.packageName)
-                val goToMarket = Intent(Intent.ACTION_VIEW, uri)
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    goToMarket.addFlags(
-                        Intent.FLAG_ACTIVITY_NO_HISTORY or
-                                Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
-                                Intent.FLAG_ACTIVITY_MULTIPLE_TASK
-                    )
-                }
-                try {
-                    startActivity(goToMarket)
-                } catch (e: ActivityNotFoundException) {
-                    startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("http://play.google.com/store/apps/details?id=" + context?.packageName)
-                        )
-                    )
-                }
-
+                goToPlayStore(context)
                 true
             }
 
@@ -140,8 +125,6 @@ class SettingsActivity : AppCompatActivity() {
             support?.setOnPreferenceClickListener {
                 if (mInterstitialAd.isLoaded) {
                     mInterstitialAd.show()
-                } else {
-                   AppLog.Log("TAG", "The interstitial wasn't loaded yet.")
                 }
                 true
             }
@@ -188,6 +171,31 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+
+    companion object{
+        fun goToPlayStore(context:Context?){
+            val uri: Uri = Uri.parse("market://details?id=" + context?.packageName)
+            val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                goToMarket.addFlags(
+                    Intent.FLAG_ACTIVITY_NO_HISTORY or
+                            Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                            Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+                )
+            }
+            try {
+                context?.startActivity(goToMarket)
+            } catch (e: ActivityNotFoundException) {
+                context?.startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("http://play.google.com/store/apps/details?id=" + context.packageName)
+                    )
+                )
+            }
+        }
+    }
 
     override fun onBackPressed() {
         super.onBackPressed()

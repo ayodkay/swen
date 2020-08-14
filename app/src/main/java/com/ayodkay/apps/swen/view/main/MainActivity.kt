@@ -1,10 +1,12 @@
 package com.ayodkay.apps.swen.view.main
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -15,10 +17,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.AppLog
+import com.ayodkay.apps.swen.helper.backend.NotificationReceiver
 import com.ayodkay.apps.swen.view.search.SearchActivity
 import com.facebook.appevents.AppEventsLogger
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
-import java.io.File
+import com.google.firebase.iid.FirebaseInstanceId
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -48,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
 
+        //setUpAlarm(this)
         toolbar.setOnMenuItemClickListener {menuItem->
             when (menuItem.itemId) {
                 R.id.search -> {
@@ -82,6 +88,19 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    AppLog.log(message = "getInstanceId failed ${task.exception}")
+                    return@OnCompleteListener
+                }
+
+                // Get new Instance ID token
+                val token = task.result?.token
+
+                AppLog.log(message = token!!)
+            })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -106,5 +125,27 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         cacheDir.deleteRecursively()
         super.onDestroy()
+    }
+
+
+    private fun setUpAlarm(context: Context){
+        val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmIntent = Intent(context, NotificationReceiver::class.java).let { intent ->
+            intent.putExtra("swen-notify", "notify")
+            PendingIntent.getBroadcast(context, 0, intent, 0)
+        }
+
+        val calendar: Calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, 14)
+            set(Calendar.MINUTE, 8)
+        }
+
+        alarmMgr.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            1000 * 60 * 3,
+            alarmIntent
+        )
     }
 }

@@ -1,62 +1,78 @@
+<?xml version='1.0' encoding='utf8'?>
 <resources>
     <string name="app_name" translatable="false">Swen</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="google_play" translatable="false">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+    <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
+    <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
+    <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+    <string name="msg_token_fmt" translatable="false" />
+
+
     <string name="search">Ищи…</string>
     <string name="select_country">Выберите страну</string>
     <string name="not_found">Статьи не найдены</string>
     <string name="page_title">Новости</string>
-    <string name="content_description_search">поиск новостей</string>
+    <string name="content_description_search">искать новости</string>
     <string name="more">Больше</string>
-    <string name="articles_found">статьи найдены</string>
+    <string name="articles_found">найденные статьи</string>
     <string name="content_description_more">Больше</string>
-    <string name="title_activity_main2">Основное занятие</string>
-
     <string name="menu_general">Общее</string>
     <string name="menu_business">Бизнес</string>
     <string name="menu_entertainment">Развлекательная программа</string>
-    <string name="menu_health">Ура</string>
+    <string name="menu_health">ура</string>
     <string name="menu_science">Наука</string>
-    <string name="menu_sports">Виды спорта</string>
+    <string name="menu_sports">виды спорта</string>
     <string name="menu_technology">Технология</string>
     <string name="menu_corona">COVID-19</string>
-
-    <string name="action_settings">Настройки</string>
-    <string name="action_share">Поделиться приложением</string>
+    <string name="menu_beauty">красота + мода</string>
+    <string name="menu_beautyy">Красота и мода</string>
+    <string name="action_settings">настройки</string>
+    <string name="action_share">Поделитесь приложением</string>
     <string name="title_activity_settings">SettingsActivity</string>
-
-
     <string name="feedback">Отправить отзыв</string>
-    <string name="feedback_summary">Сообщить о технических проблемах или предложить новые функции</string>
-
-
-    <string name="country">Страна</string>
+    <string name="feedback_summary">сообщать о технических проблемах или предлагать новые предложения</string>
+    <string name="country">страна</string>
     <string name="country_summary">изменить выбранную страну</string>
-
     <string name="share">Делиться</string>
-    <string name="share_summary">поделитесь этим ap со своими друзьями</string>
-
-    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
-
-    <string name="share_app">Скачайте приложение Swen и получайте последние новости из любой точки мира, это бесплатно!</string>
-
-
+    <string name="share_summary">поделись этим приложением с друзьями</string>
+    <string name="share_app">Загрузите приложение Swen и получайте последние новости из любой точки мира, это бесплатно!</string>
     <string name="rate">Оценить</string>
     <string name="rate_summary">Оцените это приложение в магазине Google Play</string>
-
     <string name="color">цвет</string>
     <string name="color_summary">изменить цвет темы приложения со светлого на темный</string>
-
-
-    <string name="theme_title">Темы:</string>
+    <string name="theme_title">темы:</string>
     <string name="light_theme">Темная тема</string>
     <string name="dark_theme">Очистить тему</string>
-    <string name="menu_beauty">красота мода</string>
-    <string name="menu_beautyy">Красота</string>
-    <string name="full_article">смотреть полную статью</string>
+    <string name="full_article">см. статью полностью</string>
     <string name="notification_name">Уведомление об обновлении новостей</string>
-    <string name="notification_description">Позвольте нам уведомить вас, чтобы вы не пропустили обновление новостей</string>
-    <string name="news_update">Смотрите последние новости</string>
+    <string name="notification_description">Позвольте нам уведомлять вас, чтобы вы не пропустили никаких обновлений</string>
+    <string name="news_update">Смотри последние новости</string>
     <string name="notification_id">новости ухода</string>
     <string name="text_copied">Текст скопирован в буфер обмена.</string>
     <string name="support">Служба поддержки</string>
-    <string name="dev_support">поддержать разработчика приложения, просмотрев рекламу</string>
+    <string name="dev_support">поддержите разработчика приложения, посмотрев рекламу</string>
+    <string name="permission_granted">разрешение предоставлено, попробуйте поделиться снова</string>
+    <string name="permission_not_granted">вам нужно принять разрешение поделиться</string>
+    <string name="sort">порядок</string>
+    <string name="popularity">популярность</string>
+    <string name="newest">новейший</string>
+    <string name="relevancy">актуальность</string>
+    <string name="sort_news">порядок</string>
+    <string name="native_privacy_information_icon_image">Изображение значка информации о конфиденциальности</string>
+    <string name="learn_more">Знать больше</string>
+    <string name="native_main_image">native_main_image</string>
+    <string name="update_available">обновление доступно</string>
+    <string name="updating">Качаем !!!</string>
+    <string name="updated">Скачал !!!</string>
+    <string name="feedback_suggestions">отзывы и предложения</string>
+    <string name="bookmarks">закладки</string>
+    <string name="bookmark_summary">проверьте все свои любимые новости</string>
+    <string name="share_news">Поделиться новостью</string>
 </resources>

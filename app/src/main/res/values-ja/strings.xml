@@ -1,5 +1,20 @@
+<?xml version='1.0' encoding='utf8'?>
 <resources>
     <string name="app_name" translatable="false">Swen</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="google_play" translatable="false">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+    <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
+    <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
+    <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+    <string name="msg_token_fmt" translatable="false" />
+
+
     <string name="search">検索する…</string>
     <string name="select_country">国を選択</string>
     <string name="not_found">記事は見つかりませんでした</string>
@@ -8,9 +23,6 @@
     <string name="more">もっと</string>
     <string name="articles_found">見つかった記事</string>
     <string name="content_description_more">もっと</string>
-    <string name="title_activity_main2">主な活動</string>
-
-
     <string name="menu_general">一般的な</string>
     <string name="menu_business">ビジネス</string>
     <string name="menu_entertainment">エンターテインメント</string>
@@ -19,47 +31,48 @@
     <string name="menu_sports">スポーツ</string>
     <string name="menu_technology">技術</string>
     <string name="menu_corona">COVID-19</string>
-
-
+    <string name="menu_beauty">美容+ファッション</string>
+    <string name="menu_beautyy">美とファッション</string>
     <string name="action_settings">設定</string>
     <string name="action_share">アプリを共有する</string>
     <string name="title_activity_settings">設定アクティビティ</string>
-
-
     <string name="feedback">フィードバックを送信する</string>
-    <string name="feedback_summary">技術的な問題を報告するか、新機能を提案する</string>
-
-
+    <string name="feedback_summary">技術的な問題を報告するか、新しい提案を提案する</string>
     <string name="country">国</string>
-    <string name="country_summary">選択した国を変更</string>
-
+    <string name="country_summary">選択した国を変更する</string>
     <string name="share">共有する</string>
-    <string name="share_summary">このアプリを友達と共有する</string>
-
-    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
-
+    <string name="share_summary">このアプリを友達と共有</string>
     <string name="share_app">Swenアプリをダウンロードして、世界中のどこからでも最新のニュースを入手してください。無料です！</string>
-
-
     <string name="rate">評価します</string>
     <string name="rate_summary">Google Playストアでこのアプリを評価してください</string>
-
     <string name="color">色</string>
-    <string name="color_summary">アプリのテーマの色を明るい色から暗い色に変更します</string>
-
-
+    <string name="color_summary">アプリケーションのテーマの色を明るい色から暗い色に変更します</string>
     <string name="theme_title">トピック：</string>
     <string name="light_theme">暗いテーマ</string>
     <string name="dark_theme">明確なテーマ</string>
-    <string name="menu_beauty">美容ファッション</string>
-    <string name="menu_beautyy">美しさ</string>
     <string name="full_article">記事全体を見る</string>
     <string name="notification_name">ニュース更新通知</string>
-    <string name="notification_description">ニュースの更新を見逃さないように、お知らせいたします</string>
+    <string name="notification_description">通知を見逃さないようにして、更新を見逃さないようにしてください</string>
     <string name="news_update">最新のニュースを見る</string>
     <string name="notification_id">ケアニュース</string>
-
-    <string name="text_copied">クリップボードにコピーされたテキスト。</string>
+    <string name="text_copied">テキストをクリップボードにコピーしました。</string>
     <string name="support">サポート</string>
     <string name="dev_support">広告を見てアプリ開発者をサポートする</string>
+    <string name="permission_granted">権限が付与されました。もう一度共有してみてください</string>
+    <string name="permission_not_granted">共有する許可を受け入れる必要があります</string>
+    <string name="sort">注文</string>
+    <string name="popularity">人気</string>
+    <string name="newest">最新の</string>
+    <string name="relevancy">関連性</string>
+    <string name="sort_news">注文</string>
+    <string name="native_privacy_information_icon_image">プライバシー情報アイコンの画像</string>
+    <string name="learn_more">もっと知る</string>
+    <string name="native_main_image">native_main_image</string>
+    <string name="update_available">更新が利用可能です</string>
+    <string name="updating">ダウンロード中！</string>
+    <string name="updated">ダウンロードしました!!!</string>
+    <string name="feedback_suggestions">フィードバックと提案</string>
+    <string name="bookmarks">しおり</string>
+    <string name="bookmark_summary">お気に入りのニュースをすべてチェック</string>
+    <string name="share_news">ニュースを共有する</string>
 </resources>

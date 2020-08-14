@@ -1,6 +1,5 @@
 package com.ayodkay.apps.swen.viewmodel
 
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,9 +11,7 @@ import org.json.JSONObject
 
 class NewsViewModel : ViewModel(){
 
-
     private var _news: MutableLiveData<JSONObject>? = null
-
 
     // get all the loaded users
     fun getNews(url:String):MutableLiveData<JSONObject> {
@@ -22,8 +19,6 @@ class NewsViewModel : ViewModel(){
             _news = MutableLiveData()
             loadNews(url)
         }
-
-        Log.d("TAG", "getNews: $url")
         return _news!!
     }
 
@@ -38,7 +33,6 @@ class NewsViewModel : ViewModel(){
 
             override fun onFailure(error: VolleyError?) {
                 super.onFailure(error)
-
                 Toast.makeText(App.context, error.toString(), Toast.LENGTH_SHORT).show()
             }
         }

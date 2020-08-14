@@ -33,7 +33,7 @@ class Notification internal constructor(private val context: Context){
     }
 
 
-    internal fun sendNotification(){
+    internal fun sendNotification(message:String){
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -59,14 +59,14 @@ class Notification internal constructor(private val context: Context){
 
                 builder
                     .setLargeIcon(bigIcon)
-                    .setContentTitle(context.getString(R.string.news_update))
+                    .setContentTitle(message)
                     .setSmallIcon(R.drawable.ic_logo)
                     .setDefaults(NotificationCompat.DEFAULT_ALL)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setContentIntent(pendingIntent)
                     .setWhen(System.currentTimeMillis())
                     .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setAutoCancel(false)
+                    .setAutoCancel(true)
                 notificationManager.notify(
                     UPDATE_NOTIFICATION, builder.build())
             }
@@ -74,14 +74,14 @@ class Notification internal constructor(private val context: Context){
             Build.VERSION.SDK_INT < Build.VERSION_CODES.O-> {
                 builder
                     .setLargeIcon(bigIcon)
-                    .setContentTitle(context.getString(R.string.news_update))
+                    .setContentTitle(message)
                     .setSmallIcon(R.drawable.ic_logo)
                     .setDefaults(NotificationCompat.DEFAULT_ALL)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setContentIntent(pendingIntent)
                     .setWhen(System.currentTimeMillis())
                     .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setAutoCancel(false)
+                    .setAutoCancel(true)
                 notificationManager.notify(
                     UPDATE_NOTIFICATION, builder.build())
             }

@@ -9,6 +9,7 @@
 
 
     <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_logo_white"
@@ -18,5 +19,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </ImageView>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/updating"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/updating" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

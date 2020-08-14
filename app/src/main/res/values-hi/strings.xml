@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf8'?>
+<resources>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="google_play" translatable="false">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+    <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
+    <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
+    <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+    <string name="msg_token_fmt" translatable="false" />
+
+
+    <string name="search">निम्न को खोजें…</string>
+    <string name="select_country">देश चुनिए</string>
+    <string name="not_found">कोई लेख नहीं मिला</string>
+    <string name="page_title">समाचार</string>
+    <string name="content_description_search">खोज खबर</string>
+    <string name="more">अधिक</string>
+    <string name="articles_found">लेख मिले</string>
+    <string name="content_description_more">अधिक</string>
+    <string name="menu_general">सामान्य</string>
+    <string name="menu_business">व्यापार</string>
+    <string name="menu_entertainment">मनोरंजन</string>
+    <string name="menu_health">चियर्स</string>
+    <string name="menu_science">विज्ञान</string>
+    <string name="menu_sports">खेल</string>
+    <string name="menu_technology">प्रौद्योगिकी</string>
+    <string name="menu_corona">कोविड -19</string>
+    <string name="menu_beauty">सौंदर्य + फैशन</string>
+    <string name="menu_beautyy">सौंदर्य और फैशन</string>
+    <string name="action_settings">समायोजन</string>
+    <string name="action_share">ऐप को शेयर करें</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="feedback">प्रतिक्रिया भेजें</string>
+    <string name="feedback_summary">तकनीकी समस्याओं की रिपोर्ट करें या नए सुझाव दें</string>
+    <string name="country">देश</string>
+    <string name="country_summary">चयनित देश को बदलें</string>
+    <string name="share">साझा करने के लिए</string>
+    <string name="share_summary">इस एप्लिकेशन को अपने दोस्तों के साथ साझा करें</string>
+    <string name="share_app">स्वेन ऐप डाउनलोड करें और दुनिया में कहीं से भी नवीनतम समाचार प्राप्त करें, यह मुफ़्त है!</string>
+    <string name="rate">मूल्यांकन करना</string>
+    <string name="rate_summary">इस ऐप को google play store पर रेट करें</string>
+    <string name="color">रंग</string>
+    <string name="color_summary">एप्लिकेशन थीम रंग को प्रकाश से अंधेरे में बदलें</string>
+    <string name="theme_title">विषय:</string>
+    <string name="light_theme">डार्क थीम</string>
+    <string name="dark_theme">स्पष्ट विषय</string>
+    <string name="full_article">पूरा लेख देखें</string>
+    <string name="notification_name">समाचार अद्यतन अधिसूचना</string>
+    <string name="notification_description">हमें आपको सूचित करने की अनुमति दें ताकि आप किसी भी अपडेट को याद न करें</string>
+    <string name="news_update">ताजा खबर देखें</string>
+    <string name="notification_id">खबर की देखभाल</string>
+    <string name="text_copied">क्लिपबोर्ड पर पाठ कॉपी किया गया।</string>
+    <string name="support">सहयोग</string>
+    <string name="dev_support">एक विज्ञापन देखकर ऐप डेवलपर का समर्थन करें</string>
+    <string name="permission_granted">अनुमति दी गई है, फिर से साझा करने का प्रयास करें</string>
+    <string name="permission_not_granted">आपको साझा करने की अनुमति स्वीकार करने की आवश्यकता है</string>
+    <string name="sort">गण</string>
+    <string name="popularity">लोकप्रियता</string>
+    <string name="newest">नवीनतम</string>
+    <string name="relevancy">प्रासंगिकता</string>
+    <string name="sort_news">गण</string>
+    <string name="native_privacy_information_icon_image">गोपनीयता जानकारी आइकन की तस्वीर</string>
+    <string name="learn_more">अधिक जानने के लिए</string>
+    <string name="native_main_image">native_main_image</string>
+    <string name="update_available">अद्यतन उपलब्ध है</string>
+    <string name="updating">डाउनलोडिंग !!!</string>
+    <string name="updated">डाउनलोड किया गया !!!</string>
+    <string name="feedback_suggestions">प्रतिक्रिया और सुझाव</string>
+    <string name="bookmarks">बुकमार्क</string>
+    <string name="bookmark_summary">अपने सभी पसंदीदा समाचार की जाँच करें</string>
+    <string name="share_news">खबर साझा करें</string>
+</resources>

@@ -1,3 +1,0 @@
-task generateTranslates(type: Exec){
-    commandLine 'python3', 'Retranslator.py'
-}

@@ -1,68 +1,78 @@
+<?xml version='1.0' encoding='utf8'?>
 <resources>
     <string name="app_name" translatable="false">Swen</string>
-    <string name="search">Buscar…</string>
-    <string name="select_country">seleccionar país</string>
-    <string name="not_found">Ningún artículo encontrado</string>
-    <string name="page_title">Noticias</string>
-    <string name="content_description_search">buscar noticias</string>
-    <string name="more">más</string>
-    <string name="articles_found">artículos encontrados</string>
-    <string name="content_description_more">más</string>
-    <string name="title_activity_main2">Actividad principal</string>
-
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="facebook_app_id" translatable="false">559676741602917</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="google_play" translatable="false">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+    <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
+    <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
+    <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+    <string name="msg_token_fmt" translatable="false" />
 
 
+    <string name="search">Procurar…</string>
+    <string name="select_country">Seleccionar país</string>
+    <string name="not_found">No se encontraron artículos</string>
+    <string name="page_title">Noticias</string>
+    <string name="content_description_search">buscar noticias</string>
+    <string name="more">Más</string>
+    <string name="articles_found">artículos encontrados</string>
+    <string name="content_description_more">Más</string>
     <string name="menu_general">General</string>
-    <string name="menu_business">Negocio</string>
+    <string name="menu_business">El negocio</string>
     <string name="menu_entertainment">Entretenimiento</string>
     <string name="menu_health">Salud</string>
     <string name="menu_science">Ciencias</string>
     <string name="menu_sports">Deportes</string>
     <string name="menu_technology">Tecnología</string>
     <string name="menu_corona">COVID-19</string>
-
-
-    <string name="action_settings">Configuraciones</string>
-    <string name="action_share">Compartir aplicación</string>
-    <string name="title_activity_settings">ConfiguracionesActividad</string>
-
-
+    <string name="menu_beauty">belleza + moda</string>
+    <string name="menu_beautyy">Belleza y Moda</string>
+    <string name="action_settings">ajustes</string>
+    <string name="action_share">Comparte la aplicación</string>
+    <string name="title_activity_settings">Configuración Actividad</string>
     <string name="feedback">Enviar comentarios</string>
-    <string name="feedback_summary">Informar problemas técnicos o sugerir nuevas funciones</string>
-
-
+    <string name="feedback_summary">informar problemas técnicos o sugerir nuevas sugerencias</string>
     <string name="country">País</string>
-    <string name="country_summary">cambiar país seleccionado</string>
-
-    <string name="share">Compartir</string>
-    <string name="share_summary">comparte este app con tus amigos</string>
-
-    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
-
-    <string name="share_app">Descargue la aplicación Swen y obtenga las últimas noticias de última hora desde cualquier parte del mundo, ¡es gratis!</string>
-
-
-    <string name="rate">Evaluar</string>
-    <string name="rate_summary">califica esta aplicación en Google Play Store</string>
-
+    <string name="country_summary">cambiar el país seleccionado</string>
+    <string name="share">Para compartir</string>
+    <string name="share_summary">comparte esta aplicación con tus amigos</string>
+    <string name="share_app">Descarga la aplicación Swen y recibe las últimas noticias desde cualquier parte del mundo, ¡es gratis!</string>
+    <string name="rate">Para evaluar</string>
+    <string name="rate_summary">Califica esta aplicación en Google Play Store</string>
     <string name="color">Color</string>
-    <string name="color_summary">cambia el color del tema de esta aplicación de claro a oscuro</string>
-
-
+    <string name="color_summary">cambiar el color del tema de la aplicación de claro a oscuro</string>
     <string name="theme_title">Temas:</string>
     <string name="light_theme">Tema oscuro</string>
-    <string name="dark_theme">Tema ligero</string>
-    <string name="menu_beauty">belleza+moda</string>
-    <string name="menu_beautyy">Belleza &amp; Moda</string>
-    <string name="full_article">ver artículo completo</string>
+    <string name="dark_theme">Tema claro</string>
+    <string name="full_article">ver articulo completo</string>
     <string name="notification_name">Notificación de actualización de noticias</string>
-    <string name="notification_description">Permítanos notificarle para que no se pierda una actualización de noticias</string>
-    <string name="news_update">Ver la última actualización de noticias</string>
-    <string name="notification_id">swen news</string>
-
-    <string name = "text_copied">Texto copiado en el portapapeles.</string>
-    <string name = "support">Apoyo</string>
-    <string name = "dev_support">apoya al desarrollador de la aplicación viendo un anuncio</string>
+    <string name="notification_description">Permítanos notificarle para que no se pierda ninguna actualización.</string>
+    <string name="news_update">Ver las ultimas noticias</string>
+    <string name="notification_id">noticias de cuidado</string>
+    <string name="text_copied">Texto copiado al portapapeles.</string>
+    <string name="support">Apoyo</string>
+    <string name="dev_support">apoyar al desarrollador de la aplicación viendo un anuncio</string>
+    <string name="permission_granted">permiso concedido, intenta compartir de nuevo</string>
+    <string name="permission_not_granted">necesitas aceptar permiso para compartir</string>
+    <string name="sort">ordenar</string>
+    <string name="popularity">popularidad</string>
+    <string name="newest">el más nuevo</string>
+    <string name="relevancy">Relevancia</string>
+    <string name="sort_news">ordenar</string>
+    <string name="native_privacy_information_icon_image">Imagen del icono de información de privacidad</string>
+    <string name="learn_more">Saber mas</string>
+    <string name="native_main_image">native_main_image</string>
+    <string name="update_available">actualización disponible</string>
+    <string name="updating">Descargando !!!</string>
+    <string name="updated">Descargado !!!</string>
+    <string name="feedback_suggestions">comentarios y sugerencias</string>
+    <string name="bookmarks">Favoritos</string>
+    <string name="bookmark_summary">revisa todas tus noticias favoritas</string>
+    <string name="share_news">Compartir noticias</string>
 </resources>

@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf8'?>
+<resources>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="google_play" translatable="false">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+    <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
+    <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
+    <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+    <string name="msg_token_fmt" translatable="false" />
+
+
+    <string name="search">Hledat…</string>
+    <string name="select_country">Vyberte zemi</string>
+    <string name="not_found">Nebyly nalezeny žádné články</string>
+    <string name="page_title">Zprávy</string>
+    <string name="content_description_search">hledat zprávy</string>
+    <string name="more">Více</string>
+    <string name="articles_found">nalezeny články</string>
+    <string name="content_description_more">Více</string>
+    <string name="menu_general">Všeobecné</string>
+    <string name="menu_business">Podnikání</string>
+    <string name="menu_entertainment">Zábava</string>
+    <string name="menu_health">Na zdraví</string>
+    <string name="menu_science">Věda</string>
+    <string name="menu_sports">sportovní</string>
+    <string name="menu_technology">Technologie</string>
+    <string name="menu_corona">Covid-19</string>
+    <string name="menu_beauty">krása + móda</string>
+    <string name="menu_beautyy">Krása a móda</string>
+    <string name="action_settings">nastavení</string>
+    <string name="action_share">Sdílet aplikaci</string>
+    <string name="title_activity_settings">NastaveníAktivita</string>
+    <string name="feedback">Poslat zpětnou vazbu</string>
+    <string name="feedback_summary">nahlásit technické problémy nebo navrhnout nové návrhy</string>
+    <string name="country">země</string>
+    <string name="country_summary">změnit vybranou zemi</string>
+    <string name="share">Sdílet</string>
+    <string name="share_summary">sdílet tuto aplikaci se svými přáteli</string>
+    <string name="share_app">Stáhněte si aplikaci Swen a získejte nejnovější zprávy odkudkoli na světě, je to zdarma!</string>
+    <string name="rate">Vyhodnotit</string>
+    <string name="rate_summary">hodnotit tuto aplikaci v obchodě Google Play</string>
+    <string name="color">Barva</string>
+    <string name="color_summary">změňte barvu motivu aplikace ze světlé na tmavou</string>
+    <string name="theme_title">Témata:</string>
+    <string name="light_theme">Tmavé téma</string>
+    <string name="dark_theme">Jasné téma</string>
+    <string name="full_article">viz celý článek</string>
+    <string name="notification_name">Oznámení o aktualizaci zpráv</string>
+    <string name="notification_description">Dovolte nám vás upozornit, aby vám neunikly žádné aktualizace</string>
+    <string name="news_update">Podívejte se na nejnovější zprávy</string>
+    <string name="notification_id">péče zprávy</string>
+    <string name="text_copied">Text byl zkopírován do schránky.</string>
+    <string name="support">Podpěra, podpora</string>
+    <string name="dev_support">podporujte vývojáře aplikací sledováním reklamy</string>
+    <string name="permission_granted">udělení povolení, zkuste sdílení znovu</string>
+    <string name="permission_not_granted">musíte přijmout povolení ke sdílení</string>
+    <string name="sort">objednat</string>
+    <string name="popularity">popularita</string>
+    <string name="newest">nejnovější</string>
+    <string name="relevancy">relevantnost</string>
+    <string name="sort_news">objednat</string>
+    <string name="native_privacy_information_icon_image">Obrázek ikony informací o soukromí</string>
+    <string name="learn_more">Chcete-li vědět více</string>
+    <string name="native_main_image">native_main_image</string>
+    <string name="update_available">aktualizace je k dispozici</string>
+    <string name="updating">Stahování !!!</string>
+    <string name="updated">Staženo !!!</string>
+    <string name="feedback_suggestions">zpětná vazba a návrhy</string>
+    <string name="bookmarks">Záložky</string>
+    <string name="bookmark_summary">zkontrolujte všechny své oblíbené zprávy</string>
+    <string name="share_news">Sdílet novinky</string>
+</resources>

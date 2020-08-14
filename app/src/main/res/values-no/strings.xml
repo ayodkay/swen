@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf8'?>
+<resources>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="google_play" translatable="false">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+    <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
+    <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
+    <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+    <string name="msg_token_fmt" translatable="false" />
+
+
+    <string name="search">Søk etter…</string>
+    <string name="select_country">Velg land</string>
+    <string name="not_found">Ingen artikler funnet</string>
+    <string name="page_title">Nyheter</string>
+    <string name="content_description_search">søk nyheter</string>
+    <string name="more">Mer</string>
+    <string name="articles_found">artikler funnet</string>
+    <string name="content_description_more">Mer</string>
+    <string name="menu_general">Generell</string>
+    <string name="menu_business">Bedriften</string>
+    <string name="menu_entertainment">Underholdning</string>
+    <string name="menu_health">Jubel</string>
+    <string name="menu_science">Vitenskap</string>
+    <string name="menu_sports">sport</string>
+    <string name="menu_technology">Teknologi</string>
+    <string name="menu_corona">Covid-19</string>
+    <string name="menu_beauty">skjønnhet + mote</string>
+    <string name="menu_beautyy">Skjønnhet og mote</string>
+    <string name="action_settings">innstillinger</string>
+    <string name="action_share">Del appen</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="feedback">Send tilbakemelding</string>
+    <string name="feedback_summary">rapporter tekniske problemer eller foreslå nye forslag</string>
+    <string name="country">land</string>
+    <string name="country_summary">endre det valgte landet</string>
+    <string name="share">Å dele</string>
+    <string name="share_summary">del denne appen med vennene dine</string>
+    <string name="share_app">Last ned Swen-appen og få de siste nyhetene fra hvor som helst i verden, det er gratis!</string>
+    <string name="rate">Å evaluere</string>
+    <string name="rate_summary">rangere denne appen på google play store</string>
+    <string name="color">Farge</string>
+    <string name="color_summary">endre søknadens temafarge fra lys til mørk</string>
+    <string name="theme_title">emner:</string>
+    <string name="light_theme">Mørkt tema</string>
+    <string name="dark_theme">Klart tema</string>
+    <string name="full_article">se hele artikkelen</string>
+    <string name="notification_name">Varsel om nyhetsoppdatering</string>
+    <string name="notification_description">Tillat oss å varsle deg slik at du ikke går glipp av noen oppdateringer</string>
+    <string name="news_update">Se de siste nyhetene</string>
+    <string name="notification_id">omsorgsnyheter</string>
+    <string name="text_copied">Tekst kopiert til utklippstavlen.</string>
+    <string name="support">Brukerstøtte</string>
+    <string name="dev_support">støtte apputvikleren ved å se på en annonse</string>
+    <string name="permission_granted">tillatelse gitt, prøv å dele igjen</string>
+    <string name="permission_not_granted">du må godta tillatelse til å dele</string>
+    <string name="sort">rekkefølge</string>
+    <string name="popularity">popularitet</string>
+    <string name="newest">Det nyeste</string>
+    <string name="relevancy">relevans</string>
+    <string name="sort_news">rekkefølge</string>
+    <string name="native_privacy_information_icon_image">Bilde av ikonet for personvern</string>
+    <string name="learn_more">For å vite mer</string>
+    <string name="native_main_image">native_main_image</string>
+    <string name="update_available">oppdatering er tilgjengelig</string>
+    <string name="updating">Laster ned !!!</string>
+    <string name="updated">Lastet ned !!!</string>
+    <string name="feedback_suggestions">tilbakemelding og forslag</string>
+    <string name="bookmarks">bokmerker</string>
+    <string name="bookmark_summary">sjekk alle favorittnyhetene dine</string>
+    <string name="share_news">Del nyheter</string>
+</resources>

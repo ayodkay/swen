@@ -1,66 +1,77 @@
 <resources>
     <string name="app_name" translatable="false">Swen</string>
-    <string name="search">Ricerca…</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="google_play" translatable="false">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+    <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
+    <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
+    <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+    <string name="msg_token_fmt" translatable="false" />
+
+
+    <string name="search">Cercare…</string>
     <string name="select_country">Seleziona il paese</string>
     <string name="not_found">Nessun articolo trovato</string>
-    <string name="page_title">Notizia</string>
+    <string name="page_title">notizia</string>
     <string name="content_description_search">cerca notizie</string>
     <string name="more">Di Più</string>
     <string name="articles_found">articoli trovati</string>
     <string name="content_description_more">Di Più</string>
-    <string name="title_activity_main2">Attività principale</string>
-
     <string name="menu_general">Generale</string>
-    <string name="menu_business">Attività Commerciale</string>
+    <string name="menu_business">Il business</string>
     <string name="menu_entertainment">Divertimento</string>
-    <string name="menu_health">Salute</string>
+    <string name="menu_health">Saluti</string>
     <string name="menu_science">Scienza</string>
-    <string name="menu_sports">Gli sport</string>
+    <string name="menu_sports">gli sport</string>
     <string name="menu_technology">Tecnologia</string>
     <string name="menu_corona">Covid-19</string>
-    <string name="menu_beauty">moda+bellezza</string>
-    <string name="menu_beautyy">Bellezza</string>
-
-
-    <string name="action_settings">Impostazioni</string>
-    <string name="action_share">Condividi app</string>
+    <string name="menu_beauty">bellezza + moda</string>
+    <string name="menu_beautyy">Bellezza e moda</string>
+    <string name="action_settings">impostazioni</string>
+    <string name="action_share">Condividi l\'app</string>
     <string name="title_activity_settings">SettingsActivity</string>
-
-
     <string name="feedback">Invia feedback</string>
-    <string name="feedback_summary">segnala problemi tecnici o suggerisci nuove funzionalità</string>
-
-
-    <string name="country">Nazione</string>
-    <string name="country_summary">cambia il paese selezionato</string>
-
+    <string name="feedback_summary">segnalare problemi tecnici o suggerire nuovi suggerimenti</string>
+    <string name="country">nazione</string>
+    <string name="country_summary">cambiare il paese selezionato</string>
     <string name="share">Condividere</string>
     <string name="share_summary">condividi questa app con i tuoi amici</string>
-
-    <string name="google_play">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
-
-    <string name="share_app">Scarica l app Swen e ricevi le ultime notizie da qualsiasi parte del mondo, è gratis!</string>
-
-
+    <string name="share_app">Scarica l\'app Swen e ricevi le ultime notizie da qualsiasi parte del mondo, è gratis!</string>
     <string name="rate">Valutare</string>
-    <string name="rate_summary">valuta questa app sul Google Play Store</string>
-
+    <string name="rate_summary">valuta questa app su Google Play Store</string>
     <string name="color">Colore</string>
-    <string name="color_summary">cambia il colore di questo tema dell app da chiaro a scuro</string>
-
-
+    <string name="color_summary">cambiare il colore del tema dell\'applicazione da chiaro a scuro</string>
     <string name="theme_title">Temi:</string>
-    <string name="light_theme">Tema scuro</string>
-    <string name="dark_theme">Tema leggero</string>
-    
-    <string name="full_article">visualizza l\'articolo completo</string>
-    <string name="notification_name">Notifica aggiornamento notizie</string>
-    <string name="notification_description">Consentici di avvisarti in modo da non perdere un aggiornamento delle notizie</string>
-    <string name="news_update">Vedi l\'ultimo aggiornamento delle notizie</string>
-    <string name="notification_id">swen news</string>
-
-
-    <string name = "text_copied">Testo copiato negli appunti.</string>
-    <string name = "support">Supporto</string>
-    <string name = "dev_support"> supporta lo sviluppatore dell\'app guardando un annuncio </string>
+    <string name="light_theme">Tema escuro</string>
+    <string name="dark_theme">Tema claro</string>
+    <string name="full_article">vedi articolo completo</string>
+    <string name="notification_name">Notifica di aggiornamento delle notizie</string>
+    <string name="notification_description">Consentici di avvisarti in modo da non perdere nessun aggiornamento</string>
+    <string name="news_update">Guarda le ultime notizie</string>
+    <string name="notification_id">notizie sulla cura</string>
+    <string name="text_copied">Testo copiato negli appunti.</string>
+    <string name="support">Supporto</string>
+    <string name="dev_support">supportare lo sviluppatore dell\'app guardando un annuncio</string>
+    <string name="permission_granted">autorizzazione concessa, prova a condividere di nuovo</string>
+    <string name="permission_not_granted">devi accettare l\'autorizzazione per condividere</string>
+    <string name="sort">ordine</string>
+    <string name="popularity">popolarità</string>
+    <string name="newest">il più recente</string>
+    <string name="relevancy">rilevanza</string>
+    <string name="sort_news">ordine</string>
+    <string name="native_privacy_information_icon_image">Immagine dell\'icona delle informazioni sulla privacy</string>
+    <string name="learn_more">Per saperne di più</string>
+    <string name="native_main_image">native_main_image</string>
+    <string name="update_available">l\'aggiornamento è disponibile</string>
+    <string name="updating">Download in corso !!!</string>
+    <string name="updated">Scaricato !!!</string>
+    <string name="feedback_suggestions">feedback e suggerimenti</string>
+    <string name="bookmarks">segnalibri</string>
+    <string name="bookmark_summary">controlla tutte le tue notizie preferite</string>
+    <string name="share_news">Condividi notizie</string>
 </resources>

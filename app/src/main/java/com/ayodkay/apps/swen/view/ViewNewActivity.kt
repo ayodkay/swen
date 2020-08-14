@@ -13,18 +13,22 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.ayodkay.apps.swen.R
 import com.facebook.share.model.ShareLinkContent
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.dynamiclinks.ktx.androidParameters
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
+import com.google.firebase.dynamiclinks.ktx.shortLinkAsync
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -33,11 +37,12 @@ import java.io.ByteArrayOutputStream
 
 class ViewNewActivity : AppCompatActivity() {
 
+    private lateinit var shareNews:Intent
+
     override fun onStart() {
         super.onStart()
 
-        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        when (currentNightMode) {
+        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_NO -> {
 
             } // Night mode is not active, we're using the light theme
@@ -54,6 +59,8 @@ class ViewNewActivity : AppCompatActivity() {
         MobileAds.initialize(this)
         val adRequest = AdRequest.Builder().build()
 
+        var dynamicLink = ""
+
         val url = intent?.extras?.get("url") as String
         val image = intent?.extras?.get("image") as String
         val title = intent?.extras?.get("title") as String
@@ -69,6 +76,15 @@ class ViewNewActivity : AppCompatActivity() {
         val share = findViewById<ImageView>(R.id.share)
         val article = findViewById<MaterialButton>(R.id.full_article)
 
+        Firebase.dynamicLinks.shortLinkAsync {
+            link = Uri.parse(url)
+            domainUriPrefix = getString(R.string.domainUriPrefix)
+            androidParameters{}
+        }.addOnSuccessListener { result ->
+            dynamicLink = result.shortLink.toString()
+        }.addOnFailureListener {}
+
+
         share.setOnClickListener {
             if (!image.isBlank()){
                 Picasso.get().load(image).into(object : Target {
@@ -77,14 +93,14 @@ class ViewNewActivity : AppCompatActivity() {
                         shareNews.type = "image/jpeg"
                         shareNews.putExtra(
                             Intent.EXTRA_TEXT,
-                            "${resources.getString(R.string.share_app)} ${resources.getString(R.string.bit_ly)}\n\n${title}\n${url}"
+                            "${title}\n${dynamicLink}"
                         )
                         try {
                             val uri = getImageUri(bitmap)
                             shareNews.putExtra(
                                 Intent.EXTRA_STREAM,uri
                             )
-                            startActivity(Intent.createChooser(shareNews, "Share News"))
+                            startActivity(Intent.createChooser(shareNews, getString(R.string.share_news)))
                         }catch (e:Exception){
                             checkPermission()
                         }
@@ -96,14 +112,14 @@ class ViewNewActivity : AppCompatActivity() {
                     }
                 })
             }else{
-                val shareNews = Intent(Intent.ACTION_SEND)
+                shareNews = Intent(Intent.ACTION_SEND)
                 shareNews.type = "text/plain"
                 shareNews.putExtra(
                     Intent.EXTRA_TEXT,
-                    "${resources.getString(R.string.share_app)} ${resources.getString(R.string.bit_ly)}\n\n${title}\n${url}"
+                    "\n\n${title}\n${dynamicLink}"
                 )
 
-                startActivity(Intent.createChooser(shareNews, "Share News"))
+                startActivity(Intent.createChooser(shareNews, getString(R.string.share_news)))
             }
         }
 
@@ -119,7 +135,7 @@ class ViewNewActivity : AppCompatActivity() {
                     getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip: ClipData =
                     ClipData
-                        .newPlainText("label", "${resources.getString(R.string.share_app)} ${resources.getString(R.string.bit_ly)}\n\n\n\n$title")
+                        .newPlainText("label", "$title\n\n$dynamicLink")
                 clipboard.setPrimaryClip(clip)
                 Toast.makeText(this@ViewNewActivity, getString(R.string.text_copied), Toast.LENGTH_SHORT).show()
 
@@ -153,18 +169,17 @@ class ViewNewActivity : AppCompatActivity() {
 
                 }
                 override fun onError(e: Exception?) {
-                    imageView.setImageDrawable(resources.getDrawable(R.drawable.ic_undraw_page_not_found_su7k))
+                    imageView.setImageDrawable(ResourcesCompat.getDrawable(resources,R.drawable.ic_undraw_page_not_found_su7k,null))
+
                 }
 
             })
         } catch (e: Exception) {
-            imageView.setImageDrawable(resources.getDrawable(R.drawable.ic_undraw_page_not_found_su7k))
+            imageView.setImageDrawable(ResourcesCompat.getDrawable(resources,R.drawable.ic_undraw_page_not_found_su7k,null))
         }
     }
 
     fun getImageUri(inImage: Bitmap): Uri? {
-        Log.d("TAG", "getImageUri: $inImage")
-
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
          val path: String = MediaStore.Images.Media.insertImage(
@@ -189,10 +204,11 @@ class ViewNewActivity : AppCompatActivity() {
                 if ((grantResults.isNotEmpty() &&
                             grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
 
-                    Toast.makeText(this, "permission granted try sharing again", Toast.LENGTH_SHORT)
+                    startActivity(Intent.createChooser(shareNews, getString(R.string.share_news)))
+                    Toast.makeText(this, getString(R.string.permission_granted), Toast.LENGTH_SHORT)
                         .show()
                 } else {
-                    Toast.makeText(this, "you need accept permission to share", Toast.LENGTH_SHORT)
+                    Toast.makeText(this, getString(R.string.permission_not_granted), Toast.LENGTH_SHORT)
                         .show()
                 }
 
@@ -220,16 +236,5 @@ class ViewNewActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun isAppInstalled(packageName: String): Boolean {
-        return try {
-            packageManager.getApplicationInfo(packageName, 0)
-            true
-        } catch (e: PackageManager.NameNotFoundException) {
-            false
-        }
-    }
-
-
 
 }

@@ -5,7 +5,7 @@ import android.util.Log
 
 object AppLog {
     @JvmStatic
-    fun Log(tag: String?, message: String) {
+    fun log(tag: String= "tag", message: Any) {
         if (BuildConfig.DEBUG) {
             Log.d(tag, "AppLog: $message")
         }

@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf8'?>
+<resources>
+    <string name="app_name" translatable="false">Swen</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="facebook_app_id" translatable="false">559676741602917</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
+    <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
+    <string name="google_play" translatable="false">https://play.google.com/store/apps/details?id=com.ayodkay.apps.swen</string>
+    <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
+    <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
+    <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+    <string name="msg_token_fmt" translatable="false" />
+
+
+    <string name="search">Pencarian untuk…</string>
+    <string name="select_country">Pilih negara</string>
+    <string name="not_found">Artikel tidak ditemukan</string>
+    <string name="page_title">Berita</string>
+    <string name="content_description_search">cari berita</string>
+    <string name="more">Lebih</string>
+    <string name="articles_found">artikel ditemukan</string>
+    <string name="content_description_more">Lebih</string>
+    <string name="menu_general">Umum</string>
+    <string name="menu_business">Bisnis</string>
+    <string name="menu_entertainment">Hiburan</string>
+    <string name="menu_health">Bersulang</string>
+    <string name="menu_science">Ilmu</string>
+    <string name="menu_sports">olahraga</string>
+    <string name="menu_technology">Teknologi</string>
+    <string name="menu_corona">Covid-19</string>
+    <string name="menu_beauty">kecantikan + mode</string>
+    <string name="menu_beautyy">Kecantikan dan Fashion</string>
+    <string name="action_settings">pengaturan</string>
+    <string name="action_share">Bagikan aplikasi</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="feedback">Kirim umpan balik</string>
+    <string name="feedback_summary">laporkan masalah teknis atau sarankan saran baru</string>
+    <string name="country">negara</string>
+    <string name="country_summary">ubah negara yang dipilih</string>
+    <string name="share">Untuk berbagi</string>
+    <string name="share_summary">bagikan aplikasi ini dengan teman-teman Anda</string>
+    <string name="share_app">Unduh aplikasi Swen dan dapatkan berita terbaru dari mana saja di dunia, gratis!</string>
+    <string name="rate">Untuk mengevaluasi</string>
+    <string name="rate_summary">nilai aplikasi ini di google play store</string>
+    <string name="color">Warna</string>
+    <string name="color_summary">ubah warna tema aplikasi dari terang menjadi gelap</string>
+    <string name="theme_title">Topik:</string>
+    <string name="light_theme">Tema gelap</string>
+    <string name="dark_theme">Tema claro</string>
+    <string name="full_article">lihat artikel lengkap</string>
+    <string name="notification_name">Pemberitahuan pembaruan berita</string>
+    <string name="notification_description">Izinkan kami memberi tahu Anda agar Anda tidak ketinggalan pembaruan apa pun</string>
+    <string name="news_update">Lihat berita terbaru</string>
+    <string name="notification_id">berita perawatan</string>
+    <string name="text_copied">Teks disalin ke papan klip.</string>
+    <string name="support">Dukung</string>
+    <string name="dev_support">mendukung pengembang aplikasi dengan menonton iklan</string>
+    <string name="permission_granted">izin diberikan, coba bagikan lagi</string>
+    <string name="permission_not_granted">Anda perlu menerima izin untuk berbagi</string>
+    <string name="sort">memesan</string>
+    <string name="popularity">kepopuleran</string>
+    <string name="newest">yang terbaru</string>
+    <string name="relevancy">relevansi</string>
+    <string name="sort_news">memesan</string>
+    <string name="native_privacy_information_icon_image">Gambar ikon informasi privasi</string>
+    <string name="learn_more">Untuk mengetahui lebih lanjut</string>
+    <string name="native_main_image">native_main_image</string>
+    <string name="update_available">pembaruan tersedia</string>
+    <string name="updating">Mengunduh !!!</string>
+    <string name="updated">Diunduh !!!</string>
+    <string name="feedback_suggestions">umpan balik dan saran</string>
+    <string name="bookmarks">Bookmark</string>
+    <string name="bookmark_summary">periksa semua berita favorit Anda</string>
+    <string name="share_news">Bagikan berita</string>
+</resources>

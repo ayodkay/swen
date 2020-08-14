@@ -1,4 +1,4 @@
-package com.ayodkay.apps.swen.helper.room.info
+package com.ayodkay.apps.swen.helper.room.country
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
