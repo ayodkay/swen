@@ -55,9 +55,9 @@ class NewsApiClient {
         fun getTopHeadline(
             newsApiClient: NewsApiClient,
             q:String?="", sources:String?="", category:String?="", language:String?="",
-            country:String?=""): String{
+            country:String?="",  pageSize:Int): String{
     
-            return "https://newsapi.org/v2/top-headlines?q=${q}&sources=${sources}&category=${category}&language=${language}&country=${country}&apiKey=${newsApiClient.apiKey()}"
+            return "https://newsapi.org/v2/top-headlines?q=${q}&sources=${sources}&category=${category}&pageSize=${pageSize}&language=${language}&country=${country}&apiKey=${newsApiClient.apiKey()}"
         }
 
         @JvmStatic
@@ -65,9 +65,9 @@ class NewsApiClient {
         fun getEverything(
             newsApiClient: NewsApiClient,
             q:String?="", sources:String?="", domains:String?="", from_param:String?="",
-            to:String?="", language:String?="", sort_by:String?="", page:Int?=1): String {
+            to:String?="", language:String?="", sort_by:String?="", pageSize:Int): String {
     
-            return "https://newsapi.org/v2/everything?q=${q}&sources=${sources}&domains=${domains}&from_param=${from_param}&to=${to}&language=${language}&sort_by=${sort_by}&page=${page}&apiKey=${newsApiClient.apiKey()}"
+            return "https://newsapi.org/v2/everything?q=${q}&sources=${sources}&domains=${domains}&from_param=${from_param}&to=${to}&language=${language}&sort_by=${sort_by}&pageSize=${pageSize}&apiKey=${newsApiClient.apiKey()}"
         }
 
 
@@ -122,7 +122,7 @@ class NewsApiClient {
             newsViewModel.getNews(
                 getTopHeadline(
                     newsApiClient,
-                    country = db.countryDao().getAll().country, q = q,category = category
+                    country = db.countryDao().getAll().country, q = q,category = category,pageSize = 100
                 )
             ).observe(frag.viewLifecycleOwner, Observer {
                 if (it.getInt("totalResults") == 0) {
@@ -165,7 +165,7 @@ class NewsApiClient {
                     q = q,
                     sort_by = "newest",
                     language = db.countryDao().getAll().iso,
-                    page = 5
+                    pageSize = 100
                 )
             ).observe(frag.viewLifecycleOwner, Observer {
                 if (it.getInt("totalResults") == 0) {

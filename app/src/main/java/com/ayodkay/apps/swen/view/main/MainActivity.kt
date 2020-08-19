@@ -19,7 +19,6 @@ import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.backend.NotificationReceiver
 import com.ayodkay.apps.swen.view.search.SearchActivity
-import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.iid.FirebaseInstanceId
@@ -47,7 +46,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        logSentFriendRequestEvent()
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -82,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_sports,
                 R.id.nav_technology,
                 R.id.nav_corona,
+                R.id.nav_politics,
                 R.id.nav_beauty,
                 R.id.settings
             ), drawerLayout
@@ -113,13 +112,6 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
-
-
-    private fun logSentFriendRequestEvent() {
-        val logger = AppEventsLogger.newLogger(this)
-
-        logger.logEvent("sentFriendRequest")
     }
 
     override fun onDestroy() {

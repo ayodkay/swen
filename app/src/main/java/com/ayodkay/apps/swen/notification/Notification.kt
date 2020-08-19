@@ -12,8 +12,10 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.graphics.Color.RED
 import androidx.core.app.NotificationCompat
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.App
 import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.view.main.MainActivity
+import com.facebook.appevents.AppEventsLogger
 
 class Notification internal constructor(private val context: Context){
 
@@ -34,6 +36,7 @@ class Notification internal constructor(private val context: Context){
 
 
     internal fun sendNotification(message:String){
+        AppEventsLogger.newLogger(App.context).logEvent("sentNotification")
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
         }

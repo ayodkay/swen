@@ -17,6 +17,7 @@ import com.ayodkay.apps.swen.view.AskLocation
 import com.ayodkay.apps.swen.view.SaveNews
 import com.ayodkay.apps.swen.view.ThemeActivity
 import com.ayodkay.apps.swen.view.main.MainActivity
+import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
@@ -29,8 +30,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        when (currentNightMode) {
+        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_NO -> {
 
             }
@@ -90,14 +90,12 @@ class SettingsActivity : AppCompatActivity() {
                 true
             }
             country?.setOnPreferenceClickListener {
-
                 startActivity(Intent(this.context,AskLocation::class.java))
-
                 true
             }
 
             share?.setOnPreferenceClickListener {
-
+                AppEventsLogger.newLogger(context).logEvent("appShare")
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, "${resources.getString(R.string.share_app)}\n${resources.getString(R.string.google_play)}")
@@ -111,18 +109,18 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             rate?.setOnPreferenceClickListener {
+                AppEventsLogger.newLogger(context).logEvent("appRate")
                 goToPlayStore(context)
                 true
             }
 
             color?.setOnPreferenceClickListener {
-
                 startActivity(Intent(this.context,ThemeActivity::class.java))
-
                 true
             }
 
             support?.setOnPreferenceClickListener {
+                AppEventsLogger.newLogger(context).logEvent("appSupport")
                 if (mInterstitialAd.isLoaded) {
                     mInterstitialAd.show()
                 }

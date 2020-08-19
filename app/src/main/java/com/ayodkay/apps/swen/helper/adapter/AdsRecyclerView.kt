@@ -23,6 +23,7 @@ import com.ayodkay.apps.swen.helper.room.news.NewsRoom
 import com.ayodkay.apps.swen.helper.room.news.NewsRoomVM
 import com.ayodkay.apps.swen.model.News
 import com.ayodkay.apps.swen.view.ViewNewActivity
+import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.formats.NativeAdOptions
 import com.squareup.picasso.Callback
@@ -136,6 +137,7 @@ class AdsRecyclerView internal constructor(private val newsList: ArrayList<News>
                             .getDrawable(context.resources,
                                 R.drawable.ic_bookmark,null))
                     }else{
+                        newsBookMark()
                         newsModel.insert(NewsRoom(
                             url = newsPosition.url,
                             source = newsPosition.source,
@@ -177,7 +179,7 @@ class AdsRecyclerView internal constructor(private val newsList: ArrayList<News>
 
 
                 newsViewHolder.itemView.setOnClickListener {
-
+                    cardClick()
                     context.startActivity(
                         Intent(context, ViewNewActivity::class.java)
                         .putExtra("url",newsPosition.url)
@@ -205,7 +207,7 @@ class AdsRecyclerView internal constructor(private val newsList: ArrayList<News>
         RecyclerView.ViewHolder(itemView!!)
 
 
-    inner class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    internal class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var title: TextView = itemView.findViewById(R.id.title)
         var image: ImageView = itemView.findViewById(R.id.image)
         var bookmark: ImageView = itemView.findViewById(R.id.bookmark)
@@ -213,5 +215,13 @@ class AdsRecyclerView internal constructor(private val newsList: ArrayList<News>
         var source: TextView = itemView.findViewById(R.id.source)
         var date: TextView = itemView.findViewById(R.id.date)
         var progressBar: LottieAnimationView = itemView.findViewById(R.id.progressBar)
+    }
+
+    private fun cardClick (){
+        AppEventsLogger.newLogger(context).logEvent("cardClick")
+    }
+
+    private fun newsBookMark (){
+        AppEventsLogger.newLogger(context).logEvent("newsBookMark")
     }
 }

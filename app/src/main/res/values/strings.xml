@@ -2,8 +2,6 @@
     <string name="app_name" translatable="false">Swen</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-    <string name="facebook_app_id" translatable="false">559676741602917</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
     <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
     <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
     <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
@@ -11,6 +9,8 @@
     <string name="mopub" translatable="false">4b197eaec6034992a44a48f8d0038e6a</string>
     <string name="custom_ads_unit" translatable="false">ca-app-pub-7312232171503509/5065695747</string>
     <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
+    <string name="facebook_app_id" translatable="false">3757923994237671</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb3757923994237671</string>
 
 
     <string name="search">Search&#8230;</string>
@@ -74,4 +74,5 @@
     <string name="bookmarks">Bookmarks</string>
     <string name="bookmark_summary">check all bookmarked news</string>
     <string name="share_news">Share News</string>
+    <string name="politics">Politics</string>
 </resources>

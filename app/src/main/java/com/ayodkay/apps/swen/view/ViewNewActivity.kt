@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.ayodkay.apps.swen.R
-import com.facebook.share.model.ShareLinkContent
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -89,7 +88,7 @@ class ViewNewActivity : AppCompatActivity() {
             if (!image.isBlank()){
                 Picasso.get().load(image).into(object : Target {
                     override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
-                        val shareNews = Intent(Intent.ACTION_SEND)
+                        shareNews = Intent(Intent.ACTION_SEND)
                         shareNews.type = "image/jpeg"
                         shareNews.putExtra(
                             Intent.EXTRA_TEXT,
@@ -107,9 +106,7 @@ class ViewNewActivity : AppCompatActivity() {
                     }
 
                     override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
-                    override fun onBitmapFailed(e: java.lang.Exception?, errorDrawable: Drawable?) {
-
-                    }
+                    override fun onBitmapFailed(e: java.lang.Exception?, errorDrawable: Drawable?) {}
                 })
             }else{
                 shareNews = Intent(Intent.ACTION_SEND)
@@ -120,25 +117,6 @@ class ViewNewActivity : AppCompatActivity() {
                 )
 
                 startActivity(Intent.createChooser(shareNews, getString(R.string.share_news)))
-            }
-        }
-
-        val builder = ShareLinkContent.Builder()
-            .setContentUrl(Uri.parse(url)).build()
-
-        facebookShare.shareContent = builder
-
-        facebookShare.apply {
-            shareContent = builder
-            setOnClickListener {
-                val clipboard =
-                    getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip: ClipData =
-                    ClipData
-                        .newPlainText("label", "$title\n\n$dynamicLink")
-                clipboard.setPrimaryClip(clip)
-                Toast.makeText(this@ViewNewActivity, getString(R.string.text_copied), Toast.LENGTH_SHORT).show()
-
             }
         }
 
@@ -199,17 +177,18 @@ class ViewNewActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         when(requestCode){
-            REQUEST_CODE->{
+            REQUEST_CODE-> {
 
                 if ((grantResults.isNotEmpty() &&
-                            grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                ) {
                     startActivity(Intent.createChooser(shareNews, getString(R.string.share_news)))
-                    Toast.makeText(this, getString(R.string.permission_granted), Toast.LENGTH_SHORT)
-                        .show()
                 } else {
-                    Toast.makeText(this, getString(R.string.permission_not_granted), Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.permission_not_granted),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             }

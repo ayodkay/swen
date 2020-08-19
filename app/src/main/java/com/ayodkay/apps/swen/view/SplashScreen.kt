@@ -29,6 +29,7 @@ import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_splash_screen.*
 import android.widget.Toast
+import com.facebook.appevents.AppEventsLogger
 import java.util.*
 
 private const val MY_REQUEST_CODE = 1
@@ -70,6 +71,7 @@ class SplashScreen : AppCompatActivity() {
             .addOnSuccessListener(this) { pendingDynamicLinkData ->
                 // Get deep link from result (may be null if no link is found)
                 if (pendingDynamicLinkData != null) {
+                    AppEventsLogger.newLogger(context).logEvent("dynamicLink")
                     startActivity(Intent(this, WebView::class.java)
                         .putExtra("url",pendingDynamicLinkData.link.toString()))
                     finish()
@@ -80,6 +82,7 @@ class SplashScreen : AppCompatActivity() {
                     appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
                         if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                             && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                            AppEventsLogger.newLogger(context).logEvent("in-appUpdate")
 
                             appUpdateManager.registerListener(listener!!)
                             appUpdateManager.startUpdateFlowForResult(

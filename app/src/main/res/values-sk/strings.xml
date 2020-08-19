@@ -1,10 +1,7 @@
-<?xml version='1.0' encoding='utf8'?>
 <resources>
     <string name="app_name" translatable="false">Swen</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-    <string name="facebook_app_id" translatable="false">559676741602917</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb559676741602917</string>
     <string name="bit.ly" translatable="false">https://bit.ly/swen-news</string>
     <string name="admob_app_id" translatable="false">ca-app-pub-7312232171503509~9634135332</string>
     <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7312232171503509/3807093584</string>
@@ -75,4 +72,5 @@
     <string name="bookmarks">záložky</string>
     <string name="bookmark_summary">skontrolujte všetky svoje obľúbené správy</string>
     <string name="share_news">Zdieľajte správy</string>
+    <string name="politics">politický</string>
 </resources>

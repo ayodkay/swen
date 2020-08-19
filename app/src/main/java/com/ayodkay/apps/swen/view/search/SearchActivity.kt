@@ -23,8 +23,9 @@ import org.json.JSONObject
 
 class SearchActivity : AppCompatActivity() {
 
-     var queryValue: String = "null"
-    lateinit var sort:String
+    var queryValue: String = "null"
+    lateinit var sort : String
+    private var sortOptions = arrayListOf("popularity","publishedAt","relevancy")
 
 
     override fun onStart() {
@@ -40,18 +41,15 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val map: HashMap<String, String> = hashMapOf("popularity" to getString(R.string.popularity),
-            "newest" to getString(R.string.newest),
-            "relevancy" to getString(R.string.relevancy))
-
-        val singleItems = arrayOf(map["popularity"], map["newest"], map["relevancy"])
-        var checkedItem = 0
-
-        sort = singleItems[checkedItem]!!
+        val singleSort = arrayOf(getString(R.string.popularity), getString(R.string.newest), getString(R.string.relevancy))
+        var checkedSort = 1
+        sort = sortOptions[checkedSort]
 
         MobileAds.initialize(this)
         val adRequest = AdRequest.Builder().build()
@@ -86,9 +84,9 @@ class SearchActivity : AppCompatActivity() {
 
                 }
                 // Single-choice items (initialized with checked item)
-                .setSingleChoiceItems(singleItems, checkedItem) { _, which ->
-                    sort =  singleItems[which]!!
-                    checkedItem = which
+                .setSingleChoiceItems(singleSort, checkedSort) { _, which ->
+                    sort = sortOptions[which]
+                    checkedSort = which
                 }
                 .show()
         }
@@ -107,7 +105,7 @@ class SearchActivity : AppCompatActivity() {
                 q = query,
                 sort_by = sort,
                 language = db.countryDao().getAll().iso,
-                page = 4
+                pageSize = 100
             ),
             null,
             Response.Listener<JSONObject> {

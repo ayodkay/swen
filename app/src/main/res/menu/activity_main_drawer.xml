@@ -52,6 +52,11 @@
             android:title="@string/menu_corona" />
 
         <item
+            android:id="@+id/nav_politics"
+            android:icon="@drawable/ic_politics"
+            android:title="@string/politics" />
+
+        <item
             android:id="@+id/nav_beauty"
             android:icon="@drawable/ic_cosmetics"
             android:title="@string/menu_beautyy" />
