@@ -103,22 +103,11 @@ class ViewNewActivity : AppCompatActivity() {
 
         val newsApiClient = NewsApiClient()
 
-        val db = newsApiClient.getDatabase(this@ViewNewActivity)
-
-        newsViewModel.getNews(getEverything(newsApiClient, pageSize = 100,
-            q = title.substringAfter("- "),sort_by = "popularity"))
-            .observe(this, Observer {
-                moreBy.apply {
-                    layoutManager = LinearLayoutManager(this@ViewNewActivity)
-                    hasFixedSize()
-                    adapter = AdsRecyclerView(
-                        NewsApiClient.handleJson(it),
-                        this@ViewNewActivity,
-                        this@ViewNewActivity,
-                        this@ViewNewActivity
-                    )
-                }
-            })
+        if (title.contains("- ")){
+            loadMore(newsViewModel,newsApiClient,title.substringAfter("- "))
+        }else{
+            loadMore(newsViewModel,newsApiClient,source)
+        }
 
         share.setOnClickListener {
             if (!image.isBlank()){
@@ -273,6 +262,24 @@ class ViewNewActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+
+    private fun loadMore(newsViewModel:NewsViewModel,newsApiClient:NewsApiClient,query:String){
+        newsViewModel.getNews(getEverything(newsApiClient, pageSize = 100,
+            q = query,sort_by = "publishedAt"))
+            .observe(this, Observer {
+                moreBy.apply {
+                    layoutManager = LinearLayoutManager(this@ViewNewActivity)
+                    hasFixedSize()
+                    adapter = AdsRecyclerView(
+                        NewsApiClient.handleJson(it),
+                        this@ViewNewActivity,
+                        this@ViewNewActivity,
+                        this@ViewNewActivity
+                    )
+                }
+            })
     }
 
 }
