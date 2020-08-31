@@ -72,6 +72,6 @@
     <string name="bookmarks">закладки</string>
     <string name="bookmark_summary">проверьте все свои любимые новости</string>
     <string name="share_news">Поделиться новостью</string>
-
     <string name="politics">политическая</string>
+    <string name="also_like">Вам также может понравиться</string>
 </resources>

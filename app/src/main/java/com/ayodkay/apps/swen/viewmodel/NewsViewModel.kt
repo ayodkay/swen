@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ayodkay.apps.swen.helper.App
+import com.ayodkay.apps.swen.helper.AppLog
 import com.kymjs.rxvolley.RxVolley
 import com.kymjs.rxvolley.client.HttpCallback
 import com.kymjs.rxvolley.http.VolleyError
@@ -24,6 +25,7 @@ class NewsViewModel : ViewModel(){
 
     //load all users Asynchronously
     private fun loadNews(url: String){
+        AppLog.log(tag = "url",message = url)
         val callback = object : HttpCallback(){
             override fun onSuccess(response: String?) {
                 val jsonObject = JSONObject(response!!)

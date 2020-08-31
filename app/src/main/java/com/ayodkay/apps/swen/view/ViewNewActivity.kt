@@ -1,9 +1,7 @@
 package com.ayodkay.apps.swen.view
 
 import android.Manifest
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -13,16 +11,26 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.AppLog
+import com.ayodkay.apps.swen.helper.NewsApiClient
+import com.ayodkay.apps.swen.helper.NewsApiClient.Companion.getEverything
+import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
+import com.ayodkay.apps.swen.viewmodel.NewsViewModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.dynamiclinks.ktx.androidParameters
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
@@ -31,8 +39,10 @@ import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import kotlinx.android.synthetic.main.more.*
 import kotlinx.android.synthetic.main.news_card.*
 import java.io.ByteArrayOutputStream
+import java.net.URL
 
 class ViewNewActivity : AppCompatActivity() {
 
@@ -51,6 +61,7 @@ class ViewNewActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.news_card)
@@ -66,7 +77,6 @@ class ViewNewActivity : AppCompatActivity() {
         val content = intent?.extras?.get("content") as String
         val description = intent?.extras?.get("description") as String
         val source = intent?.extras?.get("source") as String
-
         val imageView = findViewById<ImageView>(R.id.dImage)
         val contentTextView = findViewById<TextView>(R.id.content)
         val titleTextView = findViewById<TextView>(R.id.dTitle)
@@ -74,6 +84,12 @@ class ViewNewActivity : AppCompatActivity() {
         val sourceTextView = findViewById<TextView>(R.id.dSource)
         val share = findViewById<ImageView>(R.id.share)
         val article = findViewById<MaterialButton>(R.id.full_article)
+
+        AppLog.log("----",title.substringAfter("- "))
+
+        val bottomSheet:View = findViewById(R.id.bottomSheet);
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.isHideable = false;
 
         Firebase.dynamicLinks.shortLinkAsync {
             link = Uri.parse(url)
@@ -83,6 +99,26 @@ class ViewNewActivity : AppCompatActivity() {
             dynamicLink = result.shortLink.toString()
         }.addOnFailureListener {}
 
+        val newsViewModel: NewsViewModel = ViewModelProvider(this).get(NewsViewModel::class.java)
+
+        val newsApiClient = NewsApiClient()
+
+        val db = newsApiClient.getDatabase(this@ViewNewActivity)
+
+        newsViewModel.getNews(getEverything(newsApiClient, pageSize = 100,
+            q = title.substringAfter("- "),sort_by = "popularity"))
+            .observe(this, Observer {
+                moreBy.apply {
+                    layoutManager = LinearLayoutManager(this@ViewNewActivity)
+                    hasFixedSize()
+                    adapter = AdsRecyclerView(
+                        NewsApiClient.handleJson(it),
+                        this@ViewNewActivity,
+                        this@ViewNewActivity,
+                        this@ViewNewActivity
+                    )
+                }
+            })
 
         share.setOnClickListener {
             if (!image.isBlank()){
@@ -97,16 +133,25 @@ class ViewNewActivity : AppCompatActivity() {
                         try {
                             val uri = getImageUri(bitmap)
                             shareNews.putExtra(
-                                Intent.EXTRA_STREAM,uri
+                                Intent.EXTRA_STREAM, uri
                             )
-                            startActivity(Intent.createChooser(shareNews, getString(R.string.share_news)))
-                        }catch (e:Exception){
+                            startActivity(
+                                Intent.createChooser(
+                                    shareNews,
+                                    getString(R.string.share_news)
+                                )
+                            )
+                        } catch (e: Exception) {
                             checkPermission()
                         }
                     }
 
                     override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
-                    override fun onBitmapFailed(e: java.lang.Exception?, errorDrawable: Drawable?) {}
+                    override fun onBitmapFailed(
+                        e: java.lang.Exception?,
+                        errorDrawable: Drawable?
+                    ) {
+                    }
                 })
             }else{
                 shareNews = Intent(Intent.ACTION_SEND)
@@ -140,20 +185,32 @@ class ViewNewActivity : AppCompatActivity() {
         titleTextView.text = title
         sourceTextView.text = source
 
-
         try {
             Picasso.get().load(image).into(imageView, object : Callback {
                 override fun onSuccess() {
 
                 }
+
                 override fun onError(e: Exception?) {
-                    imageView.setImageDrawable(ResourcesCompat.getDrawable(resources,R.drawable.ic_undraw_page_not_found_su7k,null))
+                    imageView.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.ic_undraw_page_not_found_su7k,
+                            null
+                        )
+                    )
 
                 }
 
             })
         } catch (e: Exception) {
-            imageView.setImageDrawable(ResourcesCompat.getDrawable(resources,R.drawable.ic_undraw_page_not_found_su7k,null))
+            imageView.setImageDrawable(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_undraw_page_not_found_su7k,
+                    null
+                )
+            )
         }
     }
 
@@ -161,11 +218,11 @@ class ViewNewActivity : AppCompatActivity() {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
          val path: String = MediaStore.Images.Media.insertImage(
-            contentResolver,
-            inImage,
-            "Title",
-            null
-        )
+             contentResolver,
+             inImage,
+             "Title",
+             null
+         )
         return Uri.parse(path)
     }
 
@@ -177,7 +234,7 @@ class ViewNewActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         when(requestCode){
-            REQUEST_CODE-> {
+            REQUEST_CODE -> {
 
                 if ((grantResults.isNotEmpty() &&
                             grantResults[0] == PackageManager.PERMISSION_GRANTED)
@@ -209,8 +266,10 @@ class ViewNewActivity : AppCompatActivity() {
             }
             else -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        REQUEST_CODE)
+                    requestPermissions(
+                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                        REQUEST_CODE
+                    )
                 }
             }
         }

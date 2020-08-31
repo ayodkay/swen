@@ -73,4 +73,5 @@
     <string name="bookmark_summary">查看所有您喜欢的新闻</string>
     <string name="share_news">分享新闻</string>
     <string name="politics">政治</string>
+    <string name="also_like">您可能还喜欢</string>
 </resources>

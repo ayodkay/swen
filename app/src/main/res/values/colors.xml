@@ -17,6 +17,7 @@
 
     <color name="background">#DEE1E1</color>
 
+    <color name="iconColor">#AB3838</color>
 
 
     <color name="gnt_test_background_color">#00F4F4F4</color>

@@ -73,4 +73,6 @@
     <string name="bookmark_summary">お気に入りのニュースをすべてチェック</string>
     <string name="share_news">ニュースを共有する</string>
     <string name="politics">政治的</string>
+    <string name="also_like">あなたも好きかも</string>
+
 </resources>

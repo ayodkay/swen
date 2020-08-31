@@ -1,8 +1,7 @@
 package com.ayodkay.apps.swen.view
 
-import android.app.Activity
+
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -11,26 +10,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.App.Companion.context
-import com.ayodkay.apps.swen.helper.AppLog
-import com.ayodkay.apps.swen.helper.AppLog.log
 import com.ayodkay.apps.swen.helper.room.country.AppDatabase
-import com.ayodkay.apps.swen.notification.Notification
 import com.ayodkay.apps.swen.view.main.MainActivity
-import com.ayodkay.apps.swen.view.settings.SettingsActivity
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.firebase.dynamiclinks.ktx.dynamicLinks
-import com.google.firebase.firestore.ktx.firestoreSettings
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_splash_screen.*
 import android.widget.Toast
+import com.ayodkay.apps.swen.helper.AppLog
 import com.facebook.appevents.AppEventsLogger
-import java.util.*
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
+import com.google.firebase.ktx.Firebase
+
 
 private const val MY_REQUEST_CODE = 1
 class SplashScreen : AppCompatActivity() {
@@ -75,13 +69,19 @@ class SplashScreen : AppCompatActivity() {
                     startActivity(Intent(this, WebView::class.java)
                         .putExtra("url",pendingDynamicLinkData.link.toString()))
                     finish()
+
+                    AppLog.log("stuck here","dynamic link")
                 }else{
+                    AppLog.log("stuck here","in-appUpdate1")
                     // Returns an intent object that you use to check for an update.
                     val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+                    AppLog.log("stuck here","in-appUpdate2")
                     // Checks that the platform will allow the specified type of update.
                     appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
                         if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                             && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+
+                            AppLog.log("stuck here","in-appUpdate")
                             AppEventsLogger.newLogger(context).logEvent("in-appUpdate")
 
                             appUpdateManager.registerListener(listener!!)
@@ -95,8 +95,12 @@ class SplashScreen : AppCompatActivity() {
                                 // Include a request code to later monitor this update request.
                                 MY_REQUEST_CODE)
                         }else{
+                            AppLog.log("stuck here","nextActivity")
                             nextActivity()
                         }
+                    }.addOnFailureListener {
+                        AppLog.log("stuck here","nextActivity")
+                        nextActivity()
                     }
 
                 }

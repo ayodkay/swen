@@ -64,10 +64,10 @@ class NewsApiClient {
         @JvmOverloads
         fun getEverything(
             newsApiClient: NewsApiClient,
-            q:String?="", sources:String?="", domains:String?="", from_param:String?="",
+            q:String?="", sources:String?="", domains:String?="",qInTitle:String?="",from_param:String?="",
             to:String?="", language:String?="", sort_by:String?="", pageSize:Int): String {
     
-            return "https://newsapi.org/v2/everything?q=${q}&sources=${sources}&domains=${domains}&from_param=${from_param}&to=${to}&language=${language}&sort_by=${sort_by}&pageSize=${pageSize}&apiKey=${newsApiClient.apiKey()}"
+            return "https://newsapi.org/v2/everything?q=${q}&sources=${sources}&domains=${domains}&qInTitle=${qInTitle}&from_param=${from_param}&to=${to}&language=${language}&sort_by=${sort_by}&pageSize=${pageSize}&apiKey=${newsApiClient.apiKey()}"
         }
 
 
