@@ -76,4 +76,7 @@
     <string name="share_news">Share News</string>
     <string name="politics">Politics</string>
     <string name="also_like">You might also like</string>
+    <string name="ad">Ad</string>
+    <string name="search_language">Search Language</string>
+    <string name="search_language_summary">change the language used during news search</string>
 </resources>

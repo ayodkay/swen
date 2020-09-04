@@ -69,19 +69,14 @@ class SplashScreen : AppCompatActivity() {
                     startActivity(Intent(this, WebView::class.java)
                         .putExtra("url",pendingDynamicLinkData.link.toString()))
                     finish()
-
-                    AppLog.log("stuck here","dynamic link")
                 }else{
-                    AppLog.log("stuck here","in-appUpdate1")
                     // Returns an intent object that you use to check for an update.
                     val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-                    AppLog.log("stuck here","in-appUpdate2")
                     // Checks that the platform will allow the specified type of update.
                     appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
                         if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                             && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
 
-                            AppLog.log("stuck here","in-appUpdate")
                             AppEventsLogger.newLogger(context).logEvent("in-appUpdate")
 
                             appUpdateManager.registerListener(listener!!)
@@ -95,11 +90,9 @@ class SplashScreen : AppCompatActivity() {
                                 // Include a request code to later monitor this update request.
                                 MY_REQUEST_CODE)
                         }else{
-                            AppLog.log("stuck here","nextActivity")
                             nextActivity()
                         }
                     }.addOnFailureListener {
-                        AppLog.log("stuck here","nextActivity")
                         nextActivity()
                     }
 

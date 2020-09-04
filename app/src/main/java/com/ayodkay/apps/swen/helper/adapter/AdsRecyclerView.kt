@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -36,6 +37,7 @@ import kotlin.collections.ArrayList
 
 private val ITEM_TYPE_COUNTRY by lazy { 0 }
 private val ITEM_TYPE_BANNER_AD by lazy { 1 }
+private lateinit var mInterstitialAd: InterstitialAd
 class AdsRecyclerView internal constructor(private val newsList: ArrayList<News>, private val owner: ViewModelStoreOwner,
                                            private val lifecycleOwner: LifecycleOwner,
                                            private val context: Context):
@@ -66,7 +68,6 @@ class AdsRecyclerView internal constructor(private val newsList: ArrayList<News>
 
     @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when(getItemViewType(position)){
             ITEM_TYPE_BANNER_AD->{
                 val progressBar: LottieAnimationView = holder.itemView.findViewById(R.id.adsProgress)
@@ -109,10 +110,16 @@ class AdsRecyclerView internal constructor(private val newsList: ArrayList<News>
             }
 
             else->{
+                setUpAds()
+                if ((itemCount-1) ==position){
+                    AppLog.log(message = "yes")
+                    if (mInterstitialAd.isLoaded) {
+                        mInterstitialAd.show()
+                    }
+                }
                 val newsViewHolder : NewsViewHolder = holder as NewsViewHolder
                 val newsModel = ViewModelProvider(owner).get(NewsRoomVM::class.java)
                 val newsPosition = newsList[position]
-                AppLog.log(message = newsList[position])
                 val date = newsPosition.publishedAt
                     .replace("T"," ").replace("Z","")
                 newsViewHolder.source.text = newsPosition.source
@@ -130,7 +137,7 @@ class AdsRecyclerView internal constructor(private val newsList: ArrayList<News>
                         .getDrawable(context.resources,
                             R.drawable.ic_bookmark,null))
                 }
-                newsViewHolder.bookmark.setOnClickListener {
+                newsViewHolder.bookmarkView.setOnClickListener {
                     if (newsModel.exist(newsPosition.url)){
                         newsModel.deleteOne(newsPosition.url)
                         newsViewHolder.bookmark.setImageDrawable(ResourcesCompat
@@ -211,6 +218,7 @@ class AdsRecyclerView internal constructor(private val newsList: ArrayList<News>
         var title: TextView = itemView.findViewById(R.id.title)
         var image: ImageView = itemView.findViewById(R.id.image)
         var bookmark: ImageView = itemView.findViewById(R.id.bookmark)
+        var bookmarkView: RelativeLayout = itemView.findViewById(R.id.bookmarkView)
         var description: TextView = itemView.findViewById(R.id.description)
         var source: TextView = itemView.findViewById(R.id.source)
         var date: TextView = itemView.findViewById(R.id.date)
@@ -223,5 +231,37 @@ class AdsRecyclerView internal constructor(private val newsList: ArrayList<News>
 
     private fun newsBookMark (){
         AppEventsLogger.newLogger(context).logEvent("newsBookMark")
+    }
+
+    private fun setUpAds(){
+        MobileAds.initialize(context) {}
+        mInterstitialAd = InterstitialAd(context)
+        mInterstitialAd.adUnitId = context.resources.getString(R.string.interstitial_ad_unit_id)
+        mInterstitialAd.loadAd(AdRequest.Builder().build())
+        mInterstitialAd.adListener = object: AdListener() {
+            override fun onAdLoaded() {
+
+            }
+
+            override fun onAdFailedToLoad(errorCode: Int) {
+                mInterstitialAd.loadAd(AdRequest.Builder().build())
+            }
+
+            override fun onAdOpened() {
+                mInterstitialAd.loadAd(AdRequest.Builder().build())
+            }
+
+            override fun onAdClicked() {
+                mInterstitialAd.loadAd(AdRequest.Builder().build())
+            }
+
+            override fun onAdLeftApplication() {
+                mInterstitialAd.loadAd(AdRequest.Builder().build())
+            }
+
+            override fun onAdClosed() {
+                mInterstitialAd.loadAd(AdRequest.Builder().build())
+            }
+        }
     }
 }

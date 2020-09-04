@@ -74,4 +74,7 @@
     <string name="share_news">Bagikan berita</string>
     <string name="politics">Politik</string>
     <string name="also_like">Anda mungkin juga suka</string>
+    <string name="ad">Ad</string>
+    <string name="search_language">Bahasa pencarian</string>
+    <string name="search_language_summary">ubah bahasa yang digunakan saat mencari berita</string>
 </resources>

@@ -25,7 +25,6 @@ class NewsViewModel : ViewModel(){
 
     //load all users Asynchronously
     private fun loadNews(url: String){
-        AppLog.log(tag = "url",message = url)
         val callback = object : HttpCallback(){
             override fun onSuccess(response: String?) {
                 val jsonObject = JSONObject(response!!)

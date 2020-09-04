@@ -74,4 +74,7 @@
     <string name="share_news">Compartir noticias</string>
     <string name="politics">Político</string>
     <string name="also_like">También te puede interesar</string>
+    <string name="ad">Ad</string>
+    <string name="search_language">Idioma de búsqueda</string>
+    <string name="search_language_summary">cambiar el idioma utilizado al buscar noticias</string>
 </resources>

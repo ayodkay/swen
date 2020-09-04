@@ -74,5 +74,8 @@
     <string name="share_news">ニュースを共有する</string>
     <string name="politics">政治的</string>
     <string name="also_like">あなたも好きかも</string>
+    <string name="ad">Ad</string>
+    <string name="search_language">検索言語</string>
+    <string name="search_language_summary">ニュースを検索するときに使用する言語を変更する</string>
 
 </resources>

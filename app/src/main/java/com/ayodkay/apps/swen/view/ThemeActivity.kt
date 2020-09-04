@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import com.ayodkay.apps.swen.R
 import kotlinx.android.synthetic.main.activity_theme.*
 
@@ -25,13 +26,12 @@ class ThemeActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        when (currentNightMode) {
+        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_NO -> {
 
             } // Night mode is not active, we're using the light theme
             Configuration.UI_MODE_NIGHT_YES -> {
-                background.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+                background.setBackgroundColor(ContextCompat.getColor(this,R.color.colorPrimary))
             } // Night mode is active, we're using dark theme
         }
     }

@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.AppLog
@@ -56,7 +58,8 @@ class ViewNewActivity : AppCompatActivity() {
 
             } // Night mode is not active, we're using the light theme
             Configuration.UI_MODE_NIGHT_YES -> {
-                background.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+                setTheme(R.style.AppThemeNight)
+                background.setBackgroundColor(ContextCompat.getColor(this,R.color.background))
             } // Night mode is active, we're using dark theme
         }
     }
@@ -82,14 +85,12 @@ class ViewNewActivity : AppCompatActivity() {
         val titleTextView = findViewById<TextView>(R.id.dTitle)
         val adView = findViewById<AdView>(R.id.adView)
         val sourceTextView = findViewById<TextView>(R.id.dSource)
-        val share = findViewById<ImageView>(R.id.share)
+        val shareView = findViewById<RelativeLayout>(R.id.shareView)
         val article = findViewById<MaterialButton>(R.id.full_article)
 
-        AppLog.log("----",title.substringAfter("- "))
-
-        val bottomSheet:View = findViewById(R.id.bottomSheet);
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        bottomSheetBehavior.isHideable = false;
+        val bottomSheet:View = findViewById(R.id.bottomSheet)
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior.isHideable = false
 
         Firebase.dynamicLinks.shortLinkAsync {
             link = Uri.parse(url)
@@ -109,7 +110,7 @@ class ViewNewActivity : AppCompatActivity() {
             loadMore(newsViewModel,newsApiClient,source)
         }
 
-        share.setOnClickListener {
+        shareView.setOnClickListener {
             if (!image.isBlank()){
                 Picasso.get().load(image).into(object : Target {
                     override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {

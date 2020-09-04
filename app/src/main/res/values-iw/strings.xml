@@ -74,4 +74,7 @@
     <string name="share_news">שתף חדשות</string>
     <string name="politics">פּוֹלִיטִי</string>
     <string name="also_like">אולי גם תאהב</string>
+    <string name="ad">Ad</string>
+    <string name="search_language">שפת חיפוש</string>
+    <string name="search_language_summary">לשנות את השפה בה משתמשים בחיפוש אחר חדשות</string>
 </resources>

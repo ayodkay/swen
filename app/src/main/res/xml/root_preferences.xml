@@ -36,10 +36,15 @@
             app:summary="@string/color_summary"/>
 
         <Preference
+            app:key="search"
+            app:title="@string/search_language"
+            app:summary="@string/search_language_summary"/>
+
+        <Preference
             app:key="support"
             app:title="@string/support"
             android:enabled="false"
-            app:summary="@string/dev_support"/>
+            app:summary="Loading..."/>
 
     </PreferenceCategory>
 

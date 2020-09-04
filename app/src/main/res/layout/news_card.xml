@@ -27,7 +27,8 @@
                 android:id="@+id/dImage"
                 android:layout_width="match_parent"
                 android:layout_height="179dp"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                tools:ignore="ContentDescription" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?attr/textAppearanceHeadline6"
-                    android:textColor="#666161" />
+                    android:textColor="#000000" />
 
 
                 <TextView
@@ -49,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
                     android:textAppearance="?attr/textAppearanceHeadline6"
-                    android:textColor="#666161" />
+                    android:textColor="#000000" />
 
 
                 <TextView
@@ -58,21 +59,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textAppearance="?attr/textAppearanceBody1"
-                    android:textColor="#666161" />
+                    android:textColor="#000000" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="20dp">
-
+                <RelativeLayout
+                    android:id="@+id/shareView"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="start">
                     <ImageView
                         android:id="@+id/share"
+                        android:contentDescription="@string/share"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_centerInParent="true"
                         android:src="@drawable/ic_share" />
-                </LinearLayout>
+                </RelativeLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/full_article"
@@ -94,7 +95,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="12dp"
                 ads:adSize="BANNER"
-                ads:adUnitId="ca-app-pub-7312232171503509/9944933005" />
+                ads:adUnitId="ca-app-pub-7312232171503509/8638142033" />
         </LinearLayout>
     </ScrollView>
 

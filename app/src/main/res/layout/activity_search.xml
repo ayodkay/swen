@@ -69,7 +69,8 @@
            android:layout_width="match_parent"
            android:layout_height="match_parent"
            android:visibility="gone"
-           android:src="@drawable/ic_undraw_empty_xct9"/>
+           android:src="@drawable/ic_undraw_empty_xct9"
+           tools:ignore="ContentDescription" />
 
        <androidx.recyclerview.widget.RecyclerView
            android:id="@+id/searchRecycle"
@@ -86,7 +87,7 @@
            android:layout_alignParentBottom="true"
            android:layout_centerInParent="true"
            ads:adSize="BANNER"
-           ads:adUnitId="ca-app-pub-7312232171503509/9944933005" />
+           ads:adUnitId="ca-app-pub-7312232171503509/5964904907" />
    </RelativeLayout>
 
 

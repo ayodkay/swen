@@ -74,4 +74,7 @@
     <string name="share_news">Deel nieuws</string>
     <string name="politics">Politiek</string>
     <string name="also_like">Dit vind je misschien ook leuk</string>
+    <string name="ad">Ad</string>
+    <string name="search_language">Zoektaal</string>
+    <string name="search_language_summary">verander de taal die wordt gebruikt bij het zoeken naar nieuws</string>
 </resources>

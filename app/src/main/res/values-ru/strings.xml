@@ -74,4 +74,7 @@
     <string name="share_news">Поделиться новостью</string>
     <string name="politics">политическая</string>
     <string name="also_like">Вам также может понравиться</string>
+    <string name="ad">Ad</string>
+    <string name="search_language">Язык поиска</string>
+    <string name="search_language_summary">изменить язык, используемый при поиске новостей</string>
 </resources>

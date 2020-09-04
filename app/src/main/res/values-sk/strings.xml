@@ -74,4 +74,7 @@
     <string name="share_news">Zdieľajte správy</string>
     <string name="politics">politický</string>
     <string name="also_like">Tiež sa ti môže páčiť</string>
+    <string name="ad">Ad</string>
+    <string name="search_language">Vyhľadajte jazyk</string>
+    <string name="search_language_summary">zmeniť jazyk používaný pri hľadaní správ</string>
 </resources>

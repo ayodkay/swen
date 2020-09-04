@@ -3,16 +3,20 @@ package com.ayodkay.apps.swen.view.settings
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.room.Room
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
+import com.ayodkay.apps.swen.helper.room.country.AppDatabase
+import com.ayodkay.apps.swen.helper.room.country.Country
 import com.ayodkay.apps.swen.view.AskLocation
 import com.ayodkay.apps.swen.view.SaveNews
 import com.ayodkay.apps.swen.view.ThemeActivity
@@ -22,6 +26,7 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.settings_activity.*
 
 
@@ -36,7 +41,7 @@ class SettingsActivity : AppCompatActivity() {
             }
             Configuration.UI_MODE_NIGHT_YES -> {
                 setTheme(R.style.AppThemeNight)
-                background.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+                background.setBackgroundColor(ContextCompat.getColor(this,R.color.colorPrimary))
             }
         }
     }
@@ -60,6 +65,23 @@ class SettingsActivity : AppCompatActivity() {
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
+            val db = Room.databaseBuilder(
+                requireContext(),
+                AppDatabase::class.java, "country"
+            ).allowMainThreadQueries().build()
+
+
+            val availableLanguages = arrayListOf(
+                "ar", "de", "en", "es", "fr", "it", "nl", "no", "pt", "ru", "se", "zh"
+            )
+            val singleSort = arrayOf(
+                "Arabic", "German", "English", "Spanish", "French", "Italian", "Dutch",
+                "Norwegian", "Portuguese", "Russian", "Swedish", "Chinese"
+            )
+
+            var checkedSort = db.countryDao().getAll().position!!
+
+            var language = availableLanguages[checkedSort]
 
             val feedback: EditTextPreference? = findPreference("feedback")
             val saved: Preference? = findPreference("saved")
@@ -68,10 +90,9 @@ class SettingsActivity : AppCompatActivity() {
             val rate: Preference? = findPreference("rate")
             val color: Preference? = findPreference("color")
             val support: Preference? = findPreference("support")
-
+            val search: Preference? = findPreference("search")
 
             setupAds(support)
-
 
             feedback?.setOnPreferenceChangeListener { _, newValue ->
                 val intent = Intent(Intent.ACTION_SEND)
@@ -84,13 +105,13 @@ class SettingsActivity : AppCompatActivity() {
                 true
             }
 
-
             saved?.setOnPreferenceClickListener {
-                startActivity(Intent(this.context,SaveNews::class.java))
+                startActivity(Intent(this.context, SaveNews::class.java))
                 true
             }
+
             country?.setOnPreferenceClickListener {
-                startActivity(Intent(this.context,AskLocation::class.java))
+                startActivity(Intent(this.context, AskLocation::class.java))
                 true
             }
 
@@ -98,7 +119,13 @@ class SettingsActivity : AppCompatActivity() {
                 AppEventsLogger.newLogger(context).logEvent("appShare")
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, "${resources.getString(R.string.share_app)}\n${resources.getString(R.string.google_play)}")
+                    putExtra(
+                        Intent.EXTRA_TEXT, "${resources.getString(R.string.share_app)}\n${
+                            resources.getString(
+                                R.string.google_play
+                            )
+                        }"
+                    )
                     type = "text/plain"
                 }
 
@@ -115,9 +142,36 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             color?.setOnPreferenceClickListener {
-                startActivity(Intent(this.context,ThemeActivity::class.java))
+                startActivity(Intent(this.context, ThemeActivity::class.java))
                 true
             }
+            search?.setOnPreferenceClickListener {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(getString(R.string.sort_news))
+                    .setNeutralButton(resources.getString(android.R.string.cancel)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, which ->
+                        val countryName = db.countryDao().getAll().country
+                        db.countryDao().delete()
+                        db.countryDao().insertAll(
+                            Country(
+                                countryName,
+                                language,
+                                checkedSort
+                            )
+                        )
+                        dialog.dismiss()
+                    }
+                    // Single-choice items (initialized with checked item)
+                    .setSingleChoiceItems(singleSort, checkedSort) { _, which ->
+                        language = availableLanguages[which]
+                        checkedSort = which
+                    }
+                    .show()
+                true
+            }
+
 
             support?.setOnPreferenceClickListener {
                 AppEventsLogger.newLogger(context).logEvent("appSupport")
@@ -139,39 +193,56 @@ class SettingsActivity : AppCompatActivity() {
             mInterstitialAd.adListener = object: AdListener() {
                 override fun onAdLoaded() {
                     support?.isEnabled = true
+                    support?.summary = resources.getString(R.string.dev_support)
                 }
 
                 override fun onAdFailedToLoad(errorCode: Int) {
                     support?.isEnabled = false
+                    support?.summary = "Loading..."
                     mInterstitialAd.loadAd(AdRequest.Builder().build())
                 }
 
                 override fun onAdOpened() {
                     support?.isEnabled = false
+                    support?.summary = "Loading..."
                     mInterstitialAd.loadAd(AdRequest.Builder().build())
                 }
 
                 override fun onAdClicked() {
                     support?.isEnabled = false
+                    support?.summary = "Loading..."
                     mInterstitialAd.loadAd(AdRequest.Builder().build())
                 }
 
                 override fun onAdLeftApplication() {
                     support?.isEnabled = false
+                    support?.summary = "Loading..."
                     mInterstitialAd.loadAd(AdRequest.Builder().build())
                 }
 
                 override fun onAdClosed() {
                     support?.isEnabled = false
+                    support?.summary = "Loading..."
                     mInterstitialAd.loadAd(AdRequest.Builder().build())
                 }
             }
         }
     }
 
+    private fun isAvailable(list: ArrayList<String>,keyword:String):Int{
+        var position = 0
+        for (i in list){
+            if (keyword==i){
+                return position
+            }
+            position += 1
+        }
+
+        return position
+    }
 
     companion object{
-        fun goToPlayStore(context:Context?){
+        fun goToPlayStore(context: Context?){
             val uri: Uri = Uri.parse("market://details?id=" + context?.packageName)
             val goToMarket = Intent(Intent.ACTION_VIEW, uri)
 
@@ -198,7 +269,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
 
-        startActivity(Intent(this,MainActivity::class.java))
+        startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
 }

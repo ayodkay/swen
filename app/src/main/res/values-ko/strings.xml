@@ -74,4 +74,7 @@
     <string name="share_news">뉴스 공유</string>
     <string name="politics">주재관</string>
     <string name="also_like">당신은 또한 좋아할 수 있습니다</string>
+    <string name="ad">Ad</string>
+    <string name="search_language">검색 언어</string>
+    <string name="search_language_summary">뉴스를 검색 할 때 사용되는 언어 변경</string>
 </resources>

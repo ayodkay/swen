@@ -6,5 +6,6 @@ import androidx.room.PrimaryKey
 @Entity
 data class Country(
     @PrimaryKey val country: String,
-    val iso: String
+    var iso: String,
+    var position: Int? = 2
 )

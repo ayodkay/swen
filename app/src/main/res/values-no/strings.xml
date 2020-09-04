@@ -74,4 +74,7 @@
     <string name="share_news">Del nyheter</string>
     <string name="politics">Politisk</string>
     <string name="also_like">Kan hende du også liker</string>
+    <string name="ad">Ad</string>
+    <string name="search_language">Søkespråk</string>
+    <string name="search_language_summary">endre språket som brukes når du søker etter nyheter</string>
 </resources>
