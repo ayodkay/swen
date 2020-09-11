@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.NewsApiClient
 
 
@@ -19,7 +20,7 @@ class CoronaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return NewsApiClient.setupFragment(q= "covid",category = "health",frag = this,
+        return Helper.setupFragment(q= "covid",category = "health",frag = this,
             inflater = inflater,container = container)
     }
 }

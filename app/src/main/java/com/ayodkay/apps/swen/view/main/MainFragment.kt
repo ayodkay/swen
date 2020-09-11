@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.NewsApiClient
 
 class MainFragment : Fragment() {
@@ -18,6 +19,6 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return NewsApiClient.setupFragment("general",this,inflater,container)
+        return Helper.setupFragment("general",this,inflater,container)
     }
 }

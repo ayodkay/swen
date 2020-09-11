@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.NewsApiClient
 
 class HealthFragment : Fragment() {
@@ -17,6 +18,6 @@ class HealthFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return NewsApiClient.setupFragment("health",this,inflater,container)
+        return Helper.setupFragment("health",this,inflater,container)
     }
 }

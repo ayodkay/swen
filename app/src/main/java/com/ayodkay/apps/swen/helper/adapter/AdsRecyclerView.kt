@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,11 @@ import com.ayodkay.apps.swen.helper.room.news.NewsRoom
 import com.ayodkay.apps.swen.helper.room.news.NewsRoomVM
 import com.ayodkay.apps.swen.model.News
 import com.ayodkay.apps.swen.view.ViewNewActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.formats.NativeAdOptions
@@ -31,6 +37,7 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import okhttp3.internal.http.RequestLine
 import java.text.SimpleDateFormat
 import kotlin.collections.ArrayList
 
@@ -163,23 +170,40 @@ class AdsRecyclerView internal constructor(private val newsList: ArrayList<News>
                 }
 
                 try {
-                    Picasso.get().load(newsPosition.urlToImage).into(holder.image, object :
-                        Callback {
-                        override fun onSuccess() {
-                            newsViewHolder.progressBar.visibility = View.GONE
-                        }
+                    Glide.with(context)
+                        .load(newsPosition.urlToImage)
+                        .listener(object :RequestListener<Drawable>{
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                newsViewHolder.progressBar.visibility = View.GONE
+                                newsViewHolder.image
+                                    .setImageDrawable(ResourcesCompat
+                                        .getDrawable(context.resources,
+                                            R.drawable.ic_undraw_page_not_found_su7k,null))
 
-                        override fun onError(e: Exception?) {
-                            newsViewHolder.progressBar.visibility = View.GONE
-                            newsViewHolder.image
-                                .setImageDrawable(ResourcesCompat
-                                    .getDrawable(context.resources,
-                                        R.drawable.ic_undraw_page_not_found_su7k,null))
-                        }
 
+                                return true
+                            }
 
-                    })
-                }catch (e:Exception){
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                newsViewHolder.progressBar.visibility = View.GONE
+                                return false
+                            }
+
+                        })
+                        .into(holder.image)
+
+                }catch (e:RuntimeException){
                     newsViewHolder.progressBar.visibility = View.GONE
                     newsViewHolder.image.setImageDrawable(ResourcesCompat.getDrawable(context.resources,R.drawable.ic_undraw_page_not_found_su7k,null))
                 }

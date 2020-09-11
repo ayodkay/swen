@@ -12,6 +12,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.AppLog
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.NewsApiClient
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
 import com.google.android.gms.ads.AdRequest
@@ -95,7 +96,7 @@ class SearchActivity : AppCompatActivity() {
     private fun vanPersie(query: String?){
         val queue = Volley.newRequestQueue(this)
         val newsApiClient = NewsApiClient()
-        val db = newsApiClient.getDatabase(this@SearchActivity)
+        val db = Helper.getDatabase(this@SearchActivity)
 
         val jsonRequest = @SuppressLint("SetTextI18n")
         object : JsonObjectRequest(
@@ -115,7 +116,7 @@ class SearchActivity : AppCompatActivity() {
                     searchRecycle.visibility = View.GONE
                     totalResults.visibility = View.GONE
                 } else {
-                    val getResult  = NewsApiClient.handleJson(it)
+                    val getResult  = Helper.handleJson(it)
                     empty.visibility = View.GONE
                     searchRecycle.visibility = View.VISIBLE
                     totalResults.visibility = View.VISIBLE

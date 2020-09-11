@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.NewsApiClient
 import com.ayodkay.apps.swen.viewmodel.NewsViewModel
 
@@ -18,6 +19,6 @@ class BusinessFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return NewsApiClient.setupFragment("business",this,inflater,container)
+        return Helper.setupFragment("business",this,inflater,container)
     }
 }

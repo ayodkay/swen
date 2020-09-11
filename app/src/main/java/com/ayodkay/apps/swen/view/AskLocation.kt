@@ -18,7 +18,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_ask_location.*
 import kotlinx.android.synthetic.main.activity_ask_location.adView
-import kotlinx.android.synthetic.main.news_card.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

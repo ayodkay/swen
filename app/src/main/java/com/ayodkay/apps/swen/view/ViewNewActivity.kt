@@ -25,6 +25,7 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.AppLog
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.NewsApiClient
 import com.ayodkay.apps.swen.helper.NewsApiClient.Companion.getEverything
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
@@ -274,7 +275,7 @@ class ViewNewActivity : AppCompatActivity() {
                     layoutManager = LinearLayoutManager(this@ViewNewActivity)
                     hasFixedSize()
                     adapter = AdsRecyclerView(
-                        NewsApiClient.handleJson(it),
+                        Helper.handleJson(it),
                         this@ViewNewActivity,
                         this@ViewNewActivity,
                         this@ViewNewActivity

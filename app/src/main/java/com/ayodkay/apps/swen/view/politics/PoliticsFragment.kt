@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.NewsApiClient
 
 class PoliticsFragment:Fragment() {
@@ -17,7 +18,7 @@ class PoliticsFragment:Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return NewsApiClient.setupEveryThingFragment(q= getString(R.string.politics),frag = this,
+        return Helper.setupEveryThingFragment(q= getString(R.string.politics),frag = this,
             inflater = inflater,container = container)
     }
 }

@@ -46,7 +46,7 @@
 
    <RelativeLayout
        android:layout_width="match_parent"
-       android:padding="10dp"
+       android:padding="6dp"
        android:layout_height="wrap_content">
        <com.google.android.material.button.MaterialButton
            android:id="@+id/sortBy"
@@ -74,7 +74,7 @@
 
        <androidx.recyclerview.widget.RecyclerView
            android:id="@+id/searchRecycle"
-           android:layout_marginTop="6dp"
+           android:layout_marginTop="4dp"
            android:layout_width="match_parent"
            android:layout_height="match_parent">
 

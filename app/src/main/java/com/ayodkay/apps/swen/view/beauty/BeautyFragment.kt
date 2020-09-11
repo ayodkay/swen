@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.NewsApiClient
 
 class BeautyFragment : Fragment() {
@@ -16,7 +17,7 @@ class BeautyFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return NewsApiClient.setupEveryThingFragment(frag = this,
+        return Helper.setupEveryThingFragment(frag = this,
             inflater = inflater,container = container,q=resources.getString(R.string.menu_beauty))
     }
 }
