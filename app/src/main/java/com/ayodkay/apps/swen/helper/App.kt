@@ -43,9 +43,6 @@ class App : Application(){
         filter.addAction(Intent.ACTION_SCREEN_OFF)
         val mReceiver = PowerButtonBroadcastReceiver()
         registerReceiver(mReceiver, filter)
-
-        FirebaseMessaging.getInstance().subscribeToTopic("engage")
-            .addOnCompleteListener { _ -> }
     }
 
     companion object{

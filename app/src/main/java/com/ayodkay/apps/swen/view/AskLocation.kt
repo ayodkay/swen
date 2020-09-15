@@ -6,12 +6,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
-import androidx.room.Room
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.countrypicker.CountryPicker
 import com.ayodkay.apps.swen.helper.countrypicker.CountryPickerListener
-import com.ayodkay.apps.swen.helper.room.country.AppDatabase
 import com.ayodkay.apps.swen.helper.room.country.Country
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.google.android.gms.ads.AdRequest
@@ -52,10 +50,7 @@ class AskLocation : AppCompatActivity() {
                 CountryPicker.getInstance(resources.getString(R.string.select_country), object : CountryPickerListener {
                     override fun onSelectCountry(name: String?, code: String?, iso: String?, language: String?) {
                         GlobalScope.launch {
-                            val db = Room.databaseBuilder(
-                                applicationContext,
-                                AppDatabase::class.java, "country"
-                            ).allowMainThreadQueries().build()
+                            val db = Helper.getCountryDatabase(applicationContext)
                             db.countryDao().delete()
                             db.countryDao().insertAll(
                                 Country(

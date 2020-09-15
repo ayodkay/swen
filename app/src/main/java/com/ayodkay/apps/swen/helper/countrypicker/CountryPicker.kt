@@ -4,7 +4,6 @@ import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
+import com.ayodkay.apps.swen.helper.Helper
 import java.util.*
 import java.util.Collections.sort
 
@@ -140,7 +139,7 @@ class CountryPicker : DialogFragment() {
                 val countries: MutableList<Country> = ArrayList()
                 for (countryCode in Locale.getISOCountries()) {
                     val country = Country()
-                    if (available(Locale("", countryCode).isO3Country.substring(0, 2))){
+                    if (Helper.available(Locale("", countryCode).isO3Country.substring(0, 2))){
                         country.code = countryCode
                         country.name = Locale("", countryCode).displayName
                         country.iso = Locale("", countryCode).isO3Country.substring(0, 2)
@@ -164,21 +163,6 @@ class CountryPicker : DialogFragment() {
                 }
             }
             return countries
-        }
-
-
-
-        private fun available(country:String):Boolean{
-            val ac  = arrayListOf(
-                "ae","ar","at","au","be","bg","br","ca","ch","cn","co","cu","cz","de","eg","fr","gb"
-                ,"gr","hk","hu","id","ie","il","in","it","jp","kr","lt","lv","ma","mx","my","ng",
-                "nl","no","nz","ph","pl","pt","ro","rs","ru","sa","se","sg","si","sk","th","tr","tw"
-                ,"ua","us","ve","za"
-            )
-            if (ac.contains(country.toLowerCase(Locale.ROOT))){
-                return true
-            }
-            return false
         }
     }
 }

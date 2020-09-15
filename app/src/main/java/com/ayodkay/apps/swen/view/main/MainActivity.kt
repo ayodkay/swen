@@ -1,14 +1,20 @@
 package com.ayodkay.apps.swen.view.main
 
-import android.app.AlarmManager
-import android.app.PendingIntent
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -17,17 +23,22 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.AppLog
-import com.ayodkay.apps.swen.helper.backend.NotificationReceiver
+import com.ayodkay.apps.swen.helper.Helper
+import com.ayodkay.apps.swen.helper.room.userlocation.Location
 import com.ayodkay.apps.swen.view.search.SearchActivity
-import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
+import java.io.IOException
 import java.util.*
 
-
+private const val REQUEST_CODE = 101
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
 
     override fun onStart() {
         super.onStart()
@@ -45,13 +56,40 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )){
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE
+                )
+            }else{
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE
+                )
+            }
+        }
+
+        fusedLocationClient.lastLocation.addOnSuccessListener {
+            subscribeCountryName(this,it.latitude,it.longitude)
+        }
+
+
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
 
-        //setUpAlarm(this)
-        toolbar.setOnMenuItemClickListener {menuItem->
+        //setUpAlarm(this)ta
+        toolbar.setOnMenuItemClickListener { menuItem->
             when (menuItem.itemId) {
                 R.id.search -> {
                     startActivity(
@@ -86,19 +124,6 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        FirebaseInstanceId.getInstance().instanceId
-            .addOnCompleteListener(OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    AppLog.log(message = "getInstanceId failed ${task.exception}")
-                    return@OnCompleteListener
-                }
-
-                // Get new Instance ID token
-                val token = task.result?.token
-
-                AppLog.log(message = token!!)
-            })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -118,25 +143,82 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-
-    private fun setUpAlarm(context: Context){
-        val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val alarmIntent = Intent(context, NotificationReceiver::class.java).let { intent ->
-            intent.putExtra("swen-notify", "notify")
-            PendingIntent.getBroadcast(context, 0, intent, 0)
+    @SuppressLint("MissingPermission")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when(requestCode){
+            REQUEST_CODE -> {
+                if ((grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                ) {
+                    AppLog.log(message = "wtf")
+                    fusedLocationClient.lastLocation.addOnSuccessListener {
+                        subscribeCountryName(this,it.latitude,it.longitude)
+                    }
+                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
+    }
 
-        val calendar: Calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, 14)
-            set(Calendar.MINUTE, 8)
+    private fun subscribeCountryName(context: Context?, latitude: Double, longitude: Double){
+        val geoCoder = Geocoder(context, Locale.getDefault())
+        var addresses: List<Address>? = null
+        try {
+            addresses = geoCoder.getFromLocation(latitude, longitude, 1)
+            var result: Address
+            if (addresses != null && addresses.isNotEmpty()) {
+                val locationDatabase = Helper.getLocationDatabase(this)
+
+                val countryDatabase = Helper.getCountryDatabase(this).countryDao().getAll().country
+                var countryCode = ""
+
+                try {
+                    countryCode = locationDatabase.locationDao().getAll().countryCode!!
+                }catch (e:Exception){
+
+                }
+
+                if (addresses[0].countryCode.toLowerCase(Locale.ROOT) != countryCode){
+                    if (Helper.top3Country(addresses[0].countryCode.toLowerCase(Locale.ROOT))) {
+                        locationDatabase.locationDao().delete()
+                        locationDatabase.locationDao().insertAll(
+                            Location(
+                                latitude,
+                                longitude,
+                                addresses[0].countryCode.toLowerCase(Locale.ROOT),
+                                addresses[0].countryName.toLowerCase(Locale.ROOT)
+                            )
+                        )
+                        FirebaseMessaging.getInstance()
+                            .unsubscribeFromTopic("engage")
+                            .addOnCompleteListener { _ -> }
+
+                        if (countryDatabase == addresses[0].countryCode){
+                            FirebaseMessaging.getInstance()
+                                .subscribeToTopic(addresses[0].countryCode.toLowerCase(Locale.ROOT))
+                                .addOnCompleteListener { _ -> }
+                        }else{
+                            FirebaseMessaging.getInstance()
+                                .subscribeToTopic(countryDatabase)
+                                .addOnCompleteListener { _ -> }
+                        }
+                    }else{
+                        FirebaseMessaging.getInstance()
+                            .subscribeToTopic("engage")
+                            .addOnCompleteListener { _ -> }
+                    }
+                }
+
+
+            }
+        } catch (ignored: IOException) {
+            //do something
         }
-
-        alarmMgr.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            1000 * 60 * 3,
-            alarmIntent
-        )
     }
 }

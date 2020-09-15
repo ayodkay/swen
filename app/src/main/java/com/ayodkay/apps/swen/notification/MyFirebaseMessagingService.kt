@@ -12,7 +12,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
         AppLog.log(message = remoteMessage.data)
-        Notification(this)
-            .sendNotification(getString(R.string.news_update))
+
+        if (remoteMessage.data["isEngage"].toBoolean()){
+            Notification(this)
+                .sendEngageNotification(getString(R.string.news_update))
+        }else{
+            Notification(this).sendCountryNotification(remoteMessage.data["title"]!!,
+                    remoteMessage.data["description"]!!,remoteMessage.data["url"]!!,
+                remoteMessage.data["image"]!!)
+        }
     }
 }

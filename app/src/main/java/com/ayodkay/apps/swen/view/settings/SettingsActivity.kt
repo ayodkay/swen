@@ -3,7 +3,6 @@ package com.ayodkay.apps.swen.view.settings
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
@@ -15,7 +14,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.room.Room
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.room.country.AppDatabase
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.country.Country
 import com.ayodkay.apps.swen.view.AskLocation
 import com.ayodkay.apps.swen.view.SaveNews
@@ -28,6 +27,7 @@ import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.settings_activity.*
+import kotlin.collections.ArrayList
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -65,10 +65,7 @@ class SettingsActivity : AppCompatActivity() {
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
-            val db = Room.databaseBuilder(
-                requireContext(),
-                AppDatabase::class.java, "country"
-            ).allowMainThreadQueries().build()
+            val db = Helper.getCountryDatabase(this.requireContext())
 
 
             val availableLanguages = arrayListOf(
@@ -79,9 +76,16 @@ class SettingsActivity : AppCompatActivity() {
                 "Norwegian", "Portuguese", "Russian", "Swedish", "Chinese"
             )
 
-            var checkedSort = db.countryDao().getAll().position!!
+            var language = ""
 
-            var language = availableLanguages[checkedSort]
+            var checkedSort = db.countryDao().getAll().position!!
+            language = availableLanguages[checkedSort]
+
+            val selected = isAvailable(availableLanguages,db.countryDao().getAll().iso)
+            if (selected > -1){
+                language = availableLanguages[selected]
+                checkedSort = selected
+            }
 
             val feedback: EditTextPreference? = findPreference("feedback")
             val saved: Preference? = findPreference("saved")
@@ -134,24 +138,22 @@ class SettingsActivity : AppCompatActivity() {
 
                 true
             }
-
             rate?.setOnPreferenceClickListener {
                 AppEventsLogger.newLogger(context).logEvent("appRate")
                 goToPlayStore(context)
                 true
             }
-
             color?.setOnPreferenceClickListener {
                 startActivity(Intent(this.context, ThemeActivity::class.java))
                 true
             }
             search?.setOnPreferenceClickListener {
                 MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(getString(R.string.sort_news))
+                    .setTitle(getString(R.string.search_language))
                     .setNeutralButton(resources.getString(android.R.string.cancel)) { dialog, _ ->
                         dialog.dismiss()
                     }
-                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, which ->
+                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
                         val countryName = db.countryDao().getAll().country
                         db.countryDao().delete()
                         db.countryDao().insertAll(
@@ -171,8 +173,6 @@ class SettingsActivity : AppCompatActivity() {
                     .show()
                 true
             }
-
-
             support?.setOnPreferenceClickListener {
                 AppEventsLogger.newLogger(context).logEvent("appSupport")
                 if (mInterstitialAd.isLoaded) {
@@ -180,8 +180,6 @@ class SettingsActivity : AppCompatActivity() {
                 }
                 true
             }
-
-
         }
 
         private fun setupAds(support: Preference?) {
@@ -227,22 +225,8 @@ class SettingsActivity : AppCompatActivity() {
                 }
             }
         }
-    }
 
-    private fun isAvailable(list: ArrayList<String>,keyword:String):Int{
-        var position = 0
-        for (i in list){
-            if (keyword==i){
-                return position
-            }
-            position += 1
-        }
-
-        return position
-    }
-
-    companion object{
-        fun goToPlayStore(context: Context?){
+        private fun goToPlayStore(context: Context?){
             val uri: Uri = Uri.parse("market://details?id=" + context?.packageName)
             val goToMarket = Intent(Intent.ACTION_VIEW, uri)
 
@@ -264,6 +248,31 @@ class SettingsActivity : AppCompatActivity() {
                 )
             }
         }
+
+        private fun isAvailable(list: ArrayList<String>,keyword:String):Int{
+            var position = 0
+            for (i in list){
+                if (keyword==i){
+                    return position
+                }
+                position += 1
+            }
+
+            return -1
+        }
+
+    }
+
+    private fun isAvailable(list: ArrayList<String>,keyword:String):Int{
+        var position = 0
+        for (i in list){
+            if (keyword==i){
+                return position
+            }
+            position += 1
+        }
+
+        return position
     }
 
     override fun onBackPressed() {

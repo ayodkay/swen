@@ -2,6 +2,7 @@ package com.ayodkay.apps.swen.helper
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,24 +14,58 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
-import com.ayodkay.apps.swen.helper.room.country.AppDatabase
+import com.ayodkay.apps.swen.helper.room.country.CountryDatabase
+import com.ayodkay.apps.swen.helper.room.userlocation.LocationDatabase
 import com.ayodkay.apps.swen.model.News
+import com.ayodkay.apps.swen.view.AskLocation
 import com.ayodkay.apps.swen.viewmodel.NewsViewModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import org.json.JSONObject
-import java.util.ArrayList
+import java.util.*
 
 object Helper{
 
-    fun getDatabase(context: Context): AppDatabase {
+    fun getCountryDatabase(context: Context): CountryDatabase {
         return Room.databaseBuilder(
             context,
-            AppDatabase::class.java, "country"
+            CountryDatabase::class.java, "country"
         ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
+    }
+
+    fun getLocationDatabase(context: Context): LocationDatabase {
+        return Room.databaseBuilder(
+            context,
+            LocationDatabase::class.java, "location"
+        ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
+    }
+
+    fun available(country:String):Boolean{
+        val ac  = arrayListOf(
+            "ae","ar","at","au","be","bg","br","ca","ch","cn","co","cu","cz","de","eg","fr","gb"
+            ,"gr","hk","hu","id","ie","il","in","it","jp","kr","lt","lv","ma","mx","my","ng",
+            "nl","no","nz","ph","pl","pt","ro","rs","ru","sa","se","sg","si","sk","th","tr","tw"
+            ,"ua","us","ve","za"
+        )
+        if (ac.contains(country.toLowerCase(Locale.ROOT))){
+            return true
+        }
+        return false
+    }
+
+
+    fun top3Country(country: String):Boolean{
+        val ac  = arrayListOf(
+            "br","in","ar"
+        )
+        if (ac.contains(country.toLowerCase(Locale.ROOT))){
+            return true
+        }
+        return false
     }
 
     @JvmStatic
@@ -72,19 +107,55 @@ object Helper{
         val root = inflater.inflate(R.layout.fragment_main, container, false)
 
         val adFrag = root.findViewById<AdView>(R.id.adFrag)
+        val refresh = root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
 
         val newsApiClient = NewsApiClient()
 
-        val db = getDatabase(frag.requireContext())
+        val db = getCountryDatabase(frag.requireContext())
 
         MobileAds.initialize(frag.context)
         val adRequest = AdRequest.Builder().build()
         adFrag.loadAd(adRequest)
+        var country = ""
+        try {
+            country  = db.countryDao().getAll().country
+        }catch (e:Exception){
+            frag.requireContext().startActivity(Intent(frag.requireContext(), AskLocation::class.java))
+            frag.requireActivity().finish()
+        }
 
+        refresh.setOnRefreshListener {
+            newsViewModel.getNews(
+                NewsApiClient.getTopHeadline(
+                    newsApiClient,
+                    country = country,
+                    q = q,
+                    category = category,
+                    pageSize = 100
+                )
+            ).observe(frag.viewLifecycleOwner, Observer {
+                if (it.getInt("totalResults") == 0) {
+                    root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
+                    root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
+                    root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
+                    refresh.isRefreshing = false
+                } else {
+                    root.findViewById<TextView>(R.id.totalResults).text = "${it.getInt("totalResults")} ${frag.resources.getString(
+                        R.string.articles_found) }"
+
+                    root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
+                        layoutManager = LinearLayoutManager(frag.context)
+                        hasFixedSize()
+                        adapter = AdsRecyclerView(handleJson(it),frag ,frag.viewLifecycleOwner,frag.requireContext())
+                    }
+                    refresh.isRefreshing = false
+                }
+            })
+        }
         newsViewModel.getNews(
             NewsApiClient.getTopHeadline(
                 newsApiClient,
-                country = db.countryDao().getAll().country,
+                country = country,
                 q = q,
                 category = category,
                 pageSize = 100
@@ -105,6 +176,8 @@ object Helper{
                 }
             }
         })
+
+
         return root
     }
 
@@ -117,20 +190,57 @@ object Helper{
         val newsViewModel: NewsViewModel = ViewModelProvider(frag).get(NewsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_main, container, false)
         val adFrag = root.findViewById<AdView>(R.id.adFrag)
+        val refresh = root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
         val newsApiClient = NewsApiClient()
 
         MobileAds.initialize(frag.context)
         val adRequest = AdRequest.Builder().build()
         adFrag.loadAd(adRequest)
 
-        val db = getDatabase(frag.requireContext())
+        val db = getCountryDatabase(frag.requireContext())
+        var language = ""
+        try {
+            language  = db.countryDao().getAll().iso
+        }catch (e:Exception){
+            frag.requireContext().startActivity(Intent(frag.requireContext(), AskLocation::class.java))
+            frag.requireActivity().finish()
+        }
 
+        refresh.setOnRefreshListener {
+            newsViewModel.getNews(
+                NewsApiClient.getEverything(
+                    newsApiClient,
+                    q = q,
+                    sort_by = "newest",
+                    language = language,
+                    pageSize = 100
+                )
+            ).observe(frag.viewLifecycleOwner, Observer {
+                if (it.getInt("totalResults") == 0) {
+                    root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
+                    root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
+                    root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
+
+                    refresh.isRefreshing = false
+                } else {
+                    val getResult = handleJson(it)
+                    root.findViewById<TextView>(R.id.totalResults).text = "${getResult.size} ${frag.resources.getString(R.string.articles_found) }"
+
+                    root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
+                        layoutManager = LinearLayoutManager(frag.context)
+                        hasFixedSize()
+                        adapter = AdsRecyclerView(getResult,frag, frag.viewLifecycleOwner, frag.requireContext())
+                    }
+                    refresh.isRefreshing = false
+                }
+            })
+        }
         newsViewModel.getNews(
             NewsApiClient.getEverything(
                 newsApiClient,
                 q = q,
                 sort_by = "newest",
-                language = db.countryDao().getAll().iso,
+                language = language,
                 pageSize = 100
             )
         ).observe(frag.viewLifecycleOwner, Observer {

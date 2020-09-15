@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.notification.Notification
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -36,7 +35,7 @@ class BootReceiver :BroadcastReceiver() {
             appUpdateInfoTask?.addOnSuccessListener { appUpdateInfo ->
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                     && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-                    Notification(context).sendNotification(context.getString(R.string.update_available))
+                    Notification(context).sendEngageNotification(context.getString(R.string.update_available))
                 }
             }
         }

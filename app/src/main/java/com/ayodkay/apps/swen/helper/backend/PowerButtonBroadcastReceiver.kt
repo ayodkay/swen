@@ -22,7 +22,7 @@ class PowerButtonBroadcastReceiver : BroadcastReceiver() {
             appUpdateInfoTask?.addOnSuccessListener { appUpdateInfo ->
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                     && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-                    Notification(context).sendNotification(context.getString(R.string.update_available))
+                    Notification(context).sendEngageNotification(context.getString(R.string.update_available))
                 }
             }
 

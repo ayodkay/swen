@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.App.Companion.context
-import com.ayodkay.apps.swen.helper.room.country.AppDatabase
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -20,7 +19,7 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import kotlinx.android.synthetic.main.activity_splash_screen.*
 import android.widget.Toast
-import com.ayodkay.apps.swen.helper.AppLog
+import com.ayodkay.apps.swen.helper.Helper
 import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
@@ -115,10 +114,7 @@ class SplashScreen : AppCompatActivity() {
     private fun nextActivity(){
         Handler().postDelayed({
             appUpdateManager.unregisterListener(listener!!)
-            val db = Room.databaseBuilder(
-                this,
-                AppDatabase::class.java, "country"
-            ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
+            val db = Helper.getCountryDatabase(this)
             if (db.countryDao().getAll() != null) {
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()

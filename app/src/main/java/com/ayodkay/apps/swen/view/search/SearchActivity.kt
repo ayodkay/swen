@@ -96,7 +96,7 @@ class SearchActivity : AppCompatActivity() {
     private fun vanPersie(query: String?){
         val queue = Volley.newRequestQueue(this)
         val newsApiClient = NewsApiClient()
-        val db = Helper.getDatabase(this@SearchActivity)
+        val db = Helper.getCountryDatabase(this@SearchActivity)
 
         val jsonRequest = @SuppressLint("SetTextI18n")
         object : JsonObjectRequest(

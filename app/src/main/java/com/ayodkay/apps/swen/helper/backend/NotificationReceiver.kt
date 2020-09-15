@@ -11,7 +11,7 @@ class NotificationReceiver :BroadcastReceiver() {
         if(intent.getStringExtra("swen-notify") != null &&
             intent.getStringExtra("swen-notify") == "notify"
         ){
-            Notification(context).sendNotification(context.getString(R.string.news_update))
+            Notification(context).sendEngageNotification(context.getString(R.string.news_update))
         }
     }
 }
