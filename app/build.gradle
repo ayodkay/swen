@@ -11,8 +11,8 @@ android {
         applicationId "com.ayodkay.apps.swen"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 16
-        versionName "2.16.0"
+        versionCode 17
+        versionName "2.17.0"
 
         multiDexEnabled true
 

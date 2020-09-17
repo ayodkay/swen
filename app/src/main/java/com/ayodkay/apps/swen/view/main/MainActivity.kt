@@ -199,15 +199,10 @@ class MainActivity : AppCompatActivity() {
                             .unsubscribeFromTopic("engage")
                             .addOnCompleteListener { _ -> }
 
-                        if (countryDatabase == addresses[0].countryCode){
-                            FirebaseMessaging.getInstance()
-                                .subscribeToTopic(addresses[0].countryCode.toLowerCase(Locale.ROOT))
-                                .addOnCompleteListener { _ -> }
-                        }else{
-                            FirebaseMessaging.getInstance()
-                                .subscribeToTopic(countryDatabase)
-                                .addOnCompleteListener { _ -> }
-                        }
+                        FirebaseMessaging.getInstance()
+                            .subscribeToTopic(addresses[0].countryCode.toLowerCase(Locale.ROOT))
+                            .addOnCompleteListener { _ -> }
+
                     }else{
                         FirebaseMessaging.getInstance()
                             .subscribeToTopic("engage")
