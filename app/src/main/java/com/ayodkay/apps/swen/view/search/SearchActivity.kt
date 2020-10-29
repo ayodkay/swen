@@ -6,20 +6,18 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.NewsApiClient
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
+import com.ayodkay.apps.swen.viewmodel.NewsViewModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.activity_search.*
-import org.json.JSONObject
 
 
 class SearchActivity : AppCompatActivity() {
@@ -27,6 +25,8 @@ class SearchActivity : AppCompatActivity() {
     var queryValue: String = "null"
     lateinit var sort : String
     private var sortOptions = arrayListOf("popularity","publishedAt","relevancy")
+
+
 
 
     override fun onStart() {
@@ -52,6 +52,8 @@ class SearchActivity : AppCompatActivity() {
         var checkedSort = 1
         sort = sortOptions[checkedSort]
 
+        val newsViewModel: NewsViewModel = ViewModelProvider(this@SearchActivity).get(NewsViewModel::class.java)
+
         MobileAds.initialize(this)
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
@@ -59,15 +61,13 @@ class SearchActivity : AppCompatActivity() {
         searchBar.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 queryValue = query.toString()
-                vanPersie(query)
+                AppLog.log(message = queryValue)
+                loadNews(queryValue, newsViewModel)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                queryValue = newText.toString()
-                vanPersie(newText)
-
-                return true
+                return false
             }
 
         })
@@ -80,7 +80,7 @@ class SearchActivity : AppCompatActivity() {
                 }
                 .setPositiveButton(resources.getString(android.R.string.ok)) { _, _ ->
                     if (queryValue != "null"){
-                        vanPersie(queryValue)
+                        loadNews(queryValue, newsViewModel)
                     }
 
                 }
@@ -93,24 +93,15 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun vanPersie(query: String?){
-        val queue = Volley.newRequestQueue(this)
+    @SuppressLint("SetTextI18n")
+    fun loadNews(query: String?, newsViewModel: NewsViewModel){
         val newsApiClient = NewsApiClient()
         val db = Helper.getCountryDatabase(this@SearchActivity)
 
-        val jsonRequest = @SuppressLint("SetTextI18n")
-        object : JsonObjectRequest(
-            Method.GET,
-            NewsApiClient.getEverything(
-                newsApiClient,
-                q = query,
-                sort_by = sort,
-                language = db.countryDao().getAll().iso,
-                pageSize = 100
-            ),
-            null,
-            Response.Listener<JSONObject> {
-
+        newsViewModel.getNews(NewsApiClient.getEverything(newsApiClient, q = query, sort_by = sort,
+            language = db.countryDao().getAll().iso, pageSize = 100))
+            .observe(this, {
+                AppLog.log(message = it)
                 if (it.getInt("totalResults") == 0) {
                     empty.visibility = View.VISIBLE
                     searchRecycle.visibility = View.GONE
@@ -127,16 +118,7 @@ class SearchActivity : AppCompatActivity() {
                         adapter = AdsRecyclerView(getResult, this@SearchActivity,this@SearchActivity,this@SearchActivity)
                     }
                 }
-            },
-            Response.ErrorListener {
-                AppLog.log("search", it)
-            }
-
-
-        ){
-
-        }
-        queue.add(jsonRequest)
+            })
     }
 
 }

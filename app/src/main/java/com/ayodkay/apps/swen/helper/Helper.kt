@@ -60,7 +60,7 @@ object Helper{
 
     fun top3Country(country: String):Boolean{
         val ac  = arrayListOf(
-            "br","in","ar"
+            "br","in","ar", "us","ng"
         )
         if (ac.contains(country.toLowerCase(Locale.ROOT))){
             return true

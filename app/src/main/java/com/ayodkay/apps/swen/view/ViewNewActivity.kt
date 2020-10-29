@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -21,10 +22,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.NewsApiClient
 import com.ayodkay.apps.swen.helper.NewsApiClient.Companion.getEverything
@@ -45,8 +44,6 @@ import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.more.*
 import kotlinx.android.synthetic.main.news_card.*
 import java.io.ByteArrayOutputStream
-import java.net.URL
-
 class ViewNewActivity : AppCompatActivity() {
 
     private lateinit var shareNews:Intent
@@ -64,6 +61,7 @@ class ViewNewActivity : AppCompatActivity() {
             } // Night mode is active, we're using dark theme
         }
     }
+
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,6 +90,8 @@ class ViewNewActivity : AppCompatActivity() {
         val bottomSheet:View = findViewById(R.id.bottomSheet)
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.isHideable = false
+
+        val talky = TextToSpeech(this){}
 
         Firebase.dynamicLinks.shortLinkAsync {
             link = Uri.parse(url)
@@ -156,11 +156,22 @@ class ViewNewActivity : AppCompatActivity() {
             }
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            playView.setOnClickListener {
+                talky.speak(title+content,TextToSpeech.QUEUE_FLUSH,null, null)
+
+            }
+        }else{
+            playView.visibility = View.GONE
+        }
+
+
+
         article.setOnClickListener {
             startActivity(
                 Intent(this, WebView::class.java)
-                    .putExtra
-                        ("url", url)
+                    .putExtra("url", url)
+                    .putExtra("toMain", false)
             )
         }
 

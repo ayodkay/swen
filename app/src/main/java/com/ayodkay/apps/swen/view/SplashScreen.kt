@@ -66,7 +66,9 @@ class SplashScreen : AppCompatActivity() {
                 if (pendingDynamicLinkData != null) {
                     AppEventsLogger.newLogger(context).logEvent("dynamicLink")
                     startActivity(Intent(this, WebView::class.java)
-                        .putExtra("url",pendingDynamicLinkData.link.toString()))
+                        .putExtra("url",pendingDynamicLinkData.link.toString())
+                        .putExtra("toMain", true))
+
                     finish()
                 }else{
                     // Returns an intent object that you use to check for an update.

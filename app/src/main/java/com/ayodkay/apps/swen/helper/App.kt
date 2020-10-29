@@ -7,11 +7,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatDelegate
+import com.ayodkay.apps.swen.BuildConfig
 import com.ayodkay.apps.swen.helper.backend.BootReceiver
 import com.ayodkay.apps.swen.helper.backend.PowerButtonBroadcastReceiver
 import com.ayodkay.apps.swen.view.KEY_THEME
 import com.ayodkay.apps.swen.view.PREFS_NAME
 import com.ayodkay.apps.swen.view.THEME_UNDEFINED
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessaging
 
 
@@ -20,6 +22,10 @@ class App : Application(){
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
     override fun onCreate() {
         super.onCreate()
+
+        if (BuildConfig.DEBUG) {
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+        }
         context = this.applicationContext
         when(sharedPrefs.getInt(KEY_THEME, THEME_UNDEFINED)){
             1->{

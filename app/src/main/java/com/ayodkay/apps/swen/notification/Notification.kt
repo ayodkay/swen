@@ -1,6 +1,5 @@
 package com.ayodkay.apps.swen.notification
 
-import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -8,30 +7,25 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color.RED
-import android.graphics.drawable.Drawable
 import android.os.Build
-import androidx.annotation.NonNull
 import androidx.core.app.NotificationCompat
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.App
 import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.view.WebView
 import com.ayodkay.apps.swen.view.main.MainActivity
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import com.facebook.FacebookSdk.getApplicationContext
 import com.facebook.appevents.AppEventsLogger
 import com.squareup.picasso.Picasso
+import kotlin.random.Random
 
 
 class Notification internal constructor(private val context: Context) {
 
     companion object {
-        private const val UPDATE_NOTIFICATION = 101
+        private const val ENGAGE_NOTIFICATION = 101
+        private val COUNTRY_NOTIFICATION = Random.nextInt(0, 1000000)
         private val CHANNEL_ID = context.getString(R.string.notification_id)
 
         private val notificationManager =
@@ -39,7 +33,7 @@ class Notification internal constructor(private val context: Context) {
 
         fun deleteNotification() {
             notificationManager.cancel(
-                UPDATE_NOTIFICATION
+                ENGAGE_NOTIFICATION
             )
         }
 
@@ -76,7 +70,7 @@ class Notification internal constructor(private val context: Context) {
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setAutoCancel(true)
         notificationManager.notify(
-            UPDATE_NOTIFICATION, builder.build()
+            ENGAGE_NOTIFICATION, builder.build()
         )
 
         when {
@@ -100,7 +94,7 @@ class Notification internal constructor(private val context: Context) {
         val intent = Intent(context, WebView::class.java).apply {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
 
-        }.putExtra("url", url)
+        }.putExtra("url", url).putExtra("toMain", true)
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
             context,
@@ -129,7 +123,7 @@ class Notification internal constructor(private val context: Context) {
         val bitmap = Picasso.get().load(image).get()
         builder.setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
         notificationManager.notify(
-            UPDATE_NOTIFICATION, builder.build()
+            COUNTRY_NOTIFICATION, builder.build()
         )
 
 
