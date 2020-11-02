@@ -1,7 +1,7 @@
 package com.ayodkay.apps.swen.helper
 
-import com.ayodkay.apps.swen.BuildConfig
 import android.util.Log
+import com.ayodkay.apps.swen.BuildConfig
 
 object AppLog {
     @JvmStatic

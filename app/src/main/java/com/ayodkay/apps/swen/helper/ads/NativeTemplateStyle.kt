@@ -80,7 +80,7 @@ class NativeTemplateStyle {
 
     /** A class that provides helper methods to build a style object. *  */
     class Builder {
-        private val styles: NativeTemplateStyle
+        private val styles: NativeTemplateStyle = NativeTemplateStyle()
         fun withCallToActionTextTypeface(callToActionTextTypeface: Typeface?): Builder {
             styles.callToActionTextTypeface = callToActionTextTypeface
             return this
@@ -170,8 +170,5 @@ class NativeTemplateStyle {
             return styles
         }
 
-        init {
-            styles = NativeTemplateStyle()
-        }
     }
 }

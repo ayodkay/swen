@@ -2,10 +2,8 @@ package com.ayodkay.apps.swen.view
 
 import android.content.Context
 import android.content.res.Configuration
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.ayodkay.apps.swen.R

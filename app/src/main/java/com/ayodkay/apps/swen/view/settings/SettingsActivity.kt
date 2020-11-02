@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.room.Room
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.country.Country
@@ -27,7 +26,6 @@ import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.settings_activity.*
-import kotlin.collections.ArrayList
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -76,7 +74,7 @@ class SettingsActivity : AppCompatActivity() {
                 "Norwegian", "Portuguese", "Russian", "Swedish", "Chinese"
             )
 
-            var language = ""
+            var language: String
 
             var checkedSort = db.countryDao().getAll().position!!
             language = availableLanguages[checkedSort]

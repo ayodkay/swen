@@ -79,7 +79,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         fusedLocationClient.lastLocation.addOnSuccessListener {
-            subscribeCountryName(this,it.latitude,it.longitude)
+            if (it != null){
+                subscribeCountryName(this,it.latitude,it.longitude)
+            }
         }
 
 
@@ -158,9 +160,9 @@ class MainActivity : AppCompatActivity() {
                     fusedLocationClient.lastLocation.addOnSuccessListener {
                         subscribeCountryName(this,it.latitude,it.longitude)
                     }
-                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
                 }else{
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -168,14 +170,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun subscribeCountryName(context: Context?, latitude: Double, longitude: Double){
         val geoCoder = Geocoder(context, Locale.getDefault())
-        var addresses: List<Address>? = null
+        val addresses: List<Address>?
         try {
             addresses = geoCoder.getFromLocation(latitude, longitude, 1)
-            var result: Address
             if (addresses != null && addresses.isNotEmpty()) {
                 val locationDatabase = Helper.getLocationDatabase(this)
 
-                val countryDatabase = Helper.getCountryDatabase(this).countryDao().getAll().country
                 var countryCode = ""
 
                 try {

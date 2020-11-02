@@ -1,7 +1,6 @@
 package com.ayodkay.apps.swen.helper.room.news
 
 import androidx.lifecycle.LiveData
-import com.ayodkay.apps.swen.helper.AppLog
 
 class NewsRoomRepo(private val roomDao: NewsDao){
     val allNewsRoom: LiveData<List<NewsRoom>> = roomDao.getAll()

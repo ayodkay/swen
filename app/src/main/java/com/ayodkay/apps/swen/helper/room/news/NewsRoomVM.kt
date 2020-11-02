@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.ayodkay.apps.swen.helper.AppLog
 import kotlinx.coroutines.launch
 
 class NewsRoomVM(application: Application):AndroidViewModel(application){

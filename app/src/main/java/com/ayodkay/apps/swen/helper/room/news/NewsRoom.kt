@@ -15,5 +15,4 @@ data class NewsRoom(
     @ColumnInfo(name = "urlToImage") val urlToImage: String,
     @ColumnInfo(name = "publishedAt") val publishedAt: String,
     @ColumnInfo(name = "content") val content: String,
-    @ColumnInfo(name = "date") val date:  String
 )

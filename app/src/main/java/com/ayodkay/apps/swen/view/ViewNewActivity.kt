@@ -20,15 +20,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.Helper
-import com.ayodkay.apps.swen.helper.NewsApiClient
-import com.ayodkay.apps.swen.helper.NewsApiClient.Companion.getEverything
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
-import com.ayodkay.apps.swen.viewmodel.NewsViewModel
+import com.ayodkay.apps.swen.model.NewsArticle
+import com.ayodkay.apps.swen.viewmodel.NewViewModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -44,6 +41,8 @@ import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.more.*
 import kotlinx.android.synthetic.main.news_card.*
 import java.io.ByteArrayOutputStream
+
+
 class ViewNewActivity : AppCompatActivity() {
 
     private lateinit var shareNews:Intent
@@ -101,14 +100,10 @@ class ViewNewActivity : AppCompatActivity() {
             dynamicLink = result.shortLink.toString()
         }.addOnFailureListener {}
 
-        val newsViewModel: NewsViewModel = ViewModelProvider(this).get(NewsViewModel::class.java)
-
-        val newsApiClient = NewsApiClient()
-
         if (title.contains("- ")){
-            loadMore(newsViewModel,newsApiClient,title.substringAfter("- "))
+            loadMore(title.substringAfter("- "))
         }else{
-            loadMore(newsViewModel,newsApiClient,source)
+            loadMore(source)
         }
 
         shareView.setOnClickListener {
@@ -278,21 +273,22 @@ class ViewNewActivity : AppCompatActivity() {
     }
 
 
-    private fun loadMore(newsViewModel:NewsViewModel,newsApiClient:NewsApiClient,query:String){
-        newsViewModel.getNews(getEverything(newsApiClient, pageSize = 100,
-            q = query,sort_by = "publishedAt"))
-            .observe(this, Observer {
-                moreBy.apply {
-                    layoutManager = LinearLayoutManager(this@ViewNewActivity)
-                    hasFixedSize()
-                    adapter = AdsRecyclerView(
-                        Helper.handleJson(it),
-                        this@ViewNewActivity,
-                        this@ViewNewActivity,
-                        this@ViewNewActivity
-                    )
-                }
-            })
+    private fun loadMore(query:String){
+        val  newViewModel = ViewModelProvider(this).get(NewViewModel::class.java)
+        val articleArrayList = arrayListOf<NewsArticle>()
+        newViewModel.getEveryThingFromRepo(pageSize = 100,
+            q = query,sort_by = "publishedAt").observe(this,{
+            moreBy.apply {
+                layoutManager = LinearLayoutManager(this@ViewNewActivity)
+                hasFixedSize()
+                articleArrayList.addAll(it.articles)
+                adapter = AdsRecyclerView(
+                    articleArrayList,
+                    this@ViewNewActivity,
+                    this@ViewNewActivity
+                )
+            }
+        })
     }
 
 }

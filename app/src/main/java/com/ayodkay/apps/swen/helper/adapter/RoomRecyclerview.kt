@@ -13,7 +13,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +23,7 @@ import com.ayodkay.apps.swen.helper.ads.NativeTemplateStyle
 import com.ayodkay.apps.swen.helper.ads.TemplateView
 import com.ayodkay.apps.swen.helper.room.news.NewsRoom
 import com.ayodkay.apps.swen.helper.room.news.NewsRoomVM
-import com.ayodkay.apps.swen.model.NewsArticle
+import com.ayodkay.apps.swen.model.News
 import com.ayodkay.apps.swen.view.ViewNewActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -42,26 +41,23 @@ import java.text.SimpleDateFormat
 private val ITEM_TYPE_COUNTRY by lazy { 0 }
 private val ITEM_TYPE_BANNER_AD by lazy { 1 }
 private lateinit var mInterstitialAd: InterstitialAd
-
-class AdsRecyclerView internal constructor(
-    private val newsList: ArrayList<NewsArticle>, private val owner: ViewModelStoreOwner,
-    private val context: Context
-) :
+class RoomRecyclerview internal constructor(private val newsList: ArrayList<News>,
+                                            private val owner: ViewModelStoreOwner,
+                                           private val context: Context):
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        when (viewType) {
-            ITEM_TYPE_BANNER_AD -> {
+        when(viewType){
+            ITEM_TYPE_BANNER_AD->{
                 val bannerLayoutView: View = LayoutInflater.from(parent.context)
                     .inflate(R.layout.admob, parent, false)
 
                 return MyAdViewHolder(bannerLayoutView)
             }
 
-            else -> {
+            else->{
                 val view: View =
-                    LayoutInflater.from(context)
-                        .inflate(R.layout.news_list_card, parent, false)
+                    LayoutInflater.from(context).inflate(R.layout.news_list_card, parent, false)
                 return NewsViewHolder(view)
             }
 
@@ -74,12 +70,10 @@ class AdsRecyclerView internal constructor(
     }
 
     @SuppressLint("SimpleDateFormat")
-    @Suppress("SENSELESS_COMPARISON")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (getItemViewType(position)) {
-            ITEM_TYPE_BANNER_AD -> {
-                val progressBar: LottieAnimationView =
-                    holder.itemView.findViewById(R.id.adsProgress)
+        when(getItemViewType(position)){
+            ITEM_TYPE_BANNER_AD->{
+                val progressBar: LottieAnimationView = holder.itemView.findViewById(R.id.adsProgress)
                 val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
                 MobileAds.initialize(context)
                 GlobalScope.launch {
@@ -89,7 +83,7 @@ class AdsRecyclerView internal constructor(
                         context,
                         context.resources.getString(R.string.custom_ads_unit)
                     )
-                        .forUnifiedNativeAd { unifiedNativeAd ->
+                        .forUnifiedNativeAd{ unifiedNativeAd ->
                             val styles =
                                 NativeTemplateStyle.Builder().withMainBackgroundColor(background)
                                     .build()
@@ -112,98 +106,68 @@ class AdsRecyclerView internal constructor(
                             }
                         })
                         .build().also {
+
                             it.loadAd(AdRequest.Builder().build())
                         }
                 }
             }
 
-            else -> {
+            else->{
                 setUpAds()
-                if ((itemCount - 1) == position) {
+                if ((itemCount-1) ==position){
                     AppLog.log(message = "yes")
                     if (mInterstitialAd.isLoaded) {
                         mInterstitialAd.show()
                     }
                 }
-                val newsViewHolder: NewsViewHolder = holder as NewsViewHolder
+                val newsViewHolder : NewsViewHolder = holder as NewsViewHolder
                 val newsModel = ViewModelProvider(owner).get(NewsRoomVM::class.java)
                 val newsPosition = newsList[position]
-
-                val author =
-                    if (newsPosition.author != null) newsPosition.author else ""
-                val title =
-                    if (newsPosition.title != null) newsPosition.title else ""
-                val description =
-                    if (newsPosition.description != null) newsPosition.description else ""
-                val urlToImage =
-                    if (newsPosition.urlToImage != null) newsPosition.urlToImage else ""
-                val content =
-                    if (newsPosition.content != null) newsPosition.content else ""
-
-
                 val date = newsPosition.publishedAt
-                    .replace("T", " ").replace("Z", "")
-                newsViewHolder.source.text = newsPosition.source.name
+                    .replace("T"," ").replace("Z","")
+                newsViewHolder.source.text = newsPosition.source
                 newsViewHolder.date.text = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                     .parse(date)?.toString()
                 newsViewHolder.title.text = newsPosition.title
                 newsViewHolder.description.text = newsPosition.description
 
-                if (newsModel.exist(newsPosition.url)) {
-                    newsViewHolder.bookmark.setImageDrawable(
-                        ResourcesCompat
-                            .getDrawable(
-                                context.resources,
-                                R.drawable.ic_bookmarked, null
-                            )
-                    )
-                } else {
-                    newsViewHolder.bookmark.setImageDrawable(
-                        ResourcesCompat
-                            .getDrawable(
-                                context.resources,
-                                R.drawable.ic_bookmark, null
-                            )
-                    )
+                if (newsModel.exist(newsPosition.url)){
+                    newsViewHolder.bookmark.setImageDrawable(ResourcesCompat
+                        .getDrawable(context.resources,
+                            R.drawable.ic_bookmarked,null))
+                }else{
+                    newsViewHolder.bookmark.setImageDrawable(ResourcesCompat
+                        .getDrawable(context.resources,
+                            R.drawable.ic_bookmark,null))
                 }
                 newsViewHolder.bookmarkView.setOnClickListener {
-                    if (newsModel.exist(newsPosition.url)) {
+                    if (newsModel.exist(newsPosition.url)){
                         newsModel.deleteOne(newsPosition.url)
-                        newsViewHolder.bookmark.setImageDrawable(
-                            ResourcesCompat
-                                .getDrawable(
-                                    context.resources,
-                                    R.drawable.ic_bookmark, null
-                                )
-                        )
-                    } else {
+                        newsViewHolder.bookmark.setImageDrawable(ResourcesCompat
+                            .getDrawable(context.resources,
+                                R.drawable.ic_bookmark,null))
+                    }else{
                         newsBookMark()
-                        newsModel.insert(
-                            NewsRoom(
-                                url = newsPosition.url,
-                                source = newsPosition.source.name,
-                                author = author,
-                                title = title,
-                                description = description,
-                                urlToImage = urlToImage,
-                                publishedAt = newsPosition.publishedAt,
-                                content = content,
-                            )
-                        )
-                        newsViewHolder.bookmark.setImageDrawable(
-                            ResourcesCompat
-                                .getDrawable(
-                                    context.resources,
-                                    R.drawable.ic_bookmarked, null
-                                )
-                        )
+                        newsModel.insert(NewsRoom(
+                            url = newsPosition.url,
+                            source = newsPosition.source,
+                            author = newsPosition.author,
+                            title= newsPosition.title,
+                            description= newsPosition.description,
+                            urlToImage= newsPosition.urlToImage,
+                            publishedAt= newsPosition.publishedAt,
+                            content = newsPosition.content,
+                        ))
+                        newsViewHolder.bookmark.setImageDrawable(ResourcesCompat
+                            .getDrawable(context.resources,
+                                R.drawable.ic_bookmarked,null))
                     }
                 }
 
                 try {
                     Glide.with(context)
                         .load(newsPosition.urlToImage)
-                        .listener(object : RequestListener<Drawable> {
+                        .listener(object :RequestListener<Drawable>{
                             override fun onLoadFailed(
                                 e: GlideException?,
                                 model: Any?,
@@ -212,13 +176,9 @@ class AdsRecyclerView internal constructor(
                             ): Boolean {
                                 newsViewHolder.progressBar.visibility = View.GONE
                                 newsViewHolder.image
-                                    .setImageDrawable(
-                                        ResourcesCompat
-                                            .getDrawable(
-                                                context.resources,
-                                                R.drawable.ic_undraw_page_not_found_su7k, null
-                                            )
-                                    )
+                                    .setImageDrawable(ResourcesCompat
+                                        .getDrawable(context.resources,
+                                            R.drawable.ic_undraw_page_not_found_su7k,null))
 
 
                                 return true
@@ -238,15 +198,9 @@ class AdsRecyclerView internal constructor(
                         })
                         .into(holder.image)
 
-                } catch (e: RuntimeException) {
+                }catch (e:RuntimeException){
                     newsViewHolder.progressBar.visibility = View.GONE
-                    newsViewHolder.image.setImageDrawable(
-                        ResourcesCompat.getDrawable(
-                            context.resources,
-                            R.drawable.ic_undraw_page_not_found_su7k,
-                            null
-                        )
-                    )
+                    newsViewHolder.image.setImageDrawable(ResourcesCompat.getDrawable(context.resources,R.drawable.ic_undraw_page_not_found_su7k,null))
                 }
 
 
@@ -254,12 +208,12 @@ class AdsRecyclerView internal constructor(
                     cardClick()
                     context.startActivity(
                         Intent(context, ViewNewActivity::class.java)
-                            .putExtra("url", newsPosition.url)
-                            .putExtra("image", urlToImage)
-                            .putExtra("title", title)
-                            .putExtra("content", content)
-                            .putExtra("description", description)
-                            .putExtra("source", newsPosition.source.name)
+                        .putExtra("url",newsPosition.url)
+                        .putExtra("image",newsPosition.urlToImage)
+                        .putExtra("title",newsPosition.title)
+                        .putExtra("content",newsPosition.content)
+                        .putExtra("description",newsPosition.description)
+                        .putExtra("source",newsPosition.source)
                     )
                 }
             }
@@ -267,7 +221,7 @@ class AdsRecyclerView internal constructor(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if ((position + 1) % 4 == 0 && (position + 1) != 1) {
+        if ((position+1) % 4 == 0 && (position+1) != 1) {
             return ITEM_TYPE_BANNER_AD
         }
         return ITEM_TYPE_COUNTRY
@@ -278,7 +232,7 @@ class AdsRecyclerView internal constructor(
         RecyclerView.ViewHolder(itemView!!)
 
 
-    internal class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    internal class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var title: TextView = itemView.findViewById(R.id.title)
         var image: ImageView = itemView.findViewById(R.id.image)
         var bookmark: ImageView = itemView.findViewById(R.id.bookmark)
@@ -289,20 +243,20 @@ class AdsRecyclerView internal constructor(
         var progressBar: LottieAnimationView = itemView.findViewById(R.id.progressBar)
     }
 
-    private fun cardClick() {
+    private fun cardClick (){
         AppEventsLogger.newLogger(context).logEvent("cardClick")
     }
 
-    private fun newsBookMark() {
+    private fun newsBookMark (){
         AppEventsLogger.newLogger(context).logEvent("newsBookMark")
     }
 
-    private fun setUpAds() {
+    private fun setUpAds(){
         MobileAds.initialize(context) {}
         mInterstitialAd = InterstitialAd(context)
         mInterstitialAd.adUnitId = context.resources.getString(R.string.interstitial_ad_unit_id)
         mInterstitialAd.loadAd(AdRequest.Builder().build())
-        mInterstitialAd.adListener = object : AdListener() {
+        mInterstitialAd.adListener = object: AdListener() {
             override fun onAdLoaded() {
 
             }

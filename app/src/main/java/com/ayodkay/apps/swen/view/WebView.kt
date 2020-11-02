@@ -2,18 +2,14 @@ package com.ayodkay.apps.swen.view
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.View
-import android.view.View.*
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.core.net.toUri
+import androidx.appcompat.app.AppCompatActivity
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds

@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,8 +19,9 @@ import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
 import com.ayodkay.apps.swen.helper.room.country.CountryDatabase
 import com.ayodkay.apps.swen.helper.room.userlocation.LocationDatabase
 import com.ayodkay.apps.swen.model.News
+import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.view.AskLocation
-import com.ayodkay.apps.swen.viewmodel.NewsViewModel
+import com.ayodkay.apps.swen.viewmodel.NewViewModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -69,6 +69,7 @@ object Helper{
     }
 
     @JvmStatic
+    @Deprecated("changed to retrofit")
     fun handleJson(response: JSONObject): ArrayList<News> {
 
         val news: ArrayList<News> = arrayListOf()
@@ -89,7 +90,6 @@ object Helper{
                     results.getString("urlToImage"),
                     results.getString("publishedAt"),
                     results.getString("content"),
-                    results.getString("publishedAt")
                 )
             )
         }
@@ -103,13 +103,12 @@ object Helper{
     fun setupFragment(category: String, frag: Fragment, inflater: LayoutInflater,
                       container: ViewGroup?, q: String?=""): View?{
 
-        val newsViewModel: NewsViewModel = ViewModelProvider(frag).get(NewsViewModel::class.java)
+        val  newViewModel = ViewModelProvider(frag).get(NewViewModel::class.java)
+        val articleArrayList = arrayListOf<NewsArticle>()
         val root = inflater.inflate(R.layout.fragment_main, container, false)
 
         val adFrag = root.findViewById<AdView>(R.id.adFrag)
         val refresh = root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
-
-        val newsApiClient = NewsApiClient()
 
         val db = getCountryDatabase(frag.requireContext())
 
@@ -125,59 +124,48 @@ object Helper{
         }
 
         refresh.setOnRefreshListener {
-            newsViewModel.getNews(
-                NewsApiClient.getTopHeadline(
-                    newsApiClient,
-                    country = country,
-                    q = q,
-                    category = category,
-                    pageSize = 100
-                )
-            ).observe(frag.viewLifecycleOwner, Observer {
-                if (it.getInt("totalResults") == 0) {
-                    root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
-                    root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
-                    root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
-                    refresh.isRefreshing = false
-                } else {
-                    root.findViewById<TextView>(R.id.totalResults).text = "${it.getInt("totalResults")} ${frag.resources.getString(
+            newViewModel.getHeadlineFromRepo(country = country, q = q, category = category, pageSize = 100)
+                .observe(frag, { newsResponse ->
+                    if (newsResponse.totalResults == 0) {
+                        root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
+                        root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
+                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
+                        refresh.isRefreshing = false
+                    } else {
+                    root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(
                         R.string.articles_found) }"
 
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
                         layoutManager = LinearLayoutManager(frag.context)
                         hasFixedSize()
-                        adapter = AdsRecyclerView(handleJson(it),frag ,frag.viewLifecycleOwner,frag.requireContext())
+                        articleArrayList.addAll(newsResponse.articles)
+                        adapter = AdsRecyclerView(articleArrayList,frag,frag.requireContext())
                     }
                     refresh.isRefreshing = false
                 }
             })
         }
-        newsViewModel.getNews(
-            NewsApiClient.getTopHeadline(
-                newsApiClient,
-                country = country,
-                q = q,
-                category = category,
-                pageSize = 100
-            )
-        ).observe(frag.viewLifecycleOwner, Observer {
-            if (it.getInt("totalResults") == 0) {
-                root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
-                root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
-                root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
-            } else {
-                root.findViewById<TextView>(R.id.totalResults).text = "${it.getInt("totalResults")} ${frag.resources.getString(
-                    R.string.articles_found) }"
+        newViewModel.getHeadlineFromRepo(country = country, q = q, category = category, pageSize = 100)
+            .observe(frag, { newsResponse ->
+                if (newsResponse.totalResults == 0) {
+                    root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
+                    root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
+                    root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
+                } else {
+                    root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(
+                        R.string.articles_found) }"
 
-                root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
-                    layoutManager = LinearLayoutManager(frag.context)
-                    hasFixedSize()
-                    adapter = AdsRecyclerView(handleJson(it),frag ,frag.viewLifecycleOwner,frag.requireContext())
+                    root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
+                        layoutManager = LinearLayoutManager(frag.context)
+                        hasFixedSize()
+
+                        articleArrayList.addAll(newsResponse.articles)
+
+                        adapter = AdsRecyclerView(articleArrayList,frag,frag.requireContext())
+                    }
                 }
             }
-        })
-
-
+        )
         return root
     }
 
@@ -187,11 +175,11 @@ object Helper{
     fun setupEveryThingFragment(frag: Fragment, inflater: LayoutInflater,
                                 container: ViewGroup?,q: String?=""): View?{
 
-        val newsViewModel: NewsViewModel = ViewModelProvider(frag).get(NewsViewModel::class.java)
+        val  newViewModel = ViewModelProvider(frag).get(NewViewModel::class.java)
+        val articleArrayList = arrayListOf<NewsArticle>()
         val root = inflater.inflate(R.layout.fragment_main, container, false)
         val adFrag = root.findViewById<AdView>(R.id.adFrag)
         val refresh = root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
-        val newsApiClient = NewsApiClient()
 
         MobileAds.initialize(frag.context)
         val adRequest = AdRequest.Builder().build()
@@ -206,59 +194,46 @@ object Helper{
             frag.requireActivity().finish()
         }
 
-        refresh.setOnRefreshListener {
-            newsViewModel.getNews(
-                NewsApiClient.getEverything(
-                    newsApiClient,
-                    q = q,
-                    sort_by = "newest",
-                    language = language,
-                    pageSize = 100
-                )
-            ).observe(frag.viewLifecycleOwner, Observer {
-                if (it.getInt("totalResults") == 0) {
+        newViewModel.getEveryThingFromRepo(q = q, sort_by = "newest", language = language, pageSize = 100)
+            .observe(frag,{newsResponse ->
+                if (newsResponse.totalResults == 0) {
                     root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
                     root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
-
-                    refresh.isRefreshing = false
                 } else {
-                    val getResult = handleJson(it)
-                    root.findViewById<TextView>(R.id.totalResults).text = "${getResult.size} ${frag.resources.getString(R.string.articles_found) }"
+                    root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(R.string.articles_found) }"
 
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
                         layoutManager = LinearLayoutManager(frag.context)
+                        articleArrayList.addAll(newsResponse.articles)
                         hasFixedSize()
-                        adapter = AdsRecyclerView(getResult,frag, frag.viewLifecycleOwner, frag.requireContext())
+                        adapter = AdsRecyclerView(articleArrayList,frag,frag.requireContext())
                     }
-                    refresh.isRefreshing = false
                 }
-            })
-        }
-        newsViewModel.getNews(
-            NewsApiClient.getEverything(
-                newsApiClient,
-                q = q,
-                sort_by = "newest",
-                language = language,
-                pageSize = 100
-            )
-        ).observe(frag.viewLifecycleOwner, Observer {
-            if (it.getInt("totalResults") == 0) {
-                root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
-                root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
-                root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
-            } else {
-                val getResult = handleJson(it)
-                root.findViewById<TextView>(R.id.totalResults).text = "${getResult.size} ${frag.resources.getString(R.string.articles_found) }"
 
-                root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
-                    layoutManager = LinearLayoutManager(frag.context)
-                    hasFixedSize()
-                    adapter = AdsRecyclerView(getResult,frag, frag.viewLifecycleOwner, frag.requireContext())
-                }
-            }
-        })
+            })
+        refresh.setOnRefreshListener {
+            newViewModel.getEveryThingFromRepo(q = q, sort_by = "newest", language = language, pageSize = 100)
+                .observe(frag,{newsResponse ->
+                    if (newsResponse.totalResults == 0) {
+                        root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
+                        root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
+                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
+
+                        refresh.isRefreshing = false
+                    } else {
+                        root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(R.string.articles_found) }"
+
+                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
+                            layoutManager = LinearLayoutManager(frag.context)
+                            articleArrayList.addAll(newsResponse.articles)
+                            hasFixedSize()
+                            adapter = AdsRecyclerView(articleArrayList,frag, frag.requireContext())
+                        }
+                        refresh.isRefreshing = false
+                    }
+                })
+        }
         return root
     }
 }

@@ -8,7 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [NewsRoom::class], version = 1)
+@Database(entities = [NewsRoom::class], version = 2)
 abstract class NewsDatabase : RoomDatabase() {
     abstract fun newsDao(): NewsDao
 
@@ -29,7 +29,7 @@ abstract class NewsDatabase : RoomDatabase() {
                     val instance = Room.databaseBuilder(
                         context.applicationContext,
                         NewsDatabase::class.java,
-                        "hotel_table"
+                        "newsroom"
                     )
                         .fallbackToDestructiveMigration()
                         .addCallback(

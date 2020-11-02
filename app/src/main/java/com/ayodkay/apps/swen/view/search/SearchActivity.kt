@@ -9,11 +9,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.Helper
-import com.ayodkay.apps.swen.helper.NewsApiClient
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
-import com.ayodkay.apps.swen.viewmodel.NewsViewModel
+import com.ayodkay.apps.swen.model.NewsArticle
+import com.ayodkay.apps.swen.viewmodel.NewViewModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -52,8 +51,6 @@ class SearchActivity : AppCompatActivity() {
         var checkedSort = 1
         sort = sortOptions[checkedSort]
 
-        val newsViewModel: NewsViewModel = ViewModelProvider(this@SearchActivity).get(NewsViewModel::class.java)
-
         MobileAds.initialize(this)
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
@@ -61,8 +58,7 @@ class SearchActivity : AppCompatActivity() {
         searchBar.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 queryValue = query.toString()
-                AppLog.log(message = queryValue)
-                loadNews(queryValue, newsViewModel)
+                loadNews(queryValue)
                 return true
             }
 
@@ -80,7 +76,7 @@ class SearchActivity : AppCompatActivity() {
                 }
                 .setPositiveButton(resources.getString(android.R.string.ok)) { _, _ ->
                     if (queryValue != "null"){
-                        loadNews(queryValue, newsViewModel)
+                        loadNews(queryValue)
                     }
 
                 }
@@ -94,31 +90,39 @@ class SearchActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun loadNews(query: String?, newsViewModel: NewsViewModel){
-        val newsApiClient = NewsApiClient()
+    fun loadNews(query: String?) {
         val db = Helper.getCountryDatabase(this@SearchActivity)
+        val newViewModel = ViewModelProvider(this).get(NewViewModel::class.java)
+        val articleArrayList = arrayListOf<NewsArticle>()
 
-        newsViewModel.getNews(NewsApiClient.getEverything(newsApiClient, q = query, sort_by = sort,
-            language = db.countryDao().getAll().iso, pageSize = 100))
-            .observe(this, {
-                AppLog.log(message = it)
-                if (it.getInt("totalResults") == 0) {
+
+        newViewModel.getEveryThingFromRepo(
+            q = query, sort_by = sort,
+            language = db.countryDao().getAll().iso, pageSize = 100
+        ).observe(this, { newsResponse ->
+                if (newsResponse.totalResults == 0) {
                     empty.visibility = View.VISIBLE
                     searchRecycle.visibility = View.GONE
                     totalResults.visibility = View.GONE
                 } else {
-                    val getResult  = Helper.handleJson(it)
                     empty.visibility = View.GONE
                     searchRecycle.visibility = View.VISIBLE
                     totalResults.visibility = View.VISIBLE
-                    totalResults.text = "${getResult.size} ${resources.getString(R.string.articles_found)}"
+                    totalResults.text =
+                        "${newsResponse.totalResults} ${resources.getString(R.string.articles_found)}"
                     searchRecycle.apply {
                         layoutManager = LinearLayoutManager(this@SearchActivity)
+                        articleArrayList.addAll(newsResponse.articles)
                         hasFixedSize()
-                        adapter = AdsRecyclerView(getResult, this@SearchActivity,this@SearchActivity,this@SearchActivity)
+                        adapter = AdsRecyclerView(
+                            articleArrayList,
+                            this@SearchActivity,
+                            this@SearchActivity
+                        )
                     }
                 }
             })
     }
+
 
 }

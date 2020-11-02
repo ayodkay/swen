@@ -8,6 +8,7 @@ import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 
+@Deprecated("")
 class NewsViewModel : ViewModel(){
 
     private var _news: MutableLiveData<JSONObject>? = null

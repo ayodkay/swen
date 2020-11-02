@@ -6,23 +6,22 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.App.Companion.context
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.view.main.MainActivity
+import com.facebook.appevents.AppEventsLogger
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import kotlinx.android.synthetic.main.activity_splash_screen.*
-import android.widget.Toast
-import com.ayodkay.apps.swen.helper.Helper
-import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_splash_screen.*
 
 
 private const val MY_REQUEST_CODE = 1
@@ -113,6 +112,7 @@ class SplashScreen : AppCompatActivity() {
         }
     }
 
+    @Suppress("SENSELESS_COMPARISON")
     private fun nextActivity(){
         Handler().postDelayed({
             appUpdateManager.unregisterListener(listener!!)
@@ -124,6 +124,6 @@ class SplashScreen : AppCompatActivity() {
                 startActivity(Intent(this, AskLocation::class.java))
                 finish()
             }
-        }, 1500)
+        }, 1000)
     }
 }
