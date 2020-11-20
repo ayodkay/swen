@@ -53,7 +53,6 @@
     <string name="news_update">最新のニュースを見る</string>
     <string name="notification_id">ケアニュース</string>
     <string name="text_copied">テキストをクリップボードにコピーしました。</string>
-    <string name="support">サポート</string>
     <string name="dev_support">広告を見てアプリ開発者をサポートする</string>
     <string name="permission_granted">権限が付与されました。もう一度共有してみてください</string>
     <string name="permission_not_granted">共有する許可を受け入れる必要があります</string>
@@ -77,5 +76,6 @@
     <string name="ad">Ad</string>
     <string name="search_language">検索言語</string>
     <string name="search_language_summary">ニュースを検索するときに使用する言語を変更する</string>
+    <string name="supporting_text">私たちのアプリは100％安全なので、デバイスに害を及ぼす情報やファイルについて心配する必要はありません。私たちはあなたのプライバシーを守ります。このアプリは、ここに引用されている新聞とは提携も関連もありません。アプリが表示するコンテンツは、すべての著作権を保持するhttps://newsapi.org/で非公開で入手できるため、アプリは責任を負いません。表示されているコンテンツのいずれかについて。ソースと発行元の詳細については、https：//newsapi.org/にアクセスするか、support @ newsapi.orgにお問い合わせください。</string>
 
 </resources>

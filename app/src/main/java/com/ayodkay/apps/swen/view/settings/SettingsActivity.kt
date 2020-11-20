@@ -20,9 +20,7 @@ import com.ayodkay.apps.swen.view.SaveNews
 import com.ayodkay.apps.swen.view.ThemeActivity
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.facebook.appevents.AppEventsLogger
-import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.settings_activity.*
@@ -59,12 +57,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     class SettingsFragment : PreferenceFragmentCompat() {
-        private lateinit var mInterstitialAd: InterstitialAd
-
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
             val db = Helper.getCountryDatabase(this.requireContext())
-
 
             val availableLanguages = arrayListOf(
                 "ar", "de", "en", "es", "fr", "it", "nl", "no", "pt", "ru", "se", "zh"
@@ -91,10 +86,8 @@ class SettingsActivity : AppCompatActivity() {
             val share: Preference? = findPreference("share")
             val rate: Preference? = findPreference("rate")
             val color: Preference? = findPreference("color")
-            val support: Preference? = findPreference("support")
+            val policy: Preference? = findPreference("policy")
             val search: Preference? = findPreference("search")
-
-            setupAds(support)
 
             feedback?.setOnPreferenceChangeListener { _, newValue ->
                 val intent = Intent(Intent.ACTION_SEND)
@@ -171,57 +164,18 @@ class SettingsActivity : AppCompatActivity() {
                     .show()
                 true
             }
-            support?.setOnPreferenceClickListener {
-                AppEventsLogger.newLogger(context).logEvent("appSupport")
-                if (mInterstitialAd.isLoaded) {
-                    mInterstitialAd.show()
-                }
+            policy?.setOnPreferenceClickListener {
+
+                MaterialAlertDialogBuilder(this.requireContext())
+                    .setTitle(resources.getString(R.string.disclaimer))
+                    .setMessage(resources.getString(R.string.supporting_text))
+                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
+                       dialog.dismiss()
+                    }
+                    .show()
                 true
             }
-        }
 
-        private fun setupAds(support: Preference?) {
-            MobileAds.initialize(requireContext()) {}
-            mInterstitialAd = InterstitialAd(requireContext())
-            mInterstitialAd.adUnitId = resources.getString(R.string.interstitial_ad_unit_id)
-            mInterstitialAd.loadAd(AdRequest.Builder().build())
-
-            mInterstitialAd.adListener = object: AdListener() {
-                override fun onAdLoaded() {
-                    support?.isEnabled = true
-                    support?.summary = resources.getString(R.string.dev_support)
-                }
-
-                override fun onAdFailedToLoad(errorCode: Int) {
-                    support?.isEnabled = false
-                    support?.summary = "Loading..."
-                    mInterstitialAd.loadAd(AdRequest.Builder().build())
-                }
-
-                override fun onAdOpened() {
-                    support?.isEnabled = false
-                    support?.summary = "Loading..."
-                    mInterstitialAd.loadAd(AdRequest.Builder().build())
-                }
-
-                override fun onAdClicked() {
-                    support?.isEnabled = false
-                    support?.summary = "Loading..."
-                    mInterstitialAd.loadAd(AdRequest.Builder().build())
-                }
-
-                override fun onAdLeftApplication() {
-                    support?.isEnabled = false
-                    support?.summary = "Loading..."
-                    mInterstitialAd.loadAd(AdRequest.Builder().build())
-                }
-
-                override fun onAdClosed() {
-                    support?.isEnabled = false
-                    support?.summary = "Loading..."
-                    mInterstitialAd.loadAd(AdRequest.Builder().build())
-                }
-            }
         }
 
         private fun goToPlayStore(context: Context?){
@@ -261,21 +215,8 @@ class SettingsActivity : AppCompatActivity() {
 
     }
 
-    private fun isAvailable(list: ArrayList<String>,keyword:String):Int{
-        var position = 0
-        for (i in list){
-            if (keyword==i){
-                return position
-            }
-            position += 1
-        }
-
-        return position
-    }
-
     override fun onBackPressed() {
         super.onBackPressed()
-
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }

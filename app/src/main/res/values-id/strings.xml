@@ -53,7 +53,6 @@
     <string name="news_update">Lihat berita terbaru</string>
     <string name="notification_id">berita perawatan</string>
     <string name="text_copied">Teks disalin ke papan klip.</string>
-    <string name="support">Dukung</string>
     <string name="dev_support">mendukung pengembang aplikasi dengan menonton iklan</string>
     <string name="permission_granted">izin diberikan, coba bagikan lagi</string>
     <string name="permission_not_granted">Anda perlu menerima izin untuk berbagi</string>
@@ -77,4 +76,5 @@
     <string name="ad">Ad</string>
     <string name="search_language">Bahasa pencarian</string>
     <string name="search_language_summary">ubah bahasa yang digunakan saat mencari berita</string>
+    <string name="supporting_text">Aplikasi kami 100% Aman, jadi Anda tidak perlu khawatir tentang informasi Anda atau beberapa file yang akan membahayakan perangkat Anda. Kami menjaga privasi Anda. Harap Perhatikan bahwa, Aplikasi ini tidak berafiliasi atau tidak terkait dengan surat kabar mana pun yang dikutip di sini.Konten yang ditampilkan aplikasi tersedia secara pribadi di https://newsapi.org/ yang mempertahankan semua hak cipta dan dengan demikian aplikasi tidak bertanggung jawab untuk setiap konten yang ditampilkan. untuk lebih lanjut tentang sumber dan penerbit kunjungi https://newsapi.org/ atau hubungi support@newsapi.org</string>
 </resources>

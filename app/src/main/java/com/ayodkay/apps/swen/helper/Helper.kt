@@ -128,28 +128,36 @@ object Helper{
                 .observe(frag, { newsResponse ->
                     if (newsResponse.totalResults == 0) {
                         root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
+                        if (newsResponse.status == "400"){
+                            root.findViewById<TextView>(R.id.emptyText).text = "Internet Error"
+                        }
                         root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
                         root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
                         refresh.isRefreshing = false
                     } else {
-                    root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(
+                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.VISIBLE
+                        root.findViewById<ImageView>(R.id.empty).visibility = View.GONE
+                        root.findViewById<TextView>(R.id.emptyText).visibility = View.GONE
+                        root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(
                         R.string.articles_found) }"
-
-                    root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
-                        layoutManager = LinearLayoutManager(frag.context)
-                        hasFixedSize()
-                        articleArrayList.addAll(newsResponse.articles)
-                        adapter = AdsRecyclerView(articleArrayList,frag,frag.requireContext())
+                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
+                            layoutManager = LinearLayoutManager(frag.context)
+                            hasFixedSize()
+                            articleArrayList.addAll(newsResponse.articles)
+                            adapter = AdsRecyclerView(articleArrayList,frag,frag.requireContext())
+                        }
+                        refresh.isRefreshing = false
                     }
-                    refresh.isRefreshing = false
-                }
-            })
+                })
         }
         newViewModel.getHeadlineFromRepo(country = country, q = q, category = category, pageSize = 100)
             .observe(frag, { newsResponse ->
                 if (newsResponse.totalResults == 0) {
                     root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
                     root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
+                    if (newsResponse.status == "400"){
+                        root.findViewById<TextView>(R.id.emptyText).text = "Internet Error"
+                    }
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
                 } else {
                     root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(
@@ -199,6 +207,9 @@ object Helper{
                 if (newsResponse.totalResults == 0) {
                     root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
                     root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
+                    if (newsResponse.status == "400"){
+                        root.findViewById<TextView>(R.id.emptyText).text = "Internet Error"
+                    }
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
                 } else {
                     root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(R.string.articles_found) }"
@@ -218,12 +229,17 @@ object Helper{
                     if (newsResponse.totalResults == 0) {
                         root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
                         root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
+                        if (newsResponse.status == "400"){
+                            root.findViewById<TextView>(R.id.emptyText).text = "Internet Error"
+                        }
                         root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
 
                         refresh.isRefreshing = false
                     } else {
                         root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(R.string.articles_found) }"
-
+                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.VISIBLE
+                        root.findViewById<ImageView>(R.id.empty).visibility = View.GONE
+                        root.findViewById<TextView>(R.id.emptyText).visibility = View.GONE
                         root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
                             layoutManager = LinearLayoutManager(frag.context)
                             articleArrayList.addAll(newsResponse.articles)

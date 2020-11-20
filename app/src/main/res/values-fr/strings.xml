@@ -53,7 +53,6 @@
     <string name="news_update">Voir les dernières nouvelles</string>
     <string name="notification_id">nouvelles de soins</string>
     <string name="text_copied">Texte copié dans le presse-papiers.</string>
-    <string name="support">Soutien</string>
     <string name="dev_support">soutenir le développeur de l\'application en regardant une annonce</string>
     <string name="permission_granted">autorisation accordée, réessayez de partager</string>
     <string name="permission_not_granted">vous devez accepter l\'autorisation de partager</string>
@@ -77,4 +76,5 @@
     <string name="ad">Ad</string>
     <string name="search_language">Rechercher une langue</string>
     <string name="search_language_summary">changer la langue utilisée lors de la recherche d\'actualités</string>
+    <string name="supporting_text">Notre application est 100% sûre, vous n\'avez donc pas à vous soucier de vos informations ou de certains fichiers qui endommageront votre appareil. Nous prenons soin de votre vie privée. Veuillez noter que cette application n\'est ni affiliée ni liée à aucun des journaux cités ici.Le contenu affiché par l\'application est disponible en privé sur https://newsapi.org/ qui conserve tous les droits d\'auteur et l\'application ne peut donc être tenue responsable. pour tout contenu affiché.Pour en savoir plus sur les sources et les éditeurs, visitez https://newsapi.org/ ou contactez support@newsapi.org</string>
 </resources>

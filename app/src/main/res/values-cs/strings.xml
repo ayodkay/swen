@@ -53,7 +53,6 @@
     <string name="news_update">Podívejte se na nejnovější zprávy</string>
     <string name="notification_id">péče zprávy</string>
     <string name="text_copied">Text byl zkopírován do schránky.</string>
-    <string name="support">Podpěra, podpora</string>
     <string name="dev_support">podporujte vývojáře aplikací sledováním reklamy</string>
     <string name="permission_granted">udělení povolení, zkuste sdílení znovu</string>
     <string name="permission_not_granted">musíte přijmout povolení ke sdílení</string>
@@ -77,4 +76,5 @@
     <string name="ad">Ad</string>
     <string name = "search_language">Hledat jazyk</string>
     <string name = "search_language_summary">změnit jazyk používaný při hledání zpráv</string>
+    <string name="supporting_text">Naše aplikace je 100% bezpečná, takže si nemusíte dělat starosti s vašimi informacemi nebo některými soubory, které poškodí vaše zařízení. Postaráme se o vaše soukromí. Vezměte prosím na vědomí, že tato aplikace není spojena ani nijak nesouvisí s žádnými novinami, které jsou zde citovány. Obsah, který aplikace zobrazuje, je soukromě dostupný na https://newsapi.org/, který si zachovává všechna autorská práva, a proto za tuto aplikaci nelze nést odpovědnost. pro jakýkoli zobrazený obsah. další informace o zdrojích a vydavatelích najdete na https://newsapi.org/ nebo kontaktujte support@newsapi.org</string>
 </resources>

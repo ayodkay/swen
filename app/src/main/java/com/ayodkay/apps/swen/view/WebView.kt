@@ -5,11 +5,13 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.webkit.ClientCertRequest
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
@@ -24,6 +26,11 @@ class WebView : AppCompatActivity() {
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
 
+
+        back_button.setOnClickListener {
+            onBackPressed()
+        }
+
         webview.apply {
             loadUrl(intent.extras?.get("url") as String)
             settings.javaScriptEnabled = true
@@ -31,16 +38,25 @@ class WebView : AppCompatActivity() {
         }
         webview.webViewClient = object : WebViewClient(){
 
+            override fun onReceivedClientCertRequest(view: WebView?, request: ClientCertRequest?) {
+                super.onReceivedClientCertRequest(view, request)
+                AppLog.log(message = request.toString())
+            }
+
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
-
+                val slash = url!!.indexOf("//") + 2
+                val domain = url.substring(slash, url.indexOf('/', slash))
+                urlLink.text = domain
                 webProgress.visibility = VISIBLE
 
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-
+                val slash = url!!.indexOf("//") + 2
+                val domain = url.substring(slash, url.indexOf('/', slash))
+                urlLink.text = domain
                 webProgress.visibility = GONE
             }
 

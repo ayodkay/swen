@@ -53,7 +53,6 @@
     <string name="news_update">查看最新消息</string>
     <string name="notification_id">护理新闻</string>
     <string name="text_copied">文本已复制到剪贴板。</string>
-    <string name="support">支持</string>
     <string name="dev_support">通过观看广告来支持应用开发人员</string>
     <string name="permission_granted">已授予权限，请尝试再次共享</string>
     <string name="permission_not_granted">您需要接受许可才能共享</string>
@@ -77,4 +76,5 @@
     <string name="ad">Ad</string>
     <string name="search_language">搜索语言</string>
  <string name="search_language_summary">更改搜索新闻时使用的语言</string>
+    <string name="supporting_text">我们的应用程序是100％安全的，因此您无需担心您的信息或某些会损坏设备的文件。我们会保护您的隐私。请注意，此应用程序与此处引用的任何报纸均不存在任何关系。该应用程序显示的内容可在https://newsapi.org/上私人获得，并保留所有版权，因此该应用程序不承担任何责任有关显示的任何内容的更多信息，请访问https://newsapi.org/或联系support@newsapi.org</string>
 </resources>

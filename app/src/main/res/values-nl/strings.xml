@@ -53,7 +53,6 @@
     <string name="news_update">Bekijk het laatste nieuws</string>
     <string name="notification_id">zorg nieuws</string>
     <string name="text_copied">Tekst gekopieerd naar het klembord.</string>
-    <string name="support">Ondersteuning</string>
     <string name="dev_support">ondersteun de app-ontwikkelaar door een advertentie te bekijken</string>
     <string name="permission_granted">toestemming verleend, probeer opnieuw te delen</string>
     <string name="permission_not_granted">je moet toestemming accepteren om te delen</string>
@@ -77,4 +76,5 @@
     <string name="ad">Ad</string>
     <string name="search_language">Zoektaal</string>
     <string name="search_language_summary">verander de taal die wordt gebruikt bij het zoeken naar nieuws</string>
+    <string name="supporting_text">Onze app is 100% veilig, dus u hoeft zich geen zorgen te maken over uw informatie of bepaalde bestanden die uw apparaat kunnen beschadigen. Wij zorgen voor uw privacy. Houd er rekening mee dat deze app niet gelieerd is aan noch gerelateerd is aan een van de hier geciteerde kranten. De inhoud van de app is privé beschikbaar op https://newsapi.org/ die alle auteursrechten behoudt en de app kan daarom niet verantwoordelijk worden gehouden voor alle weergegeven inhoud. voor meer informatie over de bronnen en uitgevers, bezoek https://newsapi.org/ of neem contact op met support@newsapi.org</string>
 </resources>

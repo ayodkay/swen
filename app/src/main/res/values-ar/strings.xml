@@ -53,7 +53,6 @@
     <string name="news_update">اطلع على آخر الأخبار</string>
     <string name="notification_id">أخبار الرعاية</string>
     <string name="text_copied">تم نسخ النص إلى الحافظة.</string>
-    <string name="support">الدعم</string>
     <string name="dev_support">دعم مطور التطبيق من خلال مشاهدة إعلان</string>
     <string name="permission_granted">تم منح الإذن ، حاول المشاركة مرة أخرى</string>
     <string name="permission_not_granted">تحتاج إلى قبول الإذن للمشاركة</string>
@@ -77,4 +76,5 @@
     <string name="ad">Ad</string>
     <string name="search_language">لغة البحث</string>
     <string name="search_language_summary">تغيير اللغة المستخدمة عند البحث عن الأخبار</string>
+    <string name="supporting_text">تطبيقنا آمن بنسبة 100٪ ، لذلك لا داعي للقلق بشأن معلوماتك أو بعض الملفات التي قد تضر بجهازك. نحن نحرص على خصوصيتك. يرجى ملاحظة أن هذا التطبيق ليس تابعًا أو مرتبطًا بأي من الصحف المذكورة هنا ، المحتوى الذي يعرضه التطبيق متاح بشكل خاص على https://newsapi.org/ والذي يحتفظ بجميع حقوق النشر وبالتالي لا يتحمل التطبيق المسؤولية لمزيد من المعلومات حول المصادر والناشرين ، تفضل بزيارة https://newsapi.org/ أو اتصل بـ support@newsapi.org</string>
 </resources>

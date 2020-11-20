@@ -41,10 +41,8 @@
             app:summary="@string/search_language_summary"/>
 
         <Preference
-            app:key="support"
-            app:title="@string/support"
-            android:enabled="false"
-            app:summary="Loading..."/>
+            app:key="policy"
+            app:title="@string/disclaimer"/>
 
     </PreferenceCategory>
 

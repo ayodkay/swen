@@ -26,7 +26,7 @@ class NewsRepository {
             }
 
             override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-                newsData.value = null
+                newsData.value = NewsResponse("400",0, emptyList())
             }
         })
         return newsData
@@ -49,7 +49,7 @@ class NewsRepository {
             }
 
             override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-                newsData.value = null
+                newsData.value = NewsResponse("400",0, emptyList())
             }
         })
         return newsData
