@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.ads.NativeTemplateStyle
 import com.ayodkay.apps.swen.helper.ads.TemplateView
 import com.ayodkay.apps.swen.helper.room.news.NewsRoom
@@ -119,7 +118,6 @@ class AdsRecyclerView internal constructor(
             else -> {
                 setUpAds()
                 if ((itemCount - 1) == position) {
-                    AppLog.log(message = "yes")
                     if (mInterstitialAd.isLoaded) {
                         mInterstitialAd.show()
                     }
