@@ -12,14 +12,14 @@
 
     <application
         android:name=".helper.App"
-        android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:allowBackup="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.viewimage.ViewImageActivity"></activity>
+        <activity android:name=".view.viewimage.ViewImageActivity" />
         <activity android:name=".view.SaveNews" />
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
@@ -28,15 +28,17 @@
         <activity android:name=".view.viewnews.ViewNewActivity" />
 
         <receiver
-            android:name=".helper.backend.NotificationReceiver"
-            android:exported="false" />
-        <receiver
             android:name=".helper.backend.BootReceiver"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".notification.jobs.GetTimeJob"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <receiver
             android:name=".helper.backend.PowerButtonBroadcastReceiver"
             android:exported="false">

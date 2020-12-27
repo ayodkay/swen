@@ -22,9 +22,6 @@ import com.ayodkay.apps.swen.model.News
 import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.view.AskLocation
 import com.ayodkay.apps.swen.viewmodel.NewViewModel
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
 import org.json.JSONObject
 import java.util.*
 
@@ -107,14 +104,11 @@ object Helper{
         val articleArrayList = arrayListOf<NewsArticle>()
         val root = inflater.inflate(R.layout.fragment_main, container, false)
 
-        val adFrag = root.findViewById<AdView>(R.id.adFrag)
         val refresh = root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
+        val emptyText = root.findViewById<TextView>(R.id.emptyText)
 
         val db = getCountryDatabase(frag.requireContext())
 
-        MobileAds.initialize(frag.context)
-        val adRequest = AdRequest.Builder().build()
-        adFrag.loadAd(adRequest)
         var country = ""
         try {
             country  = db.countryDao().getAll().country
@@ -124,27 +118,34 @@ object Helper{
         }
 
         refresh.setOnRefreshListener {
+
             newViewModel.getHeadlineFromRepo(country = country, q = q, category = category, pageSize = 100)
                 .observe(frag, { newsResponse ->
                     if (newsResponse.totalResults == 0) {
                         root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
-                        if (newsResponse.status == "400"){
-                            root.findViewById<TextView>(R.id.emptyText).text = "Internet Error"
+                        if (newsResponse.status == "400") {
+                            emptyText.text = "Internet Error"
                         }
-                        root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
-                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
+                        emptyText.visibility = View.VISIBLE
+                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility =
+                            View.GONE
                         refresh.isRefreshing = false
                     } else {
-                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.VISIBLE
+                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility =
+                            View.VISIBLE
                         root.findViewById<ImageView>(R.id.empty).visibility = View.GONE
-                        root.findViewById<TextView>(R.id.emptyText).visibility = View.GONE
-                        root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(
-                        R.string.articles_found) }"
+                        emptyText.visibility = View.GONE
+                        root.findViewById<TextView>(R.id.totalResults).text =
+                            "${newsResponse.totalResults} ${
+                                frag.resources.getString(
+                                    R.string.articles_found
+                                )
+                            }"
                         root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
                             layoutManager = LinearLayoutManager(frag.context)
                             hasFixedSize()
                             articleArrayList.addAll(newsResponse.articles)
-                            adapter = AdsRecyclerView(articleArrayList,frag,frag.requireContext())
+                            adapter = AdsRecyclerView(articleArrayList, frag, frag.requireContext())
                         }
                         refresh.isRefreshing = false
                     }
@@ -154,14 +155,18 @@ object Helper{
             .observe(frag, { newsResponse ->
                 if (newsResponse.totalResults == 0) {
                     root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
-                    root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
-                    if (newsResponse.status == "400"){
-                        root.findViewById<TextView>(R.id.emptyText).text = "Internet Error"
+                    emptyText.visibility = View.VISIBLE
+                    if (newsResponse.status == "400") {
+                        emptyText.text = "Internet Error"
                     }
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
                 } else {
-                    root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(
-                        R.string.articles_found) }"
+                    root.findViewById<TextView>(R.id.totalResults).text =
+                        "${newsResponse.totalResults} ${
+                            frag.resources.getString(
+                                R.string.articles_found
+                            )
+                        }"
 
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
                         layoutManager = LinearLayoutManager(frag.context)
@@ -169,11 +174,11 @@ object Helper{
 
                         articleArrayList.addAll(newsResponse.articles)
 
-                        adapter = AdsRecyclerView(articleArrayList,frag,frag.requireContext())
+                        adapter = AdsRecyclerView(articleArrayList, frag, frag.requireContext())
                     }
                 }
             }
-        )
+            )
         return root
     }
 
@@ -186,65 +191,77 @@ object Helper{
         val  newViewModel = ViewModelProvider(frag).get(NewViewModel::class.java)
         val articleArrayList = arrayListOf<NewsArticle>()
         val root = inflater.inflate(R.layout.fragment_main, container, false)
-        val adFrag = root.findViewById<AdView>(R.id.adFrag)
         val refresh = root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
+        val emptyText = root.findViewById<TextView>(R.id.emptyText)
 
-        MobileAds.initialize(frag.context)
-        val adRequest = AdRequest.Builder().build()
-        adFrag.loadAd(adRequest)
 
         val db = getCountryDatabase(frag.requireContext())
         var language = ""
         try {
-            language  = db.countryDao().getAll().iso
-        }catch (e:Exception){
-            frag.requireContext().startActivity(Intent(frag.requireContext(), AskLocation::class.java))
+            language = db.countryDao().getAll().iso
+        } catch (e: Exception) {
+            frag.requireContext()
+                .startActivity(Intent(frag.requireContext(), AskLocation::class.java))
             frag.requireActivity().finish()
         }
 
-        newViewModel.getEveryThingFromRepo(q = q, sort_by = "newest", language = language, pageSize = 100)
-            .observe(frag,{newsResponse ->
+        newViewModel.getEveryThingFromRepo(
+            q = q,
+            sort_by = "newest",
+            language = language,
+            pageSize = 100
+        )
+            .observe(frag, { newsResponse ->
                 if (newsResponse.totalResults == 0) {
                     root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
-                    root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
-                    if (newsResponse.status == "400"){
-                        root.findViewById<TextView>(R.id.emptyText).text = "Internet Error"
+                    emptyText.visibility = View.VISIBLE
+                    if (newsResponse.status == "400") {
+                        emptyText.text = "Internet Error"
                     }
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
                 } else {
-                    root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(R.string.articles_found) }"
+                    root.findViewById<TextView>(R.id.totalResults).text =
+                        "${newsResponse.totalResults} ${frag.resources.getString(R.string.articles_found)}"
 
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
                         layoutManager = LinearLayoutManager(frag.context)
                         articleArrayList.addAll(newsResponse.articles)
                         hasFixedSize()
-                        adapter = AdsRecyclerView(articleArrayList,frag,frag.requireContext())
+                        adapter = AdsRecyclerView(articleArrayList, frag, frag.requireContext())
                     }
                 }
 
             })
         refresh.setOnRefreshListener {
-            newViewModel.getEveryThingFromRepo(q = q, sort_by = "newest", language = language, pageSize = 100)
-                .observe(frag,{newsResponse ->
+            newViewModel.getEveryThingFromRepo(
+                q = q,
+                sort_by = "newest",
+                language = language,
+                pageSize = 100
+            )
+                .observe(frag, { newsResponse ->
                     if (newsResponse.totalResults == 0) {
                         root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
-                        root.findViewById<TextView>(R.id.emptyText).visibility = View.VISIBLE
-                        if (newsResponse.status == "400"){
-                            root.findViewById<TextView>(R.id.emptyText).text = "Internet Error"
+                        emptyText.visibility = View.VISIBLE
+                        if (newsResponse.status == "400") {
+                            emptyText.text = "Internet Error"
                         }
-                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
+                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility =
+                            View.GONE
 
                         refresh.isRefreshing = false
                     } else {
-                        root.findViewById<TextView>(R.id.totalResults).text = "${newsResponse.totalResults} ${frag.resources.getString(R.string.articles_found) }"
-                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.VISIBLE
+                        root.findViewById<TextView>(R.id.totalResults).text =
+                            "${newsResponse.totalResults} ${frag.resources.getString(R.string.articles_found)}"
+                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility =
+                            View.VISIBLE
                         root.findViewById<ImageView>(R.id.empty).visibility = View.GONE
-                        root.findViewById<TextView>(R.id.emptyText).visibility = View.GONE
+                        emptyText.visibility = View.GONE
                         root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
                             layoutManager = LinearLayoutManager(frag.context)
                             articleArrayList.addAll(newsResponse.articles)
                             hasFixedSize()
-                            adapter = AdsRecyclerView(articleArrayList,frag, frag.requireContext())
+                            adapter = AdsRecyclerView(articleArrayList, frag, frag.requireContext())
                         }
                         refresh.isRefreshing = false
                     }

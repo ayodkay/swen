@@ -19,8 +19,8 @@ import com.ayodkay.apps.swen.viewmodel.NewViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.more.*
 import kotlinx.android.synthetic.main.activity_viewnews.*
+import kotlinx.android.synthetic.main.more.*
 
 class ViewNewActivity : AppCompatActivity() {
 
@@ -62,10 +62,11 @@ class ViewNewActivity : AppCompatActivity() {
         try {
             Picasso.get().load(image).into(dImage, object : Callback {
                 override fun onSuccess() {
-
+                    progress.visibility = View.GONE
                 }
 
                 override fun onError(e: Exception?) {
+                    progress.visibility = View.GONE
                     dImage.setImageDrawable(
                         ResourcesCompat.getDrawable(
                             resources,
@@ -78,6 +79,7 @@ class ViewNewActivity : AppCompatActivity() {
 
             })
         } catch (e: Exception) {
+            progress.visibility = View.GONE
             dImage.setImageDrawable(
                 ResourcesCompat.getDrawable(
                     resources,

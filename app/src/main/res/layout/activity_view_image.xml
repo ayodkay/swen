@@ -7,10 +7,15 @@
     android:id="@+id/background"
     tools:context=".view.viewimage.ViewImageActivity">
 
-    <ImageView
+    <!--    <ImageView-->
+    <!--        android:id="@+id/newsImage"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"/>-->
+
+    <com.ayodkay.apps.swen.zoom.ZoomClass
         android:id="@+id/newsImage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/pinch"

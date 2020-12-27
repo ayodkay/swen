@@ -39,7 +39,6 @@ import java.text.SimpleDateFormat
 
 private val ITEM_TYPE_COUNTRY by lazy { 0 }
 private val ITEM_TYPE_BANNER_AD by lazy { 1 }
-private lateinit var mInterstitialAd: InterstitialAd
 
 class AdsRecyclerView internal constructor(
     private val newsList: ArrayList<NewsArticle>, private val owner: ViewModelStoreOwner,
@@ -78,6 +77,9 @@ class AdsRecyclerView internal constructor(
             ITEM_TYPE_BANNER_AD -> {
                 val progressBar: LottieAnimationView =
                     holder.itemView.findViewById(R.id.adsProgress)
+
+                val error: LottieAnimationView =
+                    holder.itemView.findViewById(R.id.error)
                 val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
                 MobileAds.initialize(context)
                 GlobalScope.launch {
@@ -101,12 +103,16 @@ class AdsRecyclerView internal constructor(
                         )
                         .withAdListener(object : AdListener() {
                             override fun onAdFailedToLoad(adError: LoadAdError) {
-                                holder.itemView.visibility = View.GONE
+                                error.visibility = View.VISIBLE
+                                progressBar.visibility = View.GONE
+                                template.visibility = View.GONE
                             }
 
                             override fun onAdLoaded() {
                                 progressBar.visibility = View.GONE
+                                error.visibility = View.GONE
                                 template.visibility = View.VISIBLE
+
                             }
                         })
                         .build().also {
@@ -116,12 +122,6 @@ class AdsRecyclerView internal constructor(
             }
 
             else -> {
-                setUpAds()
-                if ((itemCount - 1) == position) {
-                    if (mInterstitialAd.isLoaded) {
-                        mInterstitialAd.show()
-                    }
-                }
                 val newsViewHolder: NewsViewHolder = holder as NewsViewHolder
                 val newsModel = ViewModelProvider(owner).get(NewsRoomVM::class.java)
                 val newsPosition = newsList[position]
@@ -294,35 +294,4 @@ class AdsRecyclerView internal constructor(
         AppEventsLogger.newLogger(context).logEvent("newsBookMark")
     }
 
-    private fun setUpAds() {
-        MobileAds.initialize(context) {}
-        mInterstitialAd = InterstitialAd(context)
-        mInterstitialAd.adUnitId = context.resources.getString(R.string.interstitial_ad_unit_id)
-        mInterstitialAd.loadAd(AdRequest.Builder().build())
-        mInterstitialAd.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-
-            }
-
-            override fun onAdFailedToLoad(errorCode: Int) {
-                mInterstitialAd.loadAd(AdRequest.Builder().build())
-            }
-
-            override fun onAdOpened() {
-                mInterstitialAd.loadAd(AdRequest.Builder().build())
-            }
-
-            override fun onAdClicked() {
-                mInterstitialAd.loadAd(AdRequest.Builder().build())
-            }
-
-            override fun onAdLeftApplication() {
-                mInterstitialAd.loadAd(AdRequest.Builder().build())
-            }
-
-            override fun onAdClosed() {
-                mInterstitialAd.loadAd(AdRequest.Builder().build())
-            }
-        }
-    }
 }

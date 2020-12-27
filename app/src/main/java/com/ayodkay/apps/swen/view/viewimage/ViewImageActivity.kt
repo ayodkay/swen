@@ -61,13 +61,20 @@ class ViewImageActivity : AppCompatActivity() {
 
             })
         } catch (e: Exception) {
-            imageView?.setImageDrawable(
-                ResourcesCompat.getDrawable(
-                    resources,
-                    R.drawable.ic_undraw_page_not_found_su7k,
-                    null
+
+            imageView?.apply {
+
+                setOnClickListener {
+                    pinch.visibility = View.GONE
+                }
+                setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_undraw_page_not_found_su7k,
+                        null
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -81,8 +88,8 @@ class ViewImageActivity : AppCompatActivity() {
         override fun onScale(scaleGestureDetector: ScaleGestureDetector): Boolean {
             mScaleFactor *= scaleGestureDetector.scaleFactor
             mScaleFactor = 0.1f.coerceAtLeast(mScaleFactor.coerceAtMost(10.0f))
-            imageView?.scaleX = mScaleFactor
-            imageView?.scaleY = mScaleFactor
+//            imageView?.scaleX = mScaleFactor
+//            imageView?.scaleY = mScaleFactor
             return true
         }
     }

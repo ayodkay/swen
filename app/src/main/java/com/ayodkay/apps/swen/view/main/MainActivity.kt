@@ -2,15 +2,20 @@ package com.ayodkay.apps.swen.view.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.location.Address
 import android.location.Geocoder
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
@@ -22,9 +27,10 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
+import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.userlocation.Location
+import com.ayodkay.apps.swen.notification.jobs.GetTimeJob
 import com.ayodkay.apps.swen.view.search.SearchActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -34,6 +40,9 @@ import java.io.IOException
 import java.util.*
 
 private const val REQUEST_CODE = 101
+
+private const val JOB_SCHEDULER_ID = 200
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -56,21 +65,26 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startJobScheduler()
+        }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED){
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION
-                )){
+                )
+            ) {
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE
                 )
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE
@@ -156,7 +170,6 @@ class MainActivity : AppCompatActivity() {
                 if ((grantResults.isNotEmpty() &&
                             grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 ) {
-                    AppLog.log(message = "wtf")
                     fusedLocationClient.lastLocation.addOnSuccessListener {
                         subscribeCountryName(this,it.latitude,it.longitude)
                     }
@@ -214,6 +227,31 @@ class MainActivity : AppCompatActivity() {
             }
         } catch (ignored: IOException) {
             //do something
+        }
+    }
+
+    companion object {
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+        fun startJobScheduler() {
+            val job = JobInfo.Builder(
+                JOB_SCHEDULER_ID, ComponentName(
+                    context,
+                    GetTimeJob::class.java
+                )
+            )
+                .setMinimumLatency(1000)
+                .setOverrideDeadline(2000)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+                .setRequiresCharging(false)
+                .build()
+            val jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+            jobScheduler.schedule(job)
+        }
+
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+        fun stopJobScheduler() {
+            val jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+            jobScheduler.cancel(JOB_SCHEDULER_ID)
         }
     }
 }

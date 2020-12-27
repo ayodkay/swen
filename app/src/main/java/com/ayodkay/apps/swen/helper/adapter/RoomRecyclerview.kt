@@ -71,10 +71,13 @@ class RoomRecyclerview internal constructor(private val newsList: ArrayList<News
 
     @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(getItemViewType(position)){
-            ITEM_TYPE_BANNER_AD->{
-                val progressBar: LottieAnimationView = holder.itemView.findViewById(R.id.adsProgress)
+        when (getItemViewType(position)) {
+            ITEM_TYPE_BANNER_AD -> {
+                val progressBar: LottieAnimationView =
+                    holder.itemView.findViewById(R.id.adsProgress)
                 val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
+                val error: LottieAnimationView =
+                    holder.itemView.findViewById(R.id.error)
                 MobileAds.initialize(context)
                 GlobalScope.launch {
                     val background =
@@ -83,7 +86,7 @@ class RoomRecyclerview internal constructor(private val newsList: ArrayList<News
                         context,
                         context.resources.getString(R.string.custom_ads_unit)
                     )
-                        .forUnifiedNativeAd{ unifiedNativeAd ->
+                        .forUnifiedNativeAd { unifiedNativeAd ->
                             val styles =
                                 NativeTemplateStyle.Builder().withMainBackgroundColor(background)
                                     .build()
@@ -97,16 +100,18 @@ class RoomRecyclerview internal constructor(private val newsList: ArrayList<News
                         )
                         .withAdListener(object : AdListener() {
                             override fun onAdFailedToLoad(adError: LoadAdError) {
-                                holder.itemView.visibility = View.GONE
+                                error.visibility = View.VISIBLE
+                                progressBar.visibility = View.GONE
+                                template.visibility = View.GONE
                             }
 
                             override fun onAdLoaded() {
                                 progressBar.visibility = View.GONE
+                                error.visibility = View.GONE
                                 template.visibility = View.VISIBLE
                             }
                         })
                         .build().also {
-
                             it.loadAd(AdRequest.Builder().build())
                         }
                 }

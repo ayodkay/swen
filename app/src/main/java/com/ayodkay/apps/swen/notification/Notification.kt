@@ -16,6 +16,7 @@ import com.ayodkay.apps.swen.helper.App
 import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.view.WebView
 import com.ayodkay.apps.swen.view.main.MainActivity
+import com.ayodkay.apps.swen.view.main.MainActivity.Companion.startJobScheduler
 import com.facebook.appevents.AppEventsLogger
 import com.squareup.picasso.Picasso
 import kotlin.random.Random
@@ -40,6 +41,53 @@ class Notification internal constructor(private val context: Context) {
 
     }
 
+
+    internal fun sendUpdateNotification(message: String) {
+        AppEventsLogger.newLogger(App.context).logEvent("sentNotification")
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val builder = NotificationCompat.Builder(
+            context,
+            CHANNEL_ID
+        )
+        val bigIcon = BitmapFactory.decodeResource(context.resources, R.drawable.ic_logo)
+
+        builder
+            .setLargeIcon(bigIcon)
+            .setContentTitle(message)
+            .setSmallIcon(R.drawable.ic_logo)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setContentIntent(pendingIntent)
+            .setWhen(System.currentTimeMillis())
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setAutoCancel(true)
+        notificationManager.notify(
+            ENGAGE_NOTIFICATION, builder.build()
+        )
+
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                val name = context.getString(R.string.notification_name)
+                val description = context.getString(R.string.notification_description)
+                val importance = NotificationManager.IMPORTANCE_HIGH
+                val channel = NotificationChannel(CHANNEL_ID, name, importance)
+                channel.description = description
+                channel.setShowBadge(true)
+                channel.enableLights(true)
+                channel.lightColor = RED
+                notificationManager.createNotificationChannel(channel)
+            }
+        }
+    }
 
     internal fun sendEngageNotification(message: String) {
         AppEventsLogger.newLogger(App.context).logEvent("sentNotification")
@@ -85,6 +133,10 @@ class Notification internal constructor(private val context: Context) {
                 channel.lightColor = RED
                 notificationManager.createNotificationChannel(channel)
             }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startJobScheduler()
         }
     }
 

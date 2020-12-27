@@ -12,8 +12,9 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
+        android:layout_height="240dp"
         android:fitsSystemWindows="true"
+        android:background="@color/background"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -31,7 +32,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                tools:ignore="ContentDescription"/>
+                tools:ignore="ContentDescription" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/bouncy_loader" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/detail_toolbar"
