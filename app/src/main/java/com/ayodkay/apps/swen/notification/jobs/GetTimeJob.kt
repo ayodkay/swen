@@ -4,8 +4,6 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.notification.Notification
 import com.ayodkay.apps.swen.view.main.MainActivity.Companion.startJobScheduler
 import com.ayodkay.apps.swen.view.main.MainActivity.Companion.stopJobScheduler
 import java.util.*
@@ -23,7 +21,7 @@ class GetTimeJob : JobService() {
         if (arrayListOf(8, 12, 15, 18, 21).contains(currentHourIn24Format)) {
             stopJobScheduler()
             if (lastHour != currentHourIn24Format) {
-                Notification(this).sendEngageNotification(getString(R.string.news_update))
+                //Notification(this).sendEngageNotification(getString(R.string.news_update))
                 lastHour = currentHourIn24Format
             } else {
                 startJobScheduler()
