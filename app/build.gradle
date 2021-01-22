@@ -5,14 +5,14 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.0"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.ayodkay.apps.swen"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 23
-        versionName "2.24.0"
+        versionCode 25
+        versionName "2.25.0"
 
         multiDexEnabled true
 
@@ -58,7 +58,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
     implementation "androidx.work:work-runtime-ktx:2.4.0"
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
-    implementation 'com.google.android.gms:play-services-ads:19.6.0'
+    implementation 'com.google.android.gms:play-services-ads:19.7.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -75,10 +75,10 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.google.firebase:firebase-perf:19.0.11'
+    implementation 'com.google.firebase:firebase-perf:19.1.0'
     implementation 'com.google.firebase:firebase-messaging:21.0.1'
     implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
-    implementation 'com.google.firebase:firebase-analytics-ktx:18.0.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:18.0.1'
     implementation 'com.google.firebase:firebase-dynamic-links-ktx:19.1.1'
 
     implementation 'com.squareup.picasso:picasso:2.71828'

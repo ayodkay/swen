@@ -55,11 +55,11 @@ object Helper{
     }
 
 
-    fun top3Country(country: String):Boolean{
-        val ac  = arrayListOf(
-            "br","in","ar", "us","ng"
+    fun top5Country(country: String): Boolean {
+        val ac = arrayListOf(
+            "br", "in", "ar", "us", "ng", "de", "fr"
         )
-        if (ac.contains(country.toLowerCase(Locale.ROOT))){
+        if (ac.contains(country.toLowerCase(Locale.ROOT))) {
             return true
         }
         return false
@@ -95,14 +95,30 @@ object Helper{
     }
 
 
-    @SuppressLint("SetTextI18n")
     @JvmStatic
-    fun setupFragment(category: String, frag: Fragment, inflater: LayoutInflater,
-                      container: ViewGroup?, q: String?=""): View?{
+    fun setupFragment(
+        category: String, frag: Fragment, inflater: LayoutInflater,
+        container: ViewGroup?, q: String? = ""
+    ): View? {
 
-        val  newViewModel = ViewModelProvider(frag).get(NewViewModel::class.java)
-        val articleArrayList = arrayListOf<NewsArticle>()
+
         val root = inflater.inflate(R.layout.fragment_main, container, false)
+        val refresh = root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
+
+        setUpObserver(category, q, frag, root)
+
+        refresh.setOnRefreshListener {
+            setUpObserver(category, q, frag, root)
+        }
+
+        return root
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setUpObserver(category: String, q: String?, frag: Fragment, root: View) {
+
+        val newViewModel = ViewModelProvider(frag).get(NewViewModel::class.java)
+        val articleArrayList = arrayListOf<NewsArticle>()
 
         val refresh = root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
         val emptyText = root.findViewById<TextView>(R.id.emptyText)
@@ -111,89 +127,85 @@ object Helper{
 
         var country = ""
         try {
-            country  = db.countryDao().getAll().country
-        }catch (e:Exception){
-            frag.requireContext().startActivity(Intent(frag.requireContext(), AskLocation::class.java))
+            country = db.countryDao().getAll().country
+        } catch (e: Exception) {
+            frag.requireContext()
+                .startActivity(Intent(frag.requireContext(), AskLocation::class.java))
             frag.requireActivity().finish()
         }
 
-        refresh.setOnRefreshListener {
+        with(newViewModel) {
+            try {
+                country = db.countryDao().getAll().country
+            } catch (e: Exception) {
+                frag.requireContext()
+                    .startActivity(Intent(frag.requireContext(), AskLocation::class.java))
+                frag.requireActivity().finish()
+            }
 
-            newViewModel.getHeadlineFromRepo(country = country, q = q, category = category, pageSize = 100)
+            getHeadlineFromRepo(country = country, q = q, category = category, pageSize = 100)
                 .observe(frag, { newsResponse ->
-                    if (newsResponse.totalResults == 0) {
-                        root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
-                        if (newsResponse.status == "400") {
-                            emptyText.text = "Internet Error"
+
+                    if (newsResponse != null) {
+                        if (newsResponse.totalResults == 0) {
+                            root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
+                            if (newsResponse.status == "400") {
+                                emptyText.text = "Internet Error"
+                            }
+                            emptyText.visibility = View.VISIBLE
+                            root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility =
+                                View.GONE
+                            refresh.isRefreshing = false
+                        } else {
+                            root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility =
+                                View.VISIBLE
+                            root.findViewById<ImageView>(R.id.empty).visibility = View.GONE
+                            emptyText.visibility = View.GONE
+                            root.findViewById<TextView>(R.id.totalResults).text =
+                                "${newsResponse.totalResults} ${
+                                    frag.resources.getString(
+                                        R.string.articles_found
+                                    )
+                                }"
+                            root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
+                                layoutManager = LinearLayoutManager(frag.context)
+                                hasFixedSize()
+                                articleArrayList.addAll(newsResponse.articles)
+                                adapter =
+                                    AdsRecyclerView(articleArrayList, frag, frag.requireContext())
+                            }
+                            refresh.isRefreshing = false
                         }
-                        emptyText.visibility = View.VISIBLE
-                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility =
-                            View.GONE
-                        refresh.isRefreshing = false
-                    } else {
-                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility =
-                            View.VISIBLE
-                        root.findViewById<ImageView>(R.id.empty).visibility = View.GONE
-                        emptyText.visibility = View.GONE
-                        root.findViewById<TextView>(R.id.totalResults).text =
-                            "${newsResponse.totalResults} ${
-                                frag.resources.getString(
-                                    R.string.articles_found
-                                )
-                            }"
-                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
-                            layoutManager = LinearLayoutManager(frag.context)
-                            hasFixedSize()
-                            articleArrayList.addAll(newsResponse.articles)
-                            adapter = AdsRecyclerView(articleArrayList, frag, frag.requireContext())
-                        }
-                        refresh.isRefreshing = false
                     }
+
                 })
         }
-        newViewModel.getHeadlineFromRepo(country = country, q = q, category = category, pageSize = 100)
-            .observe(frag, { newsResponse ->
-                if (newsResponse.totalResults == 0) {
-                    root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
-                    emptyText.visibility = View.VISIBLE
-                    if (newsResponse.status == "400") {
-                        emptyText.text = "Internet Error"
-                    }
-                    root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
-                } else {
-                    root.findViewById<TextView>(R.id.totalResults).text =
-                        "${newsResponse.totalResults} ${
-                            frag.resources.getString(
-                                R.string.articles_found
-                            )
-                        }"
-
-                    root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
-                        layoutManager = LinearLayoutManager(frag.context)
-                        hasFixedSize()
-
-                        articleArrayList.addAll(newsResponse.articles)
-
-                        adapter = AdsRecyclerView(articleArrayList, frag, frag.requireContext())
-                    }
-                }
-            }
-            )
-        return root
     }
 
 
-    @SuppressLint("SetTextI18n")
     @JvmStatic
-    fun setupEveryThingFragment(frag: Fragment, inflater: LayoutInflater,
-                                container: ViewGroup?,q: String?=""): View?{
-
-        val  newViewModel = ViewModelProvider(frag).get(NewViewModel::class.java)
-        val articleArrayList = arrayListOf<NewsArticle>()
+    fun setupEveryThingFragment(
+        frag: Fragment, inflater: LayoutInflater,
+        container: ViewGroup?, q: String? = ""
+    ): View? {
         val root = inflater.inflate(R.layout.fragment_main, container, false)
         val refresh = root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
-        val emptyText = root.findViewById<TextView>(R.id.emptyText)
 
+        setUpObserverEveryTime(q, root, frag)
+
+        refresh.setOnRefreshListener {
+            setUpObserverEveryTime(q, root, frag)
+        }
+        return root
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setUpObserverEveryTime(q: String?, root: View, frag: Fragment) {
+
+        val articleArrayList = arrayListOf<NewsArticle>()
+        val newViewModel = ViewModelProvider(frag).get(NewViewModel::class.java)
+        val refresh = root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
+        val emptyText = root.findViewById<TextView>(R.id.emptyText)
 
         val db = getCountryDatabase(frag.requireContext())
         var language = ""
@@ -204,7 +216,6 @@ object Helper{
                 .startActivity(Intent(frag.requireContext(), AskLocation::class.java))
             frag.requireActivity().finish()
         }
-
         newViewModel.getEveryThingFromRepo(
             q = q,
             sort_by = "newest",
@@ -232,41 +243,5 @@ object Helper{
                 }
 
             })
-        refresh.setOnRefreshListener {
-            newViewModel.getEveryThingFromRepo(
-                q = q,
-                sort_by = "newest",
-                language = language,
-                pageSize = 100
-            )
-                .observe(frag, { newsResponse ->
-                    if (newsResponse.totalResults == 0) {
-                        root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
-                        emptyText.visibility = View.VISIBLE
-                        if (newsResponse.status == "400") {
-                            emptyText.text = "Internet Error"
-                        }
-                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility =
-                            View.GONE
-
-                        refresh.isRefreshing = false
-                    } else {
-                        root.findViewById<TextView>(R.id.totalResults).text =
-                            "${newsResponse.totalResults} ${frag.resources.getString(R.string.articles_found)}"
-                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility =
-                            View.VISIBLE
-                        root.findViewById<ImageView>(R.id.empty).visibility = View.GONE
-                        emptyText.visibility = View.GONE
-                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
-                            layoutManager = LinearLayoutManager(frag.context)
-                            articleArrayList.addAll(newsResponse.articles)
-                            hasFixedSize()
-                            adapter = AdsRecyclerView(articleArrayList, frag, frag.requireContext())
-                        }
-                        refresh.isRefreshing = false
-                    }
-                })
-        }
-        return root
     }
 }

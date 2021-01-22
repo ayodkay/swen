@@ -2,9 +2,14 @@ package com.ayodkay.apps.swen.view.viewnews
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowInsetsController
+import android.view.WindowManager
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -42,6 +47,10 @@ class ViewNewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_viewnews)
         setSupportActionBar(findViewById(R.id.detail_toolbar))
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            initWindow()
+        }
+
         // Show the Up button in the action bar.
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -54,9 +63,22 @@ class ViewNewActivity : AppCompatActivity() {
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.isHideable = false
 
-        if (title.contains("- ")){
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    more.visibility = View.VISIBLE
+                } else {
+                    more.visibility = View.GONE
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+
+        if (title.contains("- ")) {
             loadMore(title.substringAfter("- "))
-        }else{
+        } else {
             loadMore(source)
         }
         try {
@@ -103,8 +125,21 @@ class ViewNewActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadMore(query: String){
-        val  newViewModel = ViewModelProvider(this).get(NewViewModel::class.java)
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun initWindow() {
+        window.apply {
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor = Color.TRANSPARENT
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            }
+
+        }
+    }
+
+
+    private fun loadMore(query: String) {
+        val newViewModel = ViewModelProvider(this).get(NewViewModel::class.java)
         val articleArrayList = arrayListOf<NewsArticle>()
         newViewModel.getEveryThingFromRepo(
             pageSize = 100,

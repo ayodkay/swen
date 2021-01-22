@@ -13,12 +13,22 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.view.main.MainActivity
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import kotlinx.android.synthetic.main.activity_web_view.*
 
 class WebView : AppCompatActivity() {
+
+    private lateinit var mInterstitialAd: InterstitialAd
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
+
+        mInterstitialAd = InterstitialAd(this)
+
+        mInterstitialAd.adUnitId = "ca-app-pub-7312232171503509/8595637711"
+
+        mInterstitialAd.loadAd(AdRequest.Builder().build())
 
         back_button.setOnClickListener {
             onBackPressed()
@@ -29,8 +39,8 @@ class WebView : AppCompatActivity() {
             settings.javaScriptEnabled = true
             settings.defaultTextEncodingName = "utf-8"
         }
-        webview.webViewClient = object : WebViewClient(){
 
+        webview.webViewClient = object : WebViewClient(){
             override fun onReceivedClientCertRequest(view: WebView?, request: ClientCertRequest?) {
                 super.onReceivedClientCertRequest(view, request)
                 AppLog.log(message = request.toString())
@@ -67,6 +77,7 @@ class WebView : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        mInterstitialAd.show()
         val toMain = intent.extras?.get("toMain") as Boolean
         if (toMain){
             startActivity(Intent(this, MainActivity::class.java))

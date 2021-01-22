@@ -13,7 +13,6 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:fitsSystemWindows="true"
         android:background="@color/background"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -21,7 +20,6 @@
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
@@ -31,6 +29,7 @@
                 android:id="@+id/dImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 tools:ignore="ContentDescription" />
 

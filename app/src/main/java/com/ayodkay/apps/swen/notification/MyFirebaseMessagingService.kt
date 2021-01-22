@@ -15,6 +15,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 Notification(this)
                     .sendEngageNotification(getString(R.string.news_update))
             }
+        } else if (remoteMessage.data["update"].toBoolean()) {
+            Notification(this)
+                .sendUpdateNotification(getString(R.string.update_available))
         } else {
             Notification(this).sendCountryNotification(
                 remoteMessage.data["title"]!!,

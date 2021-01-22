@@ -7,8 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color.RED
+import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.ayodkay.apps.swen.R
@@ -17,8 +19,10 @@ import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.view.WebView
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.ayodkay.apps.swen.view.main.MainActivity.Companion.startJobScheduler
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.facebook.appevents.AppEventsLogger
-import com.squareup.picasso.Picasso
 import kotlin.random.Random
 
 
@@ -172,8 +176,22 @@ class Notification internal constructor(private val context: Context) {
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setAutoCancel(true)
 
-        val bitmap = Picasso.get().load(image).get()
-        builder.setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
+        Glide.with(context)
+            .asBitmap()
+            .load(image)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    builder.setStyle(NotificationCompat.BigPictureStyle().bigPicture(resource))
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    // this is called when imageView is cleared on lifecycle call or for
+                    // some other reason.
+                    // if you are referencing the bitmap somewhere else too other than this imageView
+                    // clear it here as you can no longer have the bitmap
+                }
+            })
+
         notificationManager.notify(
             COUNTRY_NOTIFICATION, builder.build()
         )

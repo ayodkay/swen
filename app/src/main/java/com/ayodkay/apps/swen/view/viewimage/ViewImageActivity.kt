@@ -1,12 +1,14 @@
 package com.ayodkay.apps.swen.view.viewimage
 
 import android.content.res.Configuration
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.ScaleGestureDetector
-import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
 import android.view.View
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -17,8 +19,6 @@ import kotlinx.android.synthetic.main.activity_view_image.*
 
 
 class ViewImageActivity : AppCompatActivity() {
-    private var scaleGestureDetector:ScaleGestureDetector? = null
-    var mScaleFactor = 1.0f
     private var imageView: ImageView? = null
 
     override fun onStart() {
@@ -38,16 +38,27 @@ class ViewImageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_image)
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            initWindow()
+        }
         val image = intent?.extras?.get("image") as String
-        scaleGestureDetector = ScaleGestureDetector(this, ScaleListener())
         imageView = findViewById(R.id.newsImage)
 
         try {
             Picasso.get().load(image).into(imageView, object : Callback {
-                override fun onSuccess() {}
+                override fun onSuccess() {
+                    imageView?.apply {
+                        setOnClickListener {
+                            pinch.visibility = View.GONE
+                        }
+                    }
+                }
+
                 override fun onError(e: Exception?) {
                     imageView?.apply {
+                        setOnClickListener {
+                            pinch.visibility = View.GONE
+                        }
                         setImageDrawable(
                             ResourcesCompat.getDrawable(
                                 resources,
@@ -78,19 +89,15 @@ class ViewImageActivity : AppCompatActivity() {
         }
     }
 
-    override fun onTouchEvent(motionEvent: MotionEvent?): Boolean {
-        pinch.visibility = View.GONE
-        scaleGestureDetector?.onTouchEvent(motionEvent)
-        return true
-    }
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun initWindow() {
+        window.apply {
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor = Color.TRANSPARENT
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            }
 
-    inner class ScaleListener : SimpleOnScaleGestureListener() {
-        override fun onScale(scaleGestureDetector: ScaleGestureDetector): Boolean {
-            mScaleFactor *= scaleGestureDetector.scaleFactor
-            mScaleFactor = 0.1f.coerceAtLeast(mScaleFactor.coerceAtMost(10.0f))
-//            imageView?.scaleX = mScaleFactor
-//            imageView?.scaleY = mScaleFactor
-            return true
         }
     }
 }

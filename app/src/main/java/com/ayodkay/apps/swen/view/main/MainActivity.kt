@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 if (addresses[0].countryCode.toLowerCase(Locale.ROOT) != countryCode){
-                    if (Helper.top3Country(addresses[0].countryCode.toLowerCase(Locale.ROOT))) {
+                    if (Helper.top5Country(addresses[0].countryCode.toLowerCase(Locale.ROOT))) {
                         locationDatabase.locationDao().delete()
                         locationDatabase.locationDao().insertAll(
                             Location(

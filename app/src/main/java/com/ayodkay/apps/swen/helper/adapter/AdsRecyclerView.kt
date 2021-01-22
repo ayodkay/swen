@@ -144,7 +144,11 @@ class AdsRecyclerView internal constructor(
                 newsViewHolder.date.text = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                     .parse(date)?.toString()
                 newsViewHolder.title.text = newsPosition.title
-                newsViewHolder.description.text = newsPosition.description
+                try {
+                    newsViewHolder.description.text = newsPosition.description
+                        .replace(regex = Regex("<.*?>"), "")
+                } catch (e: Exception) {
+                }
 
                 if (newsModel.exist(newsPosition.url)) {
                     newsViewHolder.bookmark.setImageDrawable(
@@ -181,10 +185,10 @@ class AdsRecyclerView internal constructor(
                                 source = newsPosition.source.name,
                                 author = author,
                                 title = title,
-                                description = description,
+                                description = description.replace(regex = Regex("<.*?>"), ""),
                                 urlToImage = urlToImage,
                                 publishedAt = newsPosition.publishedAt,
-                                content = content,
+                                content = content.replace(regex = Regex("<.*?>"), ""),
                             )
                         )
                         newsViewHolder.bookmark.setImageDrawable(
@@ -254,8 +258,14 @@ class AdsRecyclerView internal constructor(
                             .putExtra("url", newsPosition.url)
                             .putExtra("image", urlToImage)
                             .putExtra("title", title)
-                            .putExtra("content", content)
-                            .putExtra("description", description)
+                            .putExtra(
+                                "content", content
+                                    .replace(regex = Regex("<.*?>"), "")
+                            )
+                            .putExtra(
+                                "description", description
+                                    .replace(regex = Regex("<.*?>"), "")
+                            )
                             .putExtra("source", newsPosition.source.name)
                     )
                 }

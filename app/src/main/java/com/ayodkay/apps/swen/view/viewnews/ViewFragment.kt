@@ -73,7 +73,7 @@ class ViewFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-       val  rootView =   inflater.inflate(R.layout.fragment_viewnews, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_viewnews, container, false)
 
         MobileAds.initialize(context)
         val adRequest = AdRequest.Builder().build()
@@ -83,8 +83,10 @@ class ViewFragment : Fragment(){
         val url = activity?.intent?.extras?.get("url") as String
         val image = activity?.intent?.extras?.get("image") as String
         val title = activity?.intent?.extras?.get("title") as String
-        val content = activity?.intent?.extras?.get("content") as String
-        val description = activity?.intent?.extras?.get("description") as String
+        val content = (activity?.intent?.extras?.get("content") as String)
+            .replace(regex = Regex("<.*?>"), "")
+        val description = (activity?.intent?.extras?.get("description") as String)
+            .replace(regex = Regex("<.*?>"), "")
         val source = activity?.intent?.extras?.get("source") as String
 
 
