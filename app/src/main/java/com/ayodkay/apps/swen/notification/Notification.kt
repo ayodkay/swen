@@ -9,20 +9,21 @@ import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color.RED
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.App
 import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.view.WebView
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.ayodkay.apps.swen.view.main.MainActivity.Companion.startJobScheduler
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.facebook.appevents.AppEventsLogger
+import com.squareup.picasso.Picasso
 import kotlin.random.Random
 
 
@@ -144,8 +145,10 @@ class Notification internal constructor(private val context: Context) {
         }
     }
 
-    internal fun sendCountryNotification(title: String, descriptions: String, url: String,
-                                         image: String) {
+    internal fun sendCountryNotification(
+        title: String, descriptions: String, url: String,
+        image: String
+    ) {
         AppEventsLogger.newLogger(App.context).logEvent("sentCountryNotification")
         val intent = Intent(context, WebView::class.java).apply {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
@@ -176,26 +179,18 @@ class Notification internal constructor(private val context: Context) {
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setAutoCancel(true)
 
-        Glide.with(context)
-            .asBitmap()
-            .load(image)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    builder.setStyle(NotificationCompat.BigPictureStyle().bigPicture(resource))
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    // this is called when imageView is cleared on lifecycle call or for
-                    // some other reason.
-                    // if you are referencing the bitmap somewhere else too other than this imageView
-                    // clear it here as you can no longer have the bitmap
-                }
-            })
+        try {
+            val bitmap = Picasso.get().load(image).get()
+            builder.setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
+        } catch (e: Exception) {
+            val bitmap =
+                drawableToBitmap(ContextCompat.getDrawable(context, R.drawable.ic_logo_24)!!)
+            builder.setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
+        }
 
         notificationManager.notify(
             COUNTRY_NOTIFICATION, builder.build()
         )
-
 
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
@@ -210,5 +205,32 @@ class Notification internal constructor(private val context: Context) {
                 notificationManager.createNotificationChannel(channel)
             }
         }
+    }
+
+    fun drawableToBitmap(drawable: Drawable): Bitmap? {
+        var bitmap: Bitmap? = null
+        if (drawable is BitmapDrawable) {
+            val bitmapDrawable = drawable
+            if (bitmapDrawable.bitmap != null) {
+                return bitmapDrawable.bitmap
+            }
+        }
+        bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
+            Bitmap.createBitmap(
+                1,
+                1,
+                Bitmap.Config.ARGB_8888
+            ) // Single color bitmap will be created of 1x1 pixel
+        } else {
+            Bitmap.createBitmap(
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
+            )
+        }
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
     }
 }
