@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/background"
     android:id="@+id/background"
-    tools:context=".view.viewnews.ViewNewActivity"
-    tools:ignore="MergeRootFrame">
+    tools:context=".view.viewnews.ViewNewActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"

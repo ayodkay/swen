@@ -184,7 +184,7 @@ class Notification internal constructor(private val context: Context) {
             builder.setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
         } catch (e: Exception) {
             val bitmap =
-                drawableToBitmap(ContextCompat.getDrawable(context, R.drawable.ic_logo_24)!!)
+                drawableToBitmap(ContextCompat.getDrawable(context, R.drawable.ic_logo_white)!!)
             builder.setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
         }
 
@@ -207,12 +207,11 @@ class Notification internal constructor(private val context: Context) {
         }
     }
 
-    fun drawableToBitmap(drawable: Drawable): Bitmap? {
+    private fun drawableToBitmap(drawable: Drawable): Bitmap? {
         var bitmap: Bitmap? = null
         if (drawable is BitmapDrawable) {
-            val bitmapDrawable = drawable
-            if (bitmapDrawable.bitmap != null) {
-                return bitmapDrawable.bitmap
+            if (drawable.bitmap != null) {
+                return drawable.bitmap
             }
         }
         bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {

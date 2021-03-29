@@ -119,7 +119,7 @@ class ViewFragment : Fragment(){
 
 
         shareView.setOnClickListener {
-            if (!image.isBlank()){
+            if (image.isNotBlank()) {
                 Picasso.get().load(image).into(object : Target {
                     override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
                         shareNews = Intent(Intent.ACTION_SEND)

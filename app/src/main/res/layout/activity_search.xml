@@ -1,94 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context=".view.search.SearchActivity">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:orientation="vertical">
+        android:layout_height="160dp"
+        android:background="@color/background"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <com.google.android.material.card.MaterialCardView
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:toolbarId="@+id/toolbar">
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchBar"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:searchIcon="@drawable/ic_search"
-                android:focusable="true"
-                app:queryHint="@string/search"
-                android:layoutDirection="rtl"
-                tools:targetApi="jelly_bean_mr1" />
+                android:orientation="vertical">
 
-        </com.google.android.material.card.MaterialCardView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
-        <TextView
-            android:id="@+id/totalResults"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </LinearLayout>
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-   <RelativeLayout
-       android:layout_width="match_parent"
-       android:padding="6dp"
-       android:layout_height="wrap_content">
-       <com.google.android.material.button.MaterialButton
-           android:id="@+id/sortBy"
-           style="@style/Widget.MaterialComponents.Button.TextButton"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_alignParentEnd="true"
-           android:drawableEnd="@drawable/ic_sort"
-           android:text="@string/sort"
-           android:textAllCaps="false" />
-   </RelativeLayout>
+                        <androidx.appcompat.widget.SearchView
+                            android:id="@+id/searchBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="true"
+                            android:layoutDirection="rtl"
+                            app:queryHint="@string/search"
+                            app:searchIcon="@drawable/ic_search"
+                            tools:targetApi="jelly_bean_mr1" />
 
+                    </com.google.android.material.card.MaterialCardView>
 
-   <RelativeLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/totalResults"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </LinearLayout>
 
-       <ImageView
-           android:id="@+id/empty"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:visibility="gone"
-           android:src="@drawable/ic_undraw_empty_xct9"
-           tools:ignore="ContentDescription" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="6dp">
 
-       <androidx.recyclerview.widget.RecyclerView
-           android:id="@+id/searchRecycle"
-           android:layout_marginTop="4dp"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/sortBy"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:drawableEnd="@drawable/ic_sort"
+                        android:text="@string/sort"
+                        android:textAllCaps="false" />
+                </RelativeLayout>
 
-       </androidx.recyclerview.widget.RecyclerView>
-
-       <com.google.android.gms.ads.AdView
-           android:id="@+id/adView"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_alignParentBottom="true"
-           android:layout_centerInParent="true"
-           ads:adSize="BANNER"
-           ads:adUnitId="ca-app-pub-7312232171503509/5964904907" />
-   </RelativeLayout>
+            </LinearLayout>
 
 
-</LinearLayout>
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/search_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/item_search_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"></androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

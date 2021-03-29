@@ -1,5 +1,6 @@
 package com.ayodkay.apps.swen.view.settings
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -23,6 +24,7 @@ import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.play.core.review.ReviewManagerFactory
 import kotlinx.android.synthetic.main.settings_activity.*
 
 
@@ -131,7 +133,7 @@ class SettingsActivity : AppCompatActivity() {
             }
             rate?.setOnPreferenceClickListener {
                 AppEventsLogger.newLogger(context).logEvent("appRate")
-                goToPlayStore(context)
+                inAppRate(requireContext(), requireActivity())
                 true
             }
             color?.setOnPreferenceClickListener {
@@ -178,6 +180,7 @@ class SettingsActivity : AppCompatActivity() {
 
         }
 
+        @Deprecated("deprecated", ReplaceWith("inAppRate", "inAppRate()"))
         private fun goToPlayStore(context: Context?){
             val uri: Uri = Uri.parse("market://details?id=" + context?.packageName)
             val goToMarket = Intent(Intent.ACTION_VIEW, uri)
@@ -201,10 +204,21 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        private fun isAvailable(list: ArrayList<String>,keyword:String):Int{
+        private fun inAppRate(context: Context, activity: Activity) {
+            val manager = ReviewManagerFactory.create(context)
+            manager.requestReviewFlow()
+                .addOnCompleteListener { it ->
+                    if (it.isSuccessful) {
+                        manager.launchReviewFlow(activity, it.result)
+                            .addOnCompleteListener { _ -> }
+                    }
+                }
+        }
+
+        private fun isAvailable(list: ArrayList<String>, keyword: String): Int {
             var position = 0
-            for (i in list){
-                if (keyword==i){
+            for (i in list) {
+                if (keyword == i) {
                     return position
                 }
                 position += 1
