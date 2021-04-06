@@ -1,10 +1,22 @@
 package com.ayodkay.apps.swen.view.search
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.Helper
+import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
+import com.ayodkay.apps.swen.model.NewsArticle
+import com.ayodkay.apps.swen.viewmodel.NewViewModel
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.activity_search.*
 
@@ -37,23 +49,15 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .add(R.id.item_search_container, SearchFragment())
-                .commit()
-        }
-
-        val singleSort = arrayOf(
-            getString(R.string.popularity),
-            getString(R.string.newest),
-            getString(R.string.relevancy)
-        )
+        val singleSort = arrayOf(getString(R.string.popularity), getString(R.string.newest), getString(R.string.relevancy))
         var checkedSort = 1
         sort = sortOptions[checkedSort]
 
+        MobileAds.initialize(this)
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
 
-
-        searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchBar.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 queryValue = query.toString()
                 loadNews(queryValue)
@@ -87,7 +91,45 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    fun loadNews(query: String?) {
+        val db = Helper.getCountryDatabase(this@SearchActivity)
+        val newViewModel = ViewModelProvider(this).get(NewViewModel::class.java)
+        val articleArrayList = arrayListOf<NewsArticle>()
 
+
+        newViewModel.getEveryThingFromRepo(
+            q = query, sort_by = sort,
+            language = db.countryDao().getAll().iso, pageSize = 100
+        ).observe(this, { newsResponse ->
+
+            this.currentFocus?.let { view ->
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                imm?.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+            if (newsResponse.totalResults == 0) {
+                empty.visibility = View.VISIBLE
+                searchRecycle.visibility = View.GONE
+                totalResults.visibility = View.GONE
+            } else {
+                empty.visibility = View.GONE
+                searchRecycle.visibility = View.VISIBLE
+                totalResults.visibility = View.VISIBLE
+                totalResults.text =
+                    "${newsResponse.totalResults} ${resources.getString(R.string.articles_found)}"
+                searchRecycle.apply {
+                    layoutManager = LinearLayoutManager(this@SearchActivity)
+                    articleArrayList.addAll(newsResponse.articles)
+                    hasFixedSize()
+                    adapter = AdsRecyclerView(
+                        articleArrayList,
+                        this@SearchActivity,
+                        this@SearchActivity
+                    )
+                }
+            }
+        })
+    }
 
 
 }
