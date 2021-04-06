@@ -11,8 +11,8 @@ android {
         applicationId "com.ayodkay.apps.swen"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 25
-        versionName "2.25.0"
+        versionCode 26
+        versionName "2.26.0"
 
         multiDexEnabled true
 
@@ -95,7 +95,7 @@ dependencies {
     def work_version = "2.5.0"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
-    implementation 'com.facebook.android:facebook-android-sdk:8.1.0'
+    implementation 'com.facebook.android:facebook-android-sdk:9.1.0'
 
 
     implementation 'com.github.ayodkay:NewsApiClient-Kotlin:1.0.0'
