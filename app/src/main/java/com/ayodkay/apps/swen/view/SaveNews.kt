@@ -4,14 +4,12 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.adapter.RoomRecyclerview
-import com.ayodkay.apps.swen.helper.room.news.NewsRoomVM
+import com.ayodkay.apps.swen.helper.room.bookmarks.NewsRoomVM
 import com.ayodkay.apps.swen.model.News
-import com.ayodkay.apps.swen.model.NewsArticle
 import kotlinx.android.synthetic.main.activity_save_news.*
 import java.util.*
 

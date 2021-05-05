@@ -1,8 +1,11 @@
 package com.ayodkay.apps.swen.helper
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +30,16 @@ import java.util.*
 
 object Helper{
 
+    fun goDark(activity: Activity){
+        when (activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+
+            } // Night mode is not active, we're using the light theme
+            Configuration.UI_MODE_NIGHT_YES -> {
+                activity.setTheme(R.style.AppThemeNight)
+            } // Night mode is active, we're using dark theme
+        }
+    }
     fun getCountryDatabase(context: Context): CountryDatabase {
         return Room.databaseBuilder(
             context,

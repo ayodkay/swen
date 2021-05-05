@@ -19,7 +19,10 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.view.WebView
+import com.github.pemistahl.lingua.api.Language
+import com.github.pemistahl.lingua.api.LanguageDetectorBuilder
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -98,6 +101,9 @@ class ViewFragment : Fragment(){
         val playView = rootView.findViewById<RelativeLayout>(R.id.playView)
 
         val talky = TextToSpeech(context){}
+
+
+        AppLog.log(message = "detectedLanguage")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             playView.setOnClickListener {

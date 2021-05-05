@@ -20,8 +20,8 @@ import com.airbnb.lottie.LottieAnimationView
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.ads.NativeTemplateStyle
 import com.ayodkay.apps.swen.helper.ads.TemplateView
-import com.ayodkay.apps.swen.helper.room.news.NewsRoom
-import com.ayodkay.apps.swen.helper.room.news.NewsRoomVM
+import com.ayodkay.apps.swen.helper.room.bookmarks.NewsRoom
+import com.ayodkay.apps.swen.helper.room.bookmarks.NewsRoomVM
 import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.view.viewnews.ViewNewActivity
 import com.bumptech.glide.Glide

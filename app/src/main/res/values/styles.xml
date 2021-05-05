@@ -6,6 +6,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="drawerArrowStyle">@style/DrawerIconStyle</item>
+
+        <item name="bottomSheetStyle">@style/Theme.NoWiredStrapInNavigationBar</item>
     </style>
 
     <style name="DrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -27,6 +29,24 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="bottomSheetStyle">@style/Theme.NoWiredStrapInNavigationBar</item>
+
+    </style>
+
+    <style name="Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <item name="android:textColorPrimary">@color/textPrimary</item>
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="Theme.NoWiredStrapInNavigationBar" parent="@style/Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:windowIsFloating">false</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
 </resources>

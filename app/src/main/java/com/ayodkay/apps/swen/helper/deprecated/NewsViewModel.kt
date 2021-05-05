@@ -1,4 +1,4 @@
-package com.ayodkay.apps.swen.viewmodel
+package com.ayodkay.apps.swen.helper.deprecated
 
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@color/background"
     android:id="@+id/background"
     tools:context=".view.viewnews.ViewNewActivity">
@@ -13,7 +12,8 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:background="@color/background"
+        android:fitsSystemWindows="true"
+        android:background="@color/colorPrimaryDark"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:popupTheme="@style/Toolbar" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -66,9 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:behavior_peekHeight="86dp"
-        app:cardBackgroundColor="#eee"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="8dp"
+        app:behavior_hideable="false"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <include layout="@layout/more" />

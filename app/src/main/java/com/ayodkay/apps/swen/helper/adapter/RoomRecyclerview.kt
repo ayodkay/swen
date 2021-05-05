@@ -18,11 +18,10 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.ads.NativeTemplateStyle
 import com.ayodkay.apps.swen.helper.ads.TemplateView
-import com.ayodkay.apps.swen.helper.room.news.NewsRoom
-import com.ayodkay.apps.swen.helper.room.news.NewsRoomVM
+import com.ayodkay.apps.swen.helper.room.bookmarks.NewsRoom
+import com.ayodkay.apps.swen.helper.room.bookmarks.NewsRoomVM
 import com.ayodkay.apps.swen.model.News
 import com.ayodkay.apps.swen.view.viewnews.ViewNewActivity
 import com.bumptech.glide.Glide
@@ -120,7 +119,6 @@ class RoomRecyclerview internal constructor(private val newsList: ArrayList<News
             else->{
                 setUpAds()
                 if ((itemCount-1) ==position){
-                    AppLog.log(message = "yes")
                     if (mInterstitialAd.isLoaded) {
                         mInterstitialAd.show()
                     }

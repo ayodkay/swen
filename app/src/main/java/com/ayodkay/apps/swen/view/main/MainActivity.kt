@@ -8,7 +8,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.location.Address
 import android.location.Geocoder
 import android.os.Build
@@ -51,15 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
-        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-            Configuration.UI_MODE_NIGHT_NO -> {
-
-            } // Night mode is not active, we're using the light theme
-            Configuration.UI_MODE_NIGHT_YES -> {
-                setTheme(R.style.AppThemeNight)
-            } // Night mode is active, we're using dark theme
-        }
+        Helper.goDark(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

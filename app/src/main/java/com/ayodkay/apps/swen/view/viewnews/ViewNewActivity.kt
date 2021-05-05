@@ -2,6 +2,7 @@ package com.ayodkay.apps.swen.view.viewnews
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -14,7 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.airbnb.lottie.LottieAnimationView
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
 import com.ayodkay.apps.swen.model.NewsArticle
@@ -26,6 +29,10 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_viewnews.*
 import kotlinx.android.synthetic.main.more.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ViewNewActivity : AppCompatActivity() {
 
@@ -59,28 +66,41 @@ class ViewNewActivity : AppCompatActivity() {
         val source = intent?.extras?.get("source") as String
 
         val bottomSheet: View = findViewById(R.id.bottomSheet)
+        bottomSheet.fitsSystemWindows = false
 
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-        bottomSheetBehavior.isHideable = false
 
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     more.visibility = View.VISIBLE
+                    swipe_up.visibility = View.VISIBLE
+                    swipe_down.visibility = View.GONE
+
                 } else {
                     more.visibility = View.GONE
+                    swipe_up.visibility = View.GONE
+                    swipe_down.visibility = View.VISIBLE
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
         })
 
-        if (title.contains("- ")) {
-            loadMore(title.substringAfter("- "))
-        } else {
-            loadMore(source)
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                if (title.contains("- ")) {
+                    loadMore(title.substringAfter("- "))
+                } else {
+                    loadMore(source)
+                }
+            }
         }
+
         try {
             Picasso.get().load(image).into(dImage, object : Callback {
                 override fun onSuccess() {
