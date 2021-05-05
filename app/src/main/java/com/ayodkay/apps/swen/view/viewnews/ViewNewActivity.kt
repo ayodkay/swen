@@ -2,7 +2,6 @@ package com.ayodkay.apps.swen.view.viewnews
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -17,7 +16,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.airbnb.lottie.LottieAnimationView
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
 import com.ayodkay.apps.swen.model.NewsArticle
@@ -30,7 +28,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_viewnews.*
 import kotlinx.android.synthetic.main.more.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -150,7 +147,7 @@ class ViewNewActivity : AppCompatActivity() {
         window.apply {
             addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             statusBarColor = Color.TRANSPARENT
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
             }
 
