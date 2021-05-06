@@ -4,6 +4,7 @@ package com.ayodkay.apps.swen.view
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -25,8 +26,9 @@ import kotlinx.android.synthetic.main.activity_splash_screen.*
 
 
 private const val MY_REQUEST_CODE = 1
+private var TAG = SplashScreen::class.java.name
+
 class SplashScreen : AppCompatActivity() {
-    private var TAG = SplashScreen::class.java.name
     private val appUpdateManager: AppUpdateManager = AppUpdateManagerFactory.create(context)
 
 
@@ -114,13 +116,13 @@ class SplashScreen : AppCompatActivity() {
 
     @Suppress("SENSELESS_COMPARISON")
     private fun nextActivity(){
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             appUpdateManager.unregisterListener(listener!!)
             val db = Helper.getCountryDatabase(this)
             if (db.countryDao().getAll() != null) {
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
-            }else{
+            } else {
                 startActivity(Intent(this, AskLocation::class.java))
                 finish()
             }

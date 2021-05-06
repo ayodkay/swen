@@ -28,8 +28,9 @@ class Country : Parcelable, Comparable<Country> {
     }
 
     companion object {
-        @JvmField val CREATOR: Parcelable.Creator<Country?> = object : Parcelable.Creator<Country?> {
-            override fun createFromParcel(source: Parcel): Country? {
+        @JvmField
+        val CREATOR: Parcelable.Creator<Country> = object : Parcelable.Creator<Country> {
+            override fun createFromParcel(source: Parcel): Country {
                 val country = Country()
                 country.code = source.readString()
                 country.name = source.readString()

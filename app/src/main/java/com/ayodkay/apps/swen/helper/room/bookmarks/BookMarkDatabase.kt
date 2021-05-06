@@ -8,25 +8,25 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [NewsRoom::class], version = 2)
-abstract class NewsDatabase : RoomDatabase() {
-    abstract fun newsDao(): NewsDao
+@Database(entities = [BookMarkRoom::class], version = 4)
+abstract class BookMarkDatabase : RoomDatabase() {
+    abstract fun newsDao(): BookMarkDao
 
     companion object {
         @Volatile
-        private var INSTANCE: NewsDatabase? = null
+        private var INSTANCE: BookMarkDatabase? = null
 
         fun getDatabase(
             context: Context,
             scope: CoroutineScope
-        ): NewsDatabase {
+        ): BookMarkDatabase {
             return INSTANCE
 
 
                 ?: synchronized(this) {
                     val instance = Room.databaseBuilder(
                         context.applicationContext,
-                        NewsDatabase::class.java,
+                        BookMarkDatabase::class.java,
                         "newsroom"
                     )
                         .fallbackToDestructiveMigration()

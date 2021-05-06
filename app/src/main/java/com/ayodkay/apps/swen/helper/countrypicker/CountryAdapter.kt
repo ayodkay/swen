@@ -36,7 +36,14 @@ class CountryAdapter(private val mCountryPicker: CountryPicker, listener: Countr
                 ContextCompat.getDrawable(mCountryPicker.requireActivity(), drawableId)
             )
         }
-        holder.itemView.setOnClickListener { mListener.onSelectCountry(country.name, country.code,country.iso,country.language) }
+        holder.itemView.setOnClickListener {
+            mListener.onSelectCountry(
+                country.name!!,
+                country.code!!,
+                country.iso!!,
+                country.language!!
+            )
+        }
     }
 
     override fun getItemCount(): Int {

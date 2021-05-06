@@ -77,4 +77,5 @@
     <string name="search_language">Zoektaal</string>
     <string name="search_language_summary">verander de taal die wordt gebruikt bij het zoeken naar nieuws</string>
     <string name="supporting_text">Onze app is 100% veilig, dus u hoeft zich geen zorgen te maken over uw informatie of bepaalde bestanden die uw apparaat kunnen beschadigen. Wij zorgen voor uw privacy. Houd er rekening mee dat deze app niet gelieerd is aan noch gerelateerd is aan een van de hier geciteerde kranten. De inhoud van de app is privé beschikbaar op https://newsapi.org/ die alle auteursrechten behoudt en de app kan daarom niet verantwoordelijk worden gehouden voor alle weergegeven inhoud. voor meer informatie over de bronnen en uitgevers, bezoek https://newsapi.org/ of neem contact op met support@newsapi.org</string>
+    <string name="refresh">Swipe to Refresh</string>
 </resources>

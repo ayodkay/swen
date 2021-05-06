@@ -2,6 +2,8 @@ package com.ayodkay.apps.swen.networking
 
 import androidx.lifecycle.MutableLiveData
 import com.ayodkay.apps.swen.model.NewsResponse
+import com.ayodkay.apps.swen.networking.api.NewsApi
+import com.ayodkay.apps.swen.networking.service.RetrofitService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

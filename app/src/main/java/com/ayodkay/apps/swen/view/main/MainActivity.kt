@@ -27,6 +27,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.App.Companion.context
+import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.userlocation.Location
 import com.ayodkay.apps.swen.notification.jobs.GetTimeJob
@@ -59,6 +60,8 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             startJobScheduler()
         }
+
+        AppLog.l(GetTimeJob.lastHour)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         if (ContextCompat.checkSelfPermission(
@@ -145,11 +148,6 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    override fun onDestroy() {
-        cacheDir.deleteRecursively()
-        super.onDestroy()
-    }
-
     @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -187,9 +185,8 @@ class MainActivity : AppCompatActivity() {
                 }catch (e:Exception){
 
                 }
-
                 if (addresses[0].countryCode.toLowerCase(Locale.ROOT) != countryCode){
-                    if (Helper.top5Country(addresses[0].countryCode.toLowerCase(Locale.ROOT))) {
+                    if (Helper.topCountries(addresses[0].countryCode.toLowerCase(Locale.ROOT))) {
                         locationDatabase.locationDao().delete()
                         locationDatabase.locationDao().insertAll(
                             Location(

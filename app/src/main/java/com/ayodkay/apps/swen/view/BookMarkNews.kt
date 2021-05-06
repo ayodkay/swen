@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.adapter.RoomRecyclerview
-import com.ayodkay.apps.swen.helper.room.bookmarks.NewsRoomVM
+import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.model.News
-import kotlinx.android.synthetic.main.activity_save_news.*
+import kotlinx.android.synthetic.main.activity_bookmark_news.*
 import java.util.*
 
-class SaveNews : AppCompatActivity() {
+class BookMarkNews : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
@@ -27,32 +27,35 @@ class SaveNews : AppCompatActivity() {
             } // Night mode is active, we're using dark theme
         }
     }
-    private lateinit var newsModel: NewsRoomVM
+
+    private lateinit var bookmarkModel: BookmarkRoomVM
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_save_news)
+        setContentView(R.layout.activity_bookmark_news)
 
         val news: ArrayList<News> = arrayListOf()
 
-        newsModel = ViewModelProvider(this).get(NewsRoomVM::class.java)
+        bookmarkModel = ViewModelProvider(this).get(BookmarkRoomVM::class.java)
         var add = true
-        newsModel.allNewsRoom.observe(this, {
-            if (it.isEmpty()){
+        bookmarkModel.allBookMarkRoom.observe(this, {
+            if (it.isEmpty()) {
                 no_saved.visibility = View.VISIBLE
                 saved_recycle.visibility = View.GONE
-            }else{
-                for (i in it.indices){
-                    if (add){
-                        news.add(News(
-                            it[i].source,
-                            it[i].author,
-                            it[i].title,
-                            it[i].description,
-                            it[i].url,
-                            it[i].urlToImage,
-                            it[i].publishedAt,
-                            it[i].content,
-                        ))
+            } else {
+                for (i in it.indices) {
+                    if (add) {
+                        news.add(
+                            News(
+                                it[i].source,
+                                it[i].author,
+                                it[i].title,
+                                it[i].description,
+                                it[i].url,
+                                it[i].urlToImage,
+                                it[i].publishedAt,
+                                it[i].content,
+                            )
+                        )
 
                     }
                 }
@@ -60,8 +63,8 @@ class SaveNews : AppCompatActivity() {
             }
 
             saved_recycle.apply {
-                layoutManager = LinearLayoutManager(this@SaveNews)
-                adapter = RoomRecyclerview(news,this@SaveNews,this@SaveNews)
+                layoutManager = LinearLayoutManager(this@BookMarkNews)
+                adapter = RoomRecyclerview(news, this@BookMarkNews, this@BookMarkNews)
             }
         })
 

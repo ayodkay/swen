@@ -77,4 +77,5 @@
     <string name="search_language">Vyhľadajte jazyk</string>
     <string name="search_language_summary">zmeniť jazyk používaný pri hľadaní správ</string>
     <string name="supporting_text">Naša aplikácia je stopercentne bezpečná, takže sa nemusíte obávať o svoje informácie alebo súbory, ktoré poškodia vaše zariadenie. Staráme sa o vaše súkromie. Upozorňujeme, že táto aplikácia nie je nijako spojená ani nijako súvisí so žiadnymi novinami, ktoré sú tu citované. Obsah, ktorý táto aplikácia zobrazuje, je súkromne dostupný na https://newsapi.org/, ktorý si zachováva všetky autorské práva, a preto za ňu nemožno niesť zodpovednosť. pre ktorýkoľvek zo zobrazených obsahov. ďalšie informácie o zdrojoch a vydavateľoch nájdete na https://newsapi.org/ alebo kontaktujte podporu@newsapi.org</string>
+    <string name="refresh">Swipe to Refresh</string>
 </resources>

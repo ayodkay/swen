@@ -20,8 +20,8 @@ import com.airbnb.lottie.LottieAnimationView
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.ads.NativeTemplateStyle
 import com.ayodkay.apps.swen.helper.ads.TemplateView
-import com.ayodkay.apps.swen.helper.room.bookmarks.NewsRoom
-import com.ayodkay.apps.swen.helper.room.bookmarks.NewsRoomVM
+import com.ayodkay.apps.swen.helper.room.bookmarks.BookMarkRoom
+import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.model.News
 import com.ayodkay.apps.swen.view.viewnews.ViewNewActivity
 import com.bumptech.glide.Glide
@@ -116,25 +116,25 @@ class RoomRecyclerview internal constructor(private val newsList: ArrayList<News
                 }
             }
 
-            else->{
+            else-> {
                 setUpAds()
-                if ((itemCount-1) ==position){
+                if ((itemCount - 1) == position) {
                     if (mInterstitialAd.isLoaded) {
                         mInterstitialAd.show()
                     }
                 }
-                val newsViewHolder : NewsViewHolder = holder as NewsViewHolder
-                val newsModel = ViewModelProvider(owner).get(NewsRoomVM::class.java)
+                val newsViewHolder: NewsViewHolder = holder as NewsViewHolder
+                val newsModel = ViewModelProvider(owner).get(BookmarkRoomVM::class.java)
                 val newsPosition = newsList[position]
                 val date = newsPosition.publishedAt
-                    .replace("T"," ").replace("Z","")
+                    .replace("T", " ").replace("Z", "")
                 newsViewHolder.source.text = newsPosition.source
                 newsViewHolder.date.text = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                     .parse(date)?.toString()
                 newsViewHolder.title.text = newsPosition.title
                 newsViewHolder.description.text = newsPosition.description
 
-                if (newsModel.exist(newsPosition.url)){
+                if (newsModel.exist(newsPosition.url)) {
                     newsViewHolder.bookmark.setImageDrawable(ResourcesCompat
                         .getDrawable(context.resources,
                             R.drawable.ic_bookmarked,null))
@@ -149,21 +149,27 @@ class RoomRecyclerview internal constructor(private val newsList: ArrayList<News
                         newsViewHolder.bookmark.setImageDrawable(ResourcesCompat
                             .getDrawable(context.resources,
                                 R.drawable.ic_bookmark,null))
-                    }else{
+                    }else {
                         newsBookMark()
-                        newsModel.insert(NewsRoom(
-                            url = newsPosition.url,
-                            source = newsPosition.source,
-                            author = newsPosition.author,
-                            title= newsPosition.title,
-                            description= newsPosition.description,
-                            urlToImage= newsPosition.urlToImage,
-                            publishedAt= newsPosition.publishedAt,
-                            content = newsPosition.content,
-                        ))
-                        newsViewHolder.bookmark.setImageDrawable(ResourcesCompat
-                            .getDrawable(context.resources,
-                                R.drawable.ic_bookmarked,null))
+                        newsModel.insert(
+                            BookMarkRoom(
+                                url = newsPosition.url,
+                                source = newsPosition.source,
+                                author = newsPosition.author,
+                                title = newsPosition.title,
+                                description = newsPosition.description,
+                                urlToImage = newsPosition.urlToImage,
+                                publishedAt = newsPosition.publishedAt,
+                                content = newsPosition.content,
+                            )
+                        )
+                        newsViewHolder.bookmark.setImageDrawable(
+                            ResourcesCompat
+                                .getDrawable(
+                                    context.resources,
+                                    R.drawable.ic_bookmarked, null
+                                )
+                        )
                     }
                 }
 

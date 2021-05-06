@@ -43,7 +43,7 @@ class WebView : AppCompatActivity() {
         webview.webViewClient = object : WebViewClient(){
             override fun onReceivedClientCertRequest(view: WebView?, request: ClientCertRequest?) {
                 super.onReceivedClientCertRequest(view, request)
-                AppLog.log(message = request.toString())
+                AppLog.l(message = request.toString())
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {

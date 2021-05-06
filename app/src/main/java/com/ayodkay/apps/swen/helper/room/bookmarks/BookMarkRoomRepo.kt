@@ -2,11 +2,11 @@ package com.ayodkay.apps.swen.helper.room.bookmarks
 
 import androidx.lifecycle.LiveData
 
-class NewsRoomRepo(private val roomDao: NewsDao) {
-    val allNewsRoom: LiveData<List<NewsRoom>> = roomDao.getAll()
+class BookMarkRoomRepo(private val roomDao: BookMarkDao) {
+    val allBookMarkRoom: LiveData<List<BookMarkRoom>> = roomDao.getAll()
 
-    suspend fun insert(news: NewsRoom) {
-        roomDao.insertAll(news)
+    suspend fun insert(bookMark: BookMarkRoom) {
+        roomDao.insertAll(bookMark)
     }
 
     fun deleteOne(url: String) {

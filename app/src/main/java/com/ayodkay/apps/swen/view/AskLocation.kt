@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.countrypicker.CountryPicker
 import com.ayodkay.apps.swen.helper.countrypicker.CountryPickerListener
@@ -46,32 +47,40 @@ class AskLocation : AppCompatActivity() {
 
         select_country.setOnClickListener {
             val picker =
-                CountryPicker.getInstance(resources.getString(R.string.select_country), object : CountryPickerListener {
-                    override fun onSelectCountry(name: String?, code: String?, iso: String?, language: String?) {
-                        GlobalScope.launch {
-                            val db = Helper.getCountryDatabase(applicationContext)
-                            db.countryDao().delete()
-                            db.countryDao().insertAll(
-                                Country(
-                                    iso!!,
-                                    language!!
+                CountryPicker.getInstance(
+                    resources.getString(R.string.select_country),
+                    object : CountryPickerListener {
+                        override fun onSelectCountry(
+                            name: String,
+                            code: String,
+                            iso: String,
+                            language: String
+                        ) {
+                            AppLog.l(iso)
+                            GlobalScope.launch {
+                                val db = Helper.getCountryDatabase(applicationContext)
+                                db.countryDao().delete()
+                                db.countryDao().insertAll(
+                                    Country(
+                                        iso,
+                                        language
+                                    )
+                                )
+                            }
+                            val dialogFragment: DialogFragment? =
+                                supportFragmentManager.findFragmentByTag("CountryPicker") as DialogFragment?
+                            dialogFragment?.dismiss()
+
+                            startActivity(
+                                Intent(
+                                    this@AskLocation,
+                                    MainActivity::class.java
                                 )
                             )
+
+                            finish()
                         }
-                        val dialogFragment: DialogFragment? =
-                            supportFragmentManager.findFragmentByTag("CountryPicker") as DialogFragment?
-                        dialogFragment?.dismiss()
-
-                        startActivity(
-                            Intent(
-                                this@AskLocation,
-                                MainActivity::class.java
-                            )
-                        )
-
-                        finish()
-                    }
-                })
+                    })
 
             picker.show(supportFragmentManager, "CountryPicker")
         }

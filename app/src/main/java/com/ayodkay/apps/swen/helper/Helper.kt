@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,7 +67,7 @@ object Helper{
     }
 
 
-    fun top5Country(country: String): Boolean {
+    fun topCountries(country: String): Boolean {
         val ac = arrayListOf(
             "br", "in", "ar", "us", "ng", "de", "fr"
         )
@@ -135,6 +134,7 @@ object Helper{
 
         val refresh = root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
         val emptyText = root.findViewById<TextView>(R.id.emptyText)
+        val swipeText = root.findViewById<TextView>(R.id.swipeText)
 
         val db = getCountryDatabase(frag.requireContext())
 
@@ -166,6 +166,8 @@ object Helper{
                                 emptyText.text = "Internet Error"
                             }
                             emptyText.visibility = View.VISIBLE
+                            swipeText.visibility = View.VISIBLE
+
                             root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility =
                                 View.GONE
                             refresh.isRefreshing = false
@@ -174,6 +176,7 @@ object Helper{
                                 View.VISIBLE
                             root.findViewById<ImageView>(R.id.empty).visibility = View.GONE
                             emptyText.visibility = View.GONE
+                            swipeText.visibility = View.GONE
                             root.findViewById<TextView>(R.id.totalResults).text =
                                 "${newsResponse.totalResults} ${
                                     frag.resources.getString(
@@ -219,6 +222,7 @@ object Helper{
         val newViewModel = ViewModelProvider(frag).get(NewViewModel::class.java)
         val refresh = root.findViewById<SwipeRefreshLayout>(R.id.swipeRefresh)
         val emptyText = root.findViewById<TextView>(R.id.emptyText)
+        val swipeText = root.findViewById<TextView>(R.id.swipeText)
 
         val db = getCountryDatabase(frag.requireContext())
         var language = ""
@@ -239,6 +243,8 @@ object Helper{
                 if (newsResponse.totalResults == 0) {
                     root.findViewById<ImageView>(R.id.empty).visibility = View.VISIBLE
                     emptyText.visibility = View.VISIBLE
+                    swipeText.visibility = View.VISIBLE
+
                     if (newsResponse.status == "400") {
                         emptyText.text = "Internet Error"
                     }

@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "newsroom")
-data class NewsRoom(
+@Entity(tableName = "bookmark_room")
+data class BookMarkRoom(
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
     @ColumnInfo(name = "url") val url: String,
     @ColumnInfo(name = "source") val source: String,

@@ -7,19 +7,19 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface NewsDao {
-    @Query("SELECT * FROM newsroom")
-    fun getAll(): LiveData<List<NewsRoom>>
+interface BookMarkDao {
+    @Query("SELECT * FROM bookmark_room")
+    fun getAll(): LiveData<List<BookMarkRoom>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(newsRooms: NewsRoom)
+    suspend fun insertAll(bookMarkRooms: BookMarkRoom)
 
-    @Query("DELETE FROM newsroom WHERE url LIKE :url")
+    @Query("DELETE FROM bookmark_room WHERE url LIKE :url")
     fun deleteOne(url: String)
 
-    @Query("SELECT * FROM newsroom WHERE url LIKE :url")
+    @Query("SELECT * FROM bookmark_room WHERE url LIKE :url")
     fun exist(url: String): Boolean
 
-    @Query("DELETE FROM newsroom")
+    @Query("DELETE FROM bookmark_room")
     fun delete()
 }

@@ -17,7 +17,7 @@ import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.country.Country
 import com.ayodkay.apps.swen.view.AskLocation
-import com.ayodkay.apps.swen.view.SaveNews
+import com.ayodkay.apps.swen.view.BookMarkNews
 import com.ayodkay.apps.swen.view.ThemeActivity
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.facebook.appevents.AppEventsLogger
@@ -103,7 +103,7 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             saved?.setOnPreferenceClickListener {
-                startActivity(Intent(this.context, SaveNews::class.java))
+                startActivity(Intent(this.context, BookMarkNews::class.java))
                 true
             }
 

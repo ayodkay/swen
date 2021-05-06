@@ -20,8 +20,8 @@ import com.airbnb.lottie.LottieAnimationView
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.ads.NativeTemplateStyle
 import com.ayodkay.apps.swen.helper.ads.TemplateView
-import com.ayodkay.apps.swen.helper.room.bookmarks.NewsRoom
-import com.ayodkay.apps.swen.helper.room.bookmarks.NewsRoomVM
+import com.ayodkay.apps.swen.helper.room.bookmarks.BookMarkRoom
+import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.view.viewnews.ViewNewActivity
 import com.bumptech.glide.Glide
@@ -123,7 +123,7 @@ class AdsRecyclerView internal constructor(
 
             else -> {
                 val newsViewHolder: NewsViewHolder = holder as NewsViewHolder
-                val newsModel = ViewModelProvider(owner).get(NewsRoomVM::class.java)
+                val newsModel = ViewModelProvider(owner).get(BookmarkRoomVM::class.java)
                 val newsPosition = newsList[position]
 
                 val author =
@@ -180,7 +180,7 @@ class AdsRecyclerView internal constructor(
                     } else {
                         newsBookMark()
                         newsModel.insert(
-                            NewsRoom(
+                            BookMarkRoom(
                                 url = newsPosition.url,
                                 source = newsPosition.source.name,
                                 author = author,
