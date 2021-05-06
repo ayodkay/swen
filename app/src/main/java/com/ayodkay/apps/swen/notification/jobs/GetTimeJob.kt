@@ -4,6 +4,8 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.notification.Notification
 import com.ayodkay.apps.swen.view.main.MainActivity.Companion.startJobScheduler
 import com.ayodkay.apps.swen.view.main.MainActivity.Companion.stopJobScheduler
 import java.util.*
@@ -17,15 +19,18 @@ class GetTimeJob : JobService() {
 
         val rightNow: Calendar = Calendar.getInstance()
         val currentHourIn24Format: Int = rightNow.get(Calendar.HOUR_OF_DAY)
+        val currentMin: Int = rightNow.get(Calendar.MINUTE)
+        val currentSec: Int = rightNow.get(Calendar.SECOND)
 
-        if (arrayListOf(8, 12, 15, 18, 21).contains(currentHourIn24Format)) {
+        if (arrayListOf(
+                9,
+                13,
+                18,
+                22
+            ).contains(currentHourIn24Format) && currentMin == 0 && currentSec == 0
+        ) {
             stopJobScheduler()
-            if (lastHour != currentHourIn24Format) {
-                //Notification(this).sendEngageNotification(getString(R.string.news_update))
-                lastHour = currentHourIn24Format
-            } else {
-                startJobScheduler()
-            }
+            Notification(this).sendEngageNotification(getString(R.string.news_update))
         } else {
             startJobScheduler()
         }
@@ -34,10 +39,5 @@ class GetTimeJob : JobService() {
 
     override fun onStopJob(jobParameters: JobParameters?): Boolean {
         return false
-    }
-
-
-    companion object {
-        var lastHour = 0
     }
 }

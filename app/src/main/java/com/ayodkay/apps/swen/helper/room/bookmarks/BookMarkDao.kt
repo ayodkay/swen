@@ -8,18 +8,18 @@ import androidx.room.Query
 
 @Dao
 interface BookMarkDao {
-    @Query("SELECT * FROM bookmark_room")
+    @Query("SELECT * FROM newsroom")
     fun getAll(): LiveData<List<BookMarkRoom>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(bookMarkRooms: BookMarkRoom)
 
-    @Query("DELETE FROM bookmark_room WHERE url LIKE :url")
+    @Query("DELETE FROM newsroom WHERE url LIKE :url")
     fun deleteOne(url: String)
 
-    @Query("SELECT * FROM bookmark_room WHERE url LIKE :url")
+    @Query("SELECT * FROM newsroom WHERE url LIKE :url")
     fun exist(url: String): Boolean
 
-    @Query("DELETE FROM bookmark_room")
+    @Query("DELETE FROM newsroom")
     fun delete()
 }

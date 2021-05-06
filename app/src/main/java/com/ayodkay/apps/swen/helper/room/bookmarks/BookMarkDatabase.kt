@@ -8,7 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [BookMarkRoom::class], version = 4)
+@Database(entities = [BookMarkRoom::class], version = 3)
 abstract class BookMarkDatabase : RoomDatabase() {
     abstract fun newsDao(): BookMarkDao
 

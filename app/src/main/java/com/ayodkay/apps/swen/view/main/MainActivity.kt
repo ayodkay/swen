@@ -27,7 +27,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.App.Companion.context
-import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.userlocation.Location
 import com.ayodkay.apps.swen.notification.jobs.GetTimeJob
@@ -61,7 +60,6 @@ class MainActivity : AppCompatActivity() {
             startJobScheduler()
         }
 
-        AppLog.l(GetTimeJob.lastHour)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         if (ContextCompat.checkSelfPermission(
