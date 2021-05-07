@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.AppLog
@@ -32,7 +31,6 @@ class AskLocation : AppCompatActivity() {
             } // Night mode is not active, we're using the light theme
             Configuration.UI_MODE_NIGHT_YES -> {
                 setTheme(R.style.AppThemeNight)
-                background.setBackgroundColor(ContextCompat.getColor(this,R.color.background))
             } // Night mode is active, we're using dark theme
         }
     }

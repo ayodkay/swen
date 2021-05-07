@@ -11,12 +11,15 @@
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="12dp">
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:searchIcon="@drawable/ic_search"
             android:focusable="true"
             app:queryHint="@string/search"
@@ -35,6 +38,7 @@
             android:id="@+id/totalResults"
             android:layout_width="0dp"
             android:layout_weight="0.7"
+            android:layout_marginStart="4dp"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceSubtitle1" />
         <com.google.android.material.button.MaterialButton
