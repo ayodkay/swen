@@ -17,4 +17,7 @@ interface LinksDao {
 
     @Query("DELETE FROM links")
     fun delete()
+
+    @Query("DELETE FROM links WHERE link LIKE :link")
+    fun deleteOne(link: String)
 }

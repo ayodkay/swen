@@ -3,6 +3,7 @@ package com.ayodkay.apps.swen.view
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.webkit.ClientCertRequest
@@ -72,11 +73,21 @@ class WebView : AppCompatActivity() {
 
         saveLink.setOnClickListener {
             Helper.getLinksDatabase(this).linksDao().insertAll(Links(link = url))
+
+            removeLink.visibility = VISIBLE
+            saveLink.visibility = GONE
         }
 
-        if (Helper.getLinksDatabase(this).linksDao()
-                .exist(url)){
-            saved.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_bookmarked, null))
+        removeLink.setOnClickListener {
+            Helper.getLinksDatabase(this).linksDao().deleteOne(url)
+
+            removeLink.visibility = GONE
+            saveLink.visibility = VISIBLE
+        }
+
+        if (Helper.getLinksDatabase(this).linksDao().exist(url)){
+            removeLink.visibility = VISIBLE
+            saveLink.visibility = GONE
         }
 
     }
