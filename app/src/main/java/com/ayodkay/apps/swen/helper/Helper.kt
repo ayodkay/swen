@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
 import com.ayodkay.apps.swen.helper.room.country.CountryDatabase
+import com.ayodkay.apps.swen.helper.room.links.LinksDatabase
 import com.ayodkay.apps.swen.helper.room.userlocation.LocationDatabase
 import com.ayodkay.apps.swen.model.News
 import com.ayodkay.apps.swen.model.NewsArticle
@@ -43,6 +44,12 @@ object Helper{
         return Room.databaseBuilder(
             context,
             CountryDatabase::class.java, "country"
+        ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
+    }
+
+    fun getLinksDatabase(context: Context): LinksDatabase {
+        return Room.databaseBuilder(
+            context, LinksDatabase::class.java, "links"
         ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
     }
 

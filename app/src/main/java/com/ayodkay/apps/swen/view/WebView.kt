@@ -10,9 +10,13 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.AppLog
+import com.ayodkay.apps.swen.helper.Helper
+import com.ayodkay.apps.swen.helper.room.links.Links
 import com.ayodkay.apps.swen.view.main.MainActivity
+import com.ayodkay.apps.swen.view.webview.WebViewSuite
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import kotlinx.android.synthetic.main.activity_web_view.*
@@ -30,46 +34,49 @@ class WebView : AppCompatActivity() {
 
         mInterstitialAd.loadAd(AdRequest.Builder().build())
 
+        val url  = intent.extras?.get("url") as String
+
+        webViewSuite.startLoading(url)
+
         back_button.setOnClickListener {
             onBackPressed()
         }
 
-        webview.apply {
-            loadUrl(intent.extras?.get("url") as String)
-            settings.javaScriptEnabled = true
-            settings.defaultTextEncodingName = "utf-8"
+        refresh.setOnClickListener {
+            webViewSuite.refresh()
         }
 
-        webview.webViewClient = object : WebViewClient(){
-            override fun onReceivedClientCertRequest(view: WebView?, request: ClientCertRequest?) {
-                super.onReceivedClientCertRequest(view, request)
-                AppLog.l(message = request.toString())
+        shareLink.setOnClickListener {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, url)
+                type = "text/plain"
             }
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
+        }
 
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                super.onPageStarted(view, url, favicon)
-                val slash = url!!.indexOf("//") + 2
-                val domain = url.substring(slash, url.indexOf('/', slash))
-                urlLink.text = domain
-                webProgress.visibility = VISIBLE
-
-            }
+        webViewSuite.customizeClient(object : WebViewSuite.WebViewSuiteCallback {
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {}
 
             override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
                 val slash = url!!.indexOf("//") + 2
                 val domain = url.substring(slash, url.indexOf('/', slash))
                 urlLink.text = domain
-                webProgress.visibility = GONE
             }
 
-            override fun shouldOverrideUrlLoading(
-                view: WebView?,
-                request: WebResourceRequest?
-            ): Boolean {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 return true
             }
+        })
 
+        saveLink.setOnClickListener {
+            Helper.getLinksDatabase(this).linksDao().insertAll(Links(link = url))
+        }
+
+        if (Helper.getLinksDatabase(this).linksDao()
+                .exist(url)){
+            saved.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_bookmarked, null))
         }
 
     }
