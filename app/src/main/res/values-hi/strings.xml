@@ -77,7 +77,7 @@
     <string name="search_language">भाषा खोजें</string>
     <string name="search_language_summary">समाचार खोजते समय प्रयुक्त भाषा बदलें</string>
     <string name="supporting_text">हमारा ऐप 100% सुरक्षित है, इसलिए आपको अपनी जानकारी या आपके डिवाइस को नुकसान पहुंचाने वाली कुछ फाइलों के बारे में चिंता करने की आवश्यकता नहीं है। हम आपकी गोपनीयता का ख्याल रखते हैं। कृपया ध्यान दें कि, यह ऐप संबद्ध नहीं है और न ही यहां दिए गए किसी भी समाचार पत्र से संबंधित है। ऐप शो को निजी तौर पर https://newsapi.org/ पर उपलब्ध है, जो सभी कॉपीराइट को बनाए रखता है और इस प्रकार ऐप को ज़िम्मेदार नहीं ठहराया जाता है। किसी भी सामग्री को प्रदर्शित करने के लिए। स्रोतों और प्रकाशकों के बारे में अधिक जानकारी के लिए https://newsapi.org/ या support@newsapi.org पर संपर्क करें।</string>
-    <string name="refresh">Swipe to Refresh</string>
-    <string name="links">Links</string>
-    <string name="system_theme" />
+    <string name="refresh">ताज़ा करने के लिए स्वाइप करें</string>
+    <string name="links">लिंक</string>
+    <string name="system_theme">प्रणालीगत चूक।</string>
 </resources>

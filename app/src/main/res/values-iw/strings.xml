@@ -77,7 +77,7 @@
     <string name="search_language">שפת חיפוש</string>
     <string name="search_language_summary">לשנות את השפה בה משתמשים בחיפוש אחר חדשות</string>
     <string name="supporting_text">האפליקציה שלנו בטוחה ב 100%, כך שאינך צריך לדאוג למידע שלך או לקבצים מסוימים שיפגעו במכשיר שלך. אנו דואגים לפרטיותך. לידיעתך, אפליקציה זו אינה קשורה ואינה קשורה לאף אחד מהעיתונים המצוטטים כאן. התוכן שהאפליקציה מציגה זמין באופן פרטי בכתובת https://newsapi.org/ השומר על כל זכויות היוצרים ולכן אין להטיל אחריות על האפליקציה לכל אחד מהתכנים המוצגים. למידע נוסף על המקורות ועל המפרסמים בקר בכתובת https://newsapi.org/ או צרו קשר עם support@newsapi.org</string>
-    <string name="refresh">Swipe to Refresh</string>
-    <string name="links">Links</string>
-    <string name="system_theme" />
+    <string name="refresh">החלק כדי לרענן</string>
+    <string name="links">קישורים</string>
+    <string name="system_theme">ברירת מחדל של המערכת.</string>
 </resources>

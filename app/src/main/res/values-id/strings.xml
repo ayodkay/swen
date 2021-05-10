@@ -77,7 +77,7 @@
     <string name="search_language">Bahasa pencarian</string>
     <string name="search_language_summary">ubah bahasa yang digunakan saat mencari berita</string>
     <string name="supporting_text">Aplikasi kami 100% Aman, jadi Anda tidak perlu khawatir tentang informasi Anda atau beberapa file yang akan membahayakan perangkat Anda. Kami menjaga privasi Anda. Harap Perhatikan bahwa, Aplikasi ini tidak berafiliasi atau tidak terkait dengan surat kabar mana pun yang dikutip di sini.Konten yang ditampilkan aplikasi tersedia secara pribadi di https://newsapi.org/ yang mempertahankan semua hak cipta dan dengan demikian aplikasi tidak bertanggung jawab untuk setiap konten yang ditampilkan. untuk lebih lanjut tentang sumber dan penerbit kunjungi https://newsapi.org/ atau hubungi support@newsapi.org</string>
-    <string name="refresh">Swipe to Refresh</string>
-    <string name="links">Links</string>
-    <string name="system_theme" />
+    <string name="refresh">Geser untuk menyegarkan</string>
+    <string name="links">Tautan</string>
+    <string name="system_theme">Sistem default.</string>
 </resources>

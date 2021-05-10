@@ -89,5 +89,5 @@
     </string>
     <string name="refresh">Swipe to Refresh</string>
     <string name="links">Links</string>
-    <string name="system_theme">Use device default theme </string>
+    <string name="system_theme">System Default</string>
 </resources>

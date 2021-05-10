@@ -77,7 +77,7 @@
     <string name="search_language">Lingua di ricerca</string>
     <string name="search_language_summary">cambiare la lingua utilizzata durante la ricerca di notizie</string>
     <string name="supporting_text">La nostra app è sicura al 100%, quindi non devi preoccuparti delle tue informazioni o di alcuni file che danneggeranno il tuo dispositivo. Ci prendiamo cura della tua privacy. Si prega di notare che questa app non è affiliata né correlata a nessuno dei giornali qui citati.Il contenuto mostrato dall\'app è disponibile privatamente su https://newsapi.org/ che conserva tutti i diritti d\'autore e quindi l\'app non è da ritenersi responsabile per qualsiasi contenuto visualizzato. per ulteriori informazioni sulle fonti e gli editori, visitare https://newsapi.org/ o contattare support@newsapi.org</string>
-    <string name="refresh">Swipe to Refresh</string>
-    <string name="links">Links</string>
-    <string name="system_theme" />
+    <string name="refresh">Scorri per rinfrescare</string>
+    <string name="links">collegamenti</string>
+    <string name="system_theme">Default del sistema.</string>
 </resources>
