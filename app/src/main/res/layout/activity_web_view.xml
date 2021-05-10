@@ -117,7 +117,7 @@
         app:overrideTelLink="true"
         app:overrideEmailLink="true"
         app:overridePdfLink="true"
-        app:showZoomControl="false"
-        app:enableVerticalScrollBar="false"
-        app:enableHorizontalScrollBar="false"/>
+        app:showZoomControl="true"
+        app:enableVerticalScrollBar="true"
+        app:enableHorizontalScrollBar="true"/>
 </LinearLayout>

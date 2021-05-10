@@ -78,4 +78,6 @@
  <string name="search_language_summary">更改搜索新闻时使用的语言</string>
     <string name="supporting_text">我们的应用程序是100％安全的，因此您无需担心您的信息或某些会损坏设备的文件。我们会保护您的隐私。请注意，此应用程序与此处引用的任何报纸均不存在任何关系。该应用程序显示的内容可在https://newsapi.org/上私人获得，并保留所有版权，因此该应用程序不承担任何责任有关显示的任何内容的更多信息，请访问https://newsapi.org/或联系support@newsapi.org</string>
     <string name="refresh">Swipe to Refresh</string>
+    <string name="links">Links</string>
+    <string name="system_theme" />
 </resources>

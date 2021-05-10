@@ -2,10 +2,10 @@
 <resources >
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#2F2F2F</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#E29C9C</color>
 
-    <color name="textPrimary">#FFFFFF</color>
-    <color name="textSecondary">#CCCCCC</color>
+    <color name="textPrimary">#FFF</color>
+    <color name="textSecondary">#4CFAFAFA</color>
 
 
     <color name="toolbar">#2F2F2F</color>

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.AppLog
 import kotlinx.android.synthetic.main.activity_theme.*
 
 
@@ -29,7 +30,8 @@ class ThemeActivity : AppCompatActivity() {
 
             } // Night mode is not active, we're using the light theme
             Configuration.UI_MODE_NIGHT_YES -> {
-                background.setBackgroundColor(ContextCompat.getColor(this,R.color.colorPrimary))
+                setTheme(R.style.AppThemeNight)
+                background.setBackgroundColor(ContextCompat.getColor(this,R.color.background))
             } // Night mode is active, we're using dark theme
         }
     }
@@ -39,17 +41,14 @@ class ThemeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_theme)
 
-        initThemeListener()
-        initTheme()
-    }
-
-    private fun initThemeListener(){
         themeGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.themeLight -> setTheme(AppCompatDelegate.MODE_NIGHT_NO, THEME_LIGHT)
                 R.id.themeDark -> setTheme(AppCompatDelegate.MODE_NIGHT_YES, THEME_DARK)
+                R.id.themeSystem -> setTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, THEME_UNDEFINED)
             }
         }
+        initTheme()
     }
 
     private fun setTheme(themeMode: Int, prefsMode: Int) {
@@ -61,18 +60,14 @@ class ThemeActivity : AppCompatActivity() {
         when (getSavedTheme()) {
             THEME_LIGHT -> themeLight.isChecked = true
             THEME_DARK -> themeDark.isChecked = true
-            THEME_UNDEFINED -> {
-                when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
-                    Configuration.UI_MODE_NIGHT_NO -> themeLight.isChecked = true
-                    Configuration.UI_MODE_NIGHT_YES -> themeDark.isChecked = true
-                    Configuration.UI_MODE_NIGHT_UNDEFINED -> themeLight.isChecked = true
-                }
-            }
+            THEME_UNDEFINED -> themeSystem.isChecked = true
         }
     }
 
-    private fun saveTheme(theme: Int) = sharedPrefs.edit().putInt(KEY_THEME, theme).apply()
+    private fun saveTheme(theme: Int) =
+        sharedPrefs.edit().putInt(KEY_THEME, theme).apply()
 
-    private fun getSavedTheme() = sharedPrefs.getInt(KEY_THEME, THEME_UNDEFINED)
+    private fun getSavedTheme() =
+        sharedPrefs.getInt(KEY_THEME, THEME_UNDEFINED)
 }
 

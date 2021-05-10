@@ -27,46 +27,11 @@ class BookMarkNews : AppCompatActivity() {
             } // Night mode is active, we're using dark theme
         }
     }
-
-    private lateinit var bookmarkModel: BookmarkRoomVM
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bookmark_news)
 
-        val news: ArrayList<News> = arrayListOf()
 
-        bookmarkModel = ViewModelProvider(this).get(BookmarkRoomVM::class.java)
-        var add = true
-        bookmarkModel.allBookMarkRoom.observe(this, {
-            if (it.isEmpty()) {
-                no_saved.visibility = View.VISIBLE
-                saved_recycle.visibility = View.GONE
-            } else {
-                for (i in it.indices) {
-                    if (add) {
-                        news.add(
-                            News(
-                                it[i].source,
-                                it[i].author,
-                                it[i].title,
-                                it[i].description,
-                                it[i].url,
-                                it[i].urlToImage,
-                                it[i].publishedAt,
-                                it[i].content,
-                            )
-                        )
-
-                    }
-                }
-                add = false
-            }
-
-            saved_recycle.apply {
-                layoutManager = LinearLayoutManager(this@BookMarkNews)
-                adapter = RoomRecyclerview(news, this@BookMarkNews, this@BookMarkNews)
-            }
-        })
 
     }
 }

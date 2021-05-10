@@ -78,4 +78,6 @@
     <string name="search_language_summary">뉴스를 검색 할 때 사용되는 언어 변경</string>
     <string name="supporting_text">저희 앱은 100 % 안전하므로 기기에 해를 끼칠 수있는 정보 나 파일에 대해 걱정할 필요가 없습니다. 우리는 귀하의 개인 정보를 관리합니다. 이 앱은 여기에 인용 된 어떤 신문과도 관련이 없으며, 앱이 보여주는 콘텐츠는 모든 저작권을 보유한 https://newsapi.org/에서 비공개로 제공되므로 앱은 책임을지지 않습니다. 표시된 콘텐츠에 대한 자세한 내용은 https://newsapi.org/를 방문하거나 support@newsapi.org로 문의하십시오.</string>
     <string name="refresh">Swipe to Refresh</string>
+    <string name="links">Links</string>
+    <string name="system_theme" />
 </resources>

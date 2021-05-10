@@ -52,9 +52,10 @@
                     android:id="@+id/source"
                     android:layout_width="0dp"
                     android:layout_weight="1.7"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:textAppearance="?attr/textAppearanceHeadline6"
-                    android:textColor="#666161"
+                    android:textColor="@color/textPrimary"
                     />
 
                 <RelativeLayout
@@ -80,11 +81,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="#666161"
+                android:textColor="@color/textSecondary"
                 />
             <TextView
                 android:id="@+id/title"
-                android:textColor="#AB3838"
+                android:textColor="@color/textPrimary"
                 android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -97,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="#928A8A" />
+                android:textColor="@color/textSecondary" />
 
         </LinearLayout>
     </LinearLayout>

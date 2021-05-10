@@ -10,6 +10,16 @@
         <item name="bottomSheetStyle">@style/Theme.NoWiredStrapInNavigationBar</item>
     </style>
 
+    <style name="AppActionBarTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/DrawerIconStyle</item>
+
+        <item name="bottomSheetStyle">@style/Theme.NoWiredStrapInNavigationBar</item>
+    </style>
+
     <style name="DrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@color/textPrimary</item>
     </style>
@@ -48,5 +58,12 @@
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
+
+    <style name="PreferenceScreen" parent="AppTheme">
+        <item name="backgroundColor">@color/background</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textColorSecondary">@color/textSecondary</item>
+    </style>
+
 
 </resources>

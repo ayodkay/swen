@@ -117,13 +117,7 @@ class RoomRecyclerview internal constructor(private val newsList: ArrayList<News
             }
 
             else-> {
-                setUpAds()
-                if ((itemCount - 1) == position) {
-                    if (mInterstitialAd.isLoaded) {
-                        mInterstitialAd.show()
-                    }
-                }
-                val newsViewHolder: NewsViewHolder = holder as NewsViewHolder
+                val newsViewHolder = holder as NewsViewHolder
                 val newsModel = ViewModelProvider(owner).get(BookmarkRoomVM::class.java)
                 val newsPosition = newsList[position]
                 val date = newsPosition.publishedAt
@@ -258,37 +252,5 @@ class RoomRecyclerview internal constructor(private val newsList: ArrayList<News
 
     private fun newsBookMark (){
         AppEventsLogger.newLogger(context).logEvent("newsBookMark")
-    }
-
-    private fun setUpAds(){
-        MobileAds.initialize(context) {}
-        mInterstitialAd = InterstitialAd(context)
-        mInterstitialAd.adUnitId = context.resources.getString(R.string.interstitial_ad_unit_id)
-        mInterstitialAd.loadAd(AdRequest.Builder().build())
-        mInterstitialAd.adListener = object: AdListener() {
-            override fun onAdLoaded() {
-
-            }
-
-            override fun onAdFailedToLoad(errorCode: Int) {
-                mInterstitialAd.loadAd(AdRequest.Builder().build())
-            }
-
-            override fun onAdOpened() {
-                mInterstitialAd.loadAd(AdRequest.Builder().build())
-            }
-
-            override fun onAdClicked() {
-                mInterstitialAd.loadAd(AdRequest.Builder().build())
-            }
-
-            override fun onAdLeftApplication() {
-                mInterstitialAd.loadAd(AdRequest.Builder().build())
-            }
-
-            override fun onAdClosed() {
-                mInterstitialAd.loadAd(AdRequest.Builder().build())
-            }
-        }
     }
 }

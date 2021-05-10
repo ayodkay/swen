@@ -8,6 +8,9 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.preference.EditTextPreference
@@ -19,6 +22,7 @@ import com.ayodkay.apps.swen.helper.room.country.Country
 import com.ayodkay.apps.swen.view.AskLocation
 import com.ayodkay.apps.swen.view.BookMarkNews
 import com.ayodkay.apps.swen.view.ThemeActivity
+import com.ayodkay.apps.swen.view.bookmarks.BookMarkActivity
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.AdRequest
@@ -103,7 +107,7 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             saved?.setOnPreferenceClickListener {
-                startActivity(Intent(this.context, BookMarkNews::class.java))
+                startActivity(Intent(this.context, BookMarkActivity::class.java))
                 true
             }
 
@@ -178,6 +182,14 @@ class SettingsActivity : AppCompatActivity() {
                 true
             }
 
+        }
+
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                                  savedInstanceState: Bundle?): View? {
+            val view = super.onCreateView(inflater, container, savedInstanceState)
+
+            view?.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.background))
+            return view
         }
 
         @Deprecated("deprecated", ReplaceWith("inAppRate", "inAppRate()"))

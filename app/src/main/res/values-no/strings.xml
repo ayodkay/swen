@@ -78,4 +78,6 @@
     <string name="search_language_summary">endre språket som brukes når du søker etter nyheter</string>
     <string name="supporting_text">Appen vår er 100% trygg, så du trenger ikke å bekymre deg for informasjonen din eller noen filer som vil skade enheten din. Vi tar vare på personvernet ditt. Vær oppmerksom på at denne appen ikke er tilknyttet eller er relatert til noen avisene som er sitert her. Innholdet appen viser er privat tilgjengelig på https://newsapi.org/ som beholder alle opphavsrettigheter, og appen skal derfor ikke holdes ansvarlig for noe av innholdet som vises. for mer informasjon om kilder og utgivere, besøk https://newsapi.org/ eller kontakt support@newsapi.org</string>
     <string name="refresh">Swipe to Refresh</string>
+    <string name="links">Links</string>
+    <string name="system_theme" />
 </resources>

@@ -62,7 +62,7 @@
 
     <fragment
         android:id="@+id/nav_settings"
-        android:name="com.ayodkay.apps.swen.view.settings.SettingsFragment"
+        android:name="com.ayodkay.apps.swen.view.settings.SettingsActivity$SettingsFragment"
         tools:layout="@layout/settings_activity" />
 
 </navigation>

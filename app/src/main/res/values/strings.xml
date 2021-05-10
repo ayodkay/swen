@@ -88,4 +88,6 @@
         publishers visit https://newsapi.org/ or contact support@newsapi.org
     </string>
     <string name="refresh">Swipe to Refresh</string>
+    <string name="links">Links</string>
+    <string name="system_theme">Use device default theme </string>
 </resources>

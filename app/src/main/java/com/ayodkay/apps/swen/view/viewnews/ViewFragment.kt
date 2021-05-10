@@ -85,6 +85,7 @@ class ViewFragment : Fragment(){
         val title = activity?.intent?.extras?.get("title") as String
         val content = (activity?.intent?.extras?.get("content") as String)
             .replace(regex = Regex("<.*?>"), "")
+            .replace(regex = Regex("\\W+\\d+ chars\\W"), "...")
         val description = (activity?.intent?.extras?.get("description") as String)
             .replace(regex = Regex("<.*?>"), "")
         val source = activity?.intent?.extras?.get("source") as String

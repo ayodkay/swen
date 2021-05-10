@@ -12,15 +12,18 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:name=".helper.App"
+        android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:allowBackup="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+
+        <activity android:name=".view.bookmarks.BookMarkActivity"
+            android:theme="@style/AppActionBarTheme"/>
         <activity android:name=".view.viewimage.ViewImageActivity" />
         <activity android:name=".view.BookMarkNews" />
         <activity
@@ -41,6 +44,7 @@
             android:name=".notification.jobs.GetTimeJob"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
         <receiver
             android:name=".helper.backend.PowerButtonBroadcastReceiver"
             android:exported="false">
@@ -62,6 +66,7 @@
         <activity android:name=".view.ThemeActivity" />
         <activity
             android:name=".view.settings.SettingsActivity"
+            android:theme="@style/PreferenceScreen"
             android:label="@string/title_activity_settings" />
 
         <meta-data

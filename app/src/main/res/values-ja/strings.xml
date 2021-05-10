@@ -78,5 +78,7 @@
     <string name="search_language_summary">ニュースを検索するときに使用する言語を変更する</string>
     <string name="supporting_text">私たちのアプリは100％安全なので、デバイスに害を及ぼす情報やファイルについて心配する必要はありません。私たちはあなたのプライバシーを守ります。このアプリは、ここに引用されている新聞とは提携も関連もありません。アプリが表示するコンテンツは、すべての著作権を保持するhttps://newsapi.org/で非公開で入手できるため、アプリは責任を負いません。表示されているコンテンツのいずれかについて。ソースと発行元の詳細については、https：//newsapi.org/にアクセスするか、support @ newsapi.orgにお問い合わせください。</string>
     <string name="refresh">Swipe to Refresh</string>
+    <string name="links">Links</string>
+    <string name="system_theme" />
 
 </resources>

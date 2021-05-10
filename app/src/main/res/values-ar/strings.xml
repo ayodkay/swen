@@ -78,4 +78,6 @@
     <string name="search_language_summary">تغيير اللغة المستخدمة عند البحث عن الأخبار</string>
     <string name="supporting_text">تطبيقنا آمن بنسبة 100٪ ، لذلك لا داعي للقلق بشأن معلوماتك أو بعض الملفات التي قد تضر بجهازك. نحن نحرص على خصوصيتك. يرجى ملاحظة أن هذا التطبيق ليس تابعًا أو مرتبطًا بأي من الصحف المذكورة هنا ، المحتوى الذي يعرضه التطبيق متاح بشكل خاص على https://newsapi.org/ والذي يحتفظ بجميع حقوق النشر وبالتالي لا يتحمل التطبيق المسؤولية لمزيد من المعلومات حول المصادر والناشرين ، تفضل بزيارة https://newsapi.org/ أو اتصل بـ support@newsapi.org</string>
     <string name="refresh">Swipe to Refresh</string>
+    <string name="links">Links</string>
+    <string name="system_theme" />
 </resources>
