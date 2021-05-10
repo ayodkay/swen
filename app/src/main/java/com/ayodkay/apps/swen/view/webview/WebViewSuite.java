@@ -114,13 +114,10 @@ public class WebViewSuite extends RelativeLayout {
         }
 
         Handler webViewInflationHandler = new Handler();
-        webViewInflationHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                webView = (WebView) webViewStub.inflate();
-                webViewInflated = true;
-                postWebViewInflated();
-            }
+        webViewInflationHandler.postDelayed(() -> {
+            webView = (WebView) webViewStub.inflate();
+            webViewInflated = true;
+            postWebViewInflated();
         }, inflationDelay);
 
     }
