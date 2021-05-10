@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
 import kotlinx.android.synthetic.main.activity_theme.*
 
 

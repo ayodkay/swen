@@ -2,16 +2,8 @@ package com.ayodkay.apps.swen.view
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.adapter.RoomRecyclerview
-import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
-import com.ayodkay.apps.swen.model.News
-import kotlinx.android.synthetic.main.activity_bookmark_news.*
-import java.util.*
 
 class BookMarkNews : AppCompatActivity() {
 

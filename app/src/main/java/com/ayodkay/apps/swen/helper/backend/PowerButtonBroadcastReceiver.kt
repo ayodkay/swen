@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Build
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.notification.Notification
-import com.ayodkay.apps.swen.view.main.MainActivity
 import com.ayodkay.apps.swen.view.main.MainActivity.Companion.startJobScheduler
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory

@@ -20,8 +20,7 @@ class TemplateView : FrameLayout {
     private var templateType = 0
     private var styles: NativeTemplateStyle? = null
     private var nativeAd: UnifiedNativeAd? = null
-    var nativeAdView: UnifiedNativeAdView? = null
-        private set
+    private var nativeAdView: UnifiedNativeAdView? = null
     private var primaryView: TextView? = null
     private var secondaryView: TextView? = null
     private var ratingBar: RatingBar? = null
@@ -31,7 +30,7 @@ class TemplateView : FrameLayout {
     private var callToActionView: Button? = null
     private var background: ConstraintLayout? = null
 
-    constructor(context: Context?) : super(context!!) {}
+    constructor(context: Context?) : super(context!!)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         initView(context, attrs)
     }

@@ -39,7 +39,7 @@ import java.text.SimpleDateFormat
 
 private val ITEM_TYPE_COUNTRY by lazy { 0 }
 private val ITEM_TYPE_BANNER_AD by lazy { 1 }
-private lateinit var mInterstitialAd: InterstitialAd
+
 class RoomRecyclerview internal constructor(private val newsList: ArrayList<News>,
                                             private val owner: ViewModelStoreOwner,
                                            private val context: Context):

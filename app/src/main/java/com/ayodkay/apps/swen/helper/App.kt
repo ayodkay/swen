@@ -7,7 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatDelegate
-import com.ayodkay.apps.swen.BuildConfig
+import androidx.multidex.BuildConfig
 import com.ayodkay.apps.swen.helper.backend.BootReceiver
 import com.ayodkay.apps.swen.helper.backend.PowerButtonBroadcastReceiver
 import com.ayodkay.apps.swen.view.KEY_THEME

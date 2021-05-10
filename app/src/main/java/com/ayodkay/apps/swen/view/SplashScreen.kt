@@ -42,17 +42,18 @@ class SplashScreen : AppCompatActivity() {
             }
     }
 
-    private val listener: InstallStateUpdatedListener? = InstallStateUpdatedListener { installState ->
-        if (installState.installStatus() == InstallStatus.DOWNLOADED) {
-            updating.visibility = View.GONE
-            Toast.makeText(this,getString(R.string.updated),Toast.LENGTH_LONG).show()
-            nextActivity()
+    private val listener: InstallStateUpdatedListener =
+        InstallStateUpdatedListener { installState ->
+            if (installState.installStatus() == InstallStatus.DOWNLOADED) {
+                updating.visibility = View.GONE
+                Toast.makeText(this, getString(R.string.updated), Toast.LENGTH_LONG).show()
+                nextActivity()
 
-        }
+            }
 
-        if (installState.installStatus() == InstallStatus.DOWNLOADING){
-            updating.visibility = View.VISIBLE
-            Toast.makeText(this,getString(R.string.updating),Toast.LENGTH_LONG).show()
+            if (installState.installStatus() == InstallStatus.DOWNLOADING) {
+                updating.visibility = View.VISIBLE
+                Toast.makeText(this, getString(R.string.updating), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -81,7 +82,7 @@ class SplashScreen : AppCompatActivity() {
 
                             AppEventsLogger.newLogger(context).logEvent("in-appUpdate")
 
-                            appUpdateManager.registerListener(listener!!)
+                            appUpdateManager.registerListener(listener)
                             appUpdateManager.startUpdateFlowForResult(
                                 // Pass the intent that is returned by 'getAppUpdateInfo()'.
                                 appUpdateInfo,
@@ -90,7 +91,8 @@ class SplashScreen : AppCompatActivity() {
                                 // The current activity making the update request.
                                 this,
                                 // Include a request code to later monitor this update request.
-                                MY_REQUEST_CODE)
+                                MY_REQUEST_CODE
+                            )
                         }else{
                             nextActivity()
                         }
@@ -117,7 +119,7 @@ class SplashScreen : AppCompatActivity() {
     @Suppress("SENSELESS_COMPARISON")
     private fun nextActivity(){
         Handler(Looper.getMainLooper()).postDelayed({
-            appUpdateManager.unregisterListener(listener!!)
+            appUpdateManager.unregisterListener(listener)
             val db = Helper.getCountryDatabase(this)
             if (db.countryDao().getAll() != null) {
                 startActivity(Intent(this, MainActivity::class.java))

@@ -94,7 +94,7 @@ class ViewImageActivity : AppCompatActivity() {
         window.apply {
             addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             statusBarColor = Color.TRANSPARENT
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
             }
 

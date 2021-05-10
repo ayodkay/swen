@@ -1,7 +1,7 @@
 package com.ayodkay.apps.swen.helper
 
 import android.util.Log
-import com.ayodkay.apps.swen.BuildConfig
+import androidx.multidex.BuildConfig
 
 object AppLog {
     @JvmStatic

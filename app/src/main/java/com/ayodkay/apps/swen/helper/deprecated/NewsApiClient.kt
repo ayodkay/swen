@@ -1,7 +1,7 @@
 package com.ayodkay.apps.swen.helper.deprecated
 
 
-@Deprecated("switched to retrofit", ReplaceWith("retrofit",))
+@Deprecated("switched to retrofit", ReplaceWith("retrofit"))
 class NewsApiClient(private val apiKey: String) {
     fun getSources(
         category: String? = "", language: String? = "", country: String? = ""

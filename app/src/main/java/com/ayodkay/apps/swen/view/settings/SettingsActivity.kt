@@ -20,7 +20,6 @@ import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.country.Country
 import com.ayodkay.apps.swen.view.AskLocation
-import com.ayodkay.apps.swen.view.BookMarkNews
 import com.ayodkay.apps.swen.view.ThemeActivity
 import com.ayodkay.apps.swen.view.bookmarks.BookMarkActivity
 import com.ayodkay.apps.swen.view.main.MainActivity
@@ -219,10 +218,10 @@ class SettingsActivity : AppCompatActivity() {
         private fun inAppRate(context: Context, activity: Activity) {
             val manager = ReviewManagerFactory.create(context)
             manager.requestReviewFlow()
-                .addOnCompleteListener { it ->
+                .addOnCompleteListener {
                     if (it.isSuccessful) {
                         manager.launchReviewFlow(activity, it.result)
-                            .addOnCompleteListener { _ -> }
+                            .addOnCompleteListener { }
                     }
                 }
         }

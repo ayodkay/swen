@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -20,7 +19,6 @@ import com.ayodkay.apps.swen.helper.room.links.Links
 import com.ayodkay.apps.swen.view.WebView
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.formats.NativeAdOptions
-
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

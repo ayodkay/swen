@@ -196,16 +196,16 @@ class MainActivity : AppCompatActivity() {
                         )
                         FirebaseMessaging.getInstance()
                             .unsubscribeFromTopic("engage")
-                            .addOnCompleteListener { _ -> }
+                            .addOnCompleteListener { }
 
                         FirebaseMessaging.getInstance()
                             .subscribeToTopic(addresses[0].countryCode.toLowerCase(Locale.ROOT))
-                            .addOnCompleteListener { _ -> }
+                            .addOnCompleteListener { }
 
                     }else{
                         FirebaseMessaging.getInstance()
                             .subscribeToTopic("engage")
-                            .addOnCompleteListener { _ -> }
+                            .addOnCompleteListener { }
                     }
                 }
 
