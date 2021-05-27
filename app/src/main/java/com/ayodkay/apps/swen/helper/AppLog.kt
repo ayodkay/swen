@@ -1,12 +1,12 @@
 package com.ayodkay.apps.swen.helper
 
 import android.util.Log
-import androidx.multidex.BuildConfig
+import com.ayodkay.apps.swen.BuildConfig.DEBUG
 
 object AppLog {
     @JvmStatic
     fun l(message: Any) {
-        if (BuildConfig.DEBUG) {
+        if (DEBUG) {
             Log.d("log", "AppLog: $message")
         }
     }
