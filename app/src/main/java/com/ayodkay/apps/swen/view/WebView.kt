@@ -29,9 +29,9 @@ class WebView : AppCompatActivity() {
 
         mInterstitialAd.loadAd(AdRequest.Builder().build())
 
-        val url  = intent.extras?.get("url") as String
+        val link = intent.extras?.get("url") as String
 
-        webViewSuite.startLoading(url)
+        webViewSuite.startLoading(link)
 
         back_button.setOnClickListener {
             onBackPressed()
@@ -41,45 +41,74 @@ class WebView : AppCompatActivity() {
             webViewSuite.refresh()
         }
 
-        shareLink.setOnClickListener {
-            val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, url)
-                type = "text/plain"
-            }
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
-        }
-
         webViewSuite.customizeClient(object : WebViewSuite.WebViewSuiteCallback {
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {}
-
-            override fun onPageFinished(view: WebView?, url: String?) {
+            var reload = true
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 val slash = url!!.indexOf("//") + 2
                 val domain = url.substring(slash, url.indexOf('/', slash))
                 urlLink.text = domain
+
+                shareLink.setOnClickListener {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, url)
+                        type = "text/plain"
+                    }
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
+                }
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                if (link.contains("news.google.com")) {
+                    if (reload) {
+                        webViewSuite.startLoading(url)
+                        reload = false
+                    }
+                }
+
+                val slash = url!!.indexOf("//") + 2
+                val domain = url.substring(slash, url.indexOf('/', slash))
+                urlLink.text = domain
+
+                shareLink.setOnClickListener {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, url)
+                        type = "text/plain"
+                    }
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
+                }
             }
 
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                if (url.orEmpty().contains("youtube.com")) {
+                    view?.loadUrl(url!!)
+                }
                 return true
             }
         })
 
         saveLink.setOnClickListener {
-            Helper.getLinksDatabase(this).linksDao().insertAll(Links(link = url))
+            Helper.getLinksDatabase(this).linksDao().insertAll(Links(link = link))
 
             removeLink.visibility = VISIBLE
             saveLink.visibility = GONE
         }
 
         removeLink.setOnClickListener {
-            Helper.getLinksDatabase(this).linksDao().deleteOne(url)
+            Helper.getLinksDatabase(this).linksDao().deleteOne(link)
 
             removeLink.visibility = GONE
             saveLink.visibility = VISIBLE
         }
 
-        if (Helper.getLinksDatabase(this).linksDao().exist(url)){
+        refresh.setOnClickListener {
+            webViewSuite.refresh()
+        }
+
+        if (Helper.getLinksDatabase(this).linksDao().exist(link)) {
             removeLink.visibility = VISIBLE
             saveLink.visibility = GONE
         }
