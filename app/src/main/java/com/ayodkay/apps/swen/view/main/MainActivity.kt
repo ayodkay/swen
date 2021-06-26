@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         fusedLocationClient.lastLocation.addOnSuccessListener {
-            if (it != null){
+            if (it != null) {
                 subscribeCountryName(it.latitude, it.longitude)
             }
         }
@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity() {
         val navView: NavigationView = findViewById(R.id.nav_view)
 
         //setUpAlarm(this)ta
-        toolbar.setOnMenuItemClickListener { menuItem->
+        toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.search -> {
                     startActivity(
@@ -197,7 +197,8 @@ class MainActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        when(requestCode){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
             REQUEST_CODE -> {
                 if ((grantResults.isNotEmpty() &&
                             grantResults[0] == PackageManager.PERMISSION_GRANTED)
@@ -219,14 +220,15 @@ class MainActivity : AppCompatActivity() {
         try {
             addresses = geoCoder.getFromLocation(latitude, longitude, 1)
             if (addresses != null && addresses.isNotEmpty()) {
+                val addressCode = addresses[0].countryCode.toLowerCase(Locale.ROOT)
                 if (Helper.topCountries(addresses[0].countryCode.toLowerCase(Locale.ROOT))) {
                     FirebaseMessaging.getInstance()
                         .unsubscribeFromTopic("engage")
                         .addOnCompleteListener { }
 
                     FirebaseMessaging.getInstance()
-                        .subscribeToTopic(addresses[0].countryCode.toLowerCase(Locale.ROOT))
-                        .addOnCompleteListener { }
+                        .subscribeToTopic(addressCode)
+                        .addOnCompleteListener {}
 
                 } else {
                     FirebaseMessaging.getInstance()

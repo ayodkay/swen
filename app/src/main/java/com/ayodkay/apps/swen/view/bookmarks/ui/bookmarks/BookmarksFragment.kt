@@ -13,11 +13,16 @@ import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.adapter.RoomRecyclerview
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.model.News
+import com.mopub.nativeads.MoPubRecyclerAdapter
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer
+import com.mopub.nativeads.ViewBinder
 import java.util.*
 
 class BookmarksFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val root = inflater.inflate(R.layout.fragment_bookmarks, container, false)
         val noSaved = root.findViewById<ImageView>(R.id.no_saved)
         val savedRecycle = root.findViewById<RecyclerView>(R.id.saved_recycle)
@@ -53,7 +58,23 @@ class BookmarksFragment : Fragment() {
 
             savedRecycle.apply {
                 layoutManager = LinearLayoutManager(requireContext())
-                adapter = RoomRecyclerview(news, this@BookmarksFragment, requireContext())
+
+                val myMoPubAdapter = MoPubRecyclerAdapter(
+                    requireActivity(),
+                    RoomRecyclerview(news, this@BookmarksFragment, requireContext())
+                )
+                val viewBinder: ViewBinder =
+                    ViewBinder.Builder(R.layout.native_ad_list_item)
+                        .mainImageId(R.id.native_ad_main_image)
+                        .iconImageId(R.id.native_ad_icon_image)
+                        .titleId(R.id.native_ad_title)
+                        .textId(R.id.native_ad_text)
+                        .build()
+
+                val myRenderer = MoPubStaticNativeAdRenderer(viewBinder)
+                myMoPubAdapter.registerAdRenderer(myRenderer)
+                adapter = myMoPubAdapter
+                myMoPubAdapter.loadAds("63951017645141f3a3ede48a53ab4942")
             }
         })
 

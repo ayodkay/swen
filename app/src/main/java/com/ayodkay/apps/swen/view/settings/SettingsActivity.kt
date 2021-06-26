@@ -42,7 +42,7 @@ class SettingsActivity : AppCompatActivity() {
             }
             Configuration.UI_MODE_NIGHT_YES -> {
                 setTheme(R.style.AppThemeNight)
-                background.setBackgroundColor(ContextCompat.getColor(this,R.color.colorPrimary))
+                background.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
             }
         }
     }
@@ -79,8 +79,8 @@ class SettingsActivity : AppCompatActivity() {
             var checkedSort = db.countryDao().getAll().position!!
             language = availableLanguages[checkedSort]
 
-            val selected = isAvailable(availableLanguages,db.countryDao().getAll().iso)
-            if (selected > -1){
+            val selected = isAvailable(availableLanguages, db.countryDao().getAll().iso)
+            if (selected > -1) {
                 language = availableLanguages[selected]
                 checkedSort = selected
             }
@@ -175,7 +175,7 @@ class SettingsActivity : AppCompatActivity() {
                     .setTitle(resources.getString(R.string.disclaimer))
                     .setMessage(resources.getString(R.string.supporting_text))
                     .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
-                       dialog.dismiss()
+                        dialog.dismiss()
                     }
                     .show()
                 true
@@ -183,16 +183,18 @@ class SettingsActivity : AppCompatActivity() {
 
         }
 
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                                  savedInstanceState: Bundle?): View? {
+        override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
+        ): View? {
             val view = super.onCreateView(inflater, container, savedInstanceState)
 
-            view?.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.background))
+            view?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background))
             return view
         }
 
         @Deprecated("deprecated", ReplaceWith("inAppRate", "inAppRate()"))
-        private fun goToPlayStore(context: Context?){
+        private fun goToPlayStore(context: Context?) {
             val uri: Uri = Uri.parse("market://details?id=" + context?.packageName)
             val goToMarket = Intent(Intent.ACTION_VIEW, uri)
 

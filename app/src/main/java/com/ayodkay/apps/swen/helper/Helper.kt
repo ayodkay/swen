@@ -25,12 +25,16 @@ import com.ayodkay.apps.swen.model.News
 import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.view.AskLocation
 import com.ayodkay.apps.swen.viewmodel.NewViewModel
+import com.mopub.nativeads.MoPubRecyclerAdapter
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer
+import com.mopub.nativeads.ViewBinder
 import org.json.JSONObject
 import java.util.*
 
-object Helper{
 
-    fun goDark(activity: Activity){
+object Helper {
+
+    fun goDark(activity: Activity) {
         when (activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_NO -> {
 
@@ -40,6 +44,7 @@ object Helper{
             } // Night mode is active, we're using dark theme
         }
     }
+
     fun getCountryDatabase(context: Context): CountryDatabase {
         return Room.databaseBuilder(
             context,
@@ -60,14 +65,64 @@ object Helper{
         ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
     }
 
-    fun available(country:String):Boolean{
-        val ac  = arrayListOf(
-            "ae","ar","at","au","be","bg","br","ca","ch","cn","co","cu","cz","de","eg","fr","gb"
-            ,"gr","hk","hu","id","ie","il","in","it","jp","kr","lt","lv","ma","mx","my","ng",
-            "nl","no","nz","ph","pl","pt","ro","rs","ru","sa","se","sg","si","sk","th","tr","tw"
-            ,"ua","us","ve","za"
+    fun available(country: String): Boolean {
+        val ac = arrayListOf(
+            "ae",
+            "ar",
+            "at",
+            "au",
+            "be",
+            "bg",
+            "br",
+            "ca",
+            "ch",
+            "cn",
+            "co",
+            "cu",
+            "cz",
+            "de",
+            "eg",
+            "fr",
+            "gb",
+            "gr",
+            "hk",
+            "hu",
+            "id",
+            "ie",
+            "il",
+            "in",
+            "it",
+            "jp",
+            "kr",
+            "lt",
+            "lv",
+            "ma",
+            "mx",
+            "my",
+            "ng",
+            "nl",
+            "no",
+            "nz",
+            "ph",
+            "pl",
+            "pt",
+            "ro",
+            "rs",
+            "ru",
+            "sa",
+            "se",
+            "sg",
+            "si",
+            "sk",
+            "th",
+            "tr",
+            "tw",
+            "ua",
+            "us",
+            "ve",
+            "za"
         )
-        if (ac.contains(country.toLowerCase(Locale.ROOT))){
+        if (ac.contains(country.toLowerCase(Locale.ROOT))) {
             return true
         }
         return false
@@ -92,7 +147,7 @@ object Helper{
 
         val result = response.getJSONArray("articles")
 
-        for (results_loop in 0 until result.length()){
+        for (results_loop in 0 until result.length()) {
             val results = result.getJSONObject(results_loop)
 
             val source = results.getJSONObject("source")
@@ -194,8 +249,26 @@ object Helper{
                                 layoutManager = LinearLayoutManager(frag.context)
                                 hasFixedSize()
                                 articleArrayList.addAll(newsResponse.articles)
-                                adapter =
-                                    AdsRecyclerView(articleArrayList, frag, frag.requireContext())
+                                val myMoPubAdapter = MoPubRecyclerAdapter(
+                                    frag.requireActivity(), AdsRecyclerView(
+                                        articleArrayList,
+                                        frag,
+                                        frag.requireContext()
+                                    )
+                                )
+                                val viewBinder: ViewBinder =
+                                    ViewBinder.Builder(R.layout.native_ad_list_item)
+                                        .mainImageId(R.id.native_ad_main_image)
+                                        .iconImageId(R.id.native_ad_icon_image)
+                                        .titleId(R.id.native_ad_title)
+                                        .textId(R.id.native_ad_text)
+                                        .build()
+
+                                val myRenderer = MoPubStaticNativeAdRenderer(viewBinder)
+
+                                myMoPubAdapter.registerAdRenderer(myRenderer)
+                                adapter = myMoPubAdapter
+                                myMoPubAdapter.loadAds("63951017645141f3a3ede48a53ab4942")
                             }
                             refresh.isRefreshing = false
                         }
@@ -256,6 +329,7 @@ object Helper{
                         emptyText.text = "Internet Error"
                     }
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).visibility = View.GONE
+                    refresh.isRefreshing = false
                 } else {
                     root.findViewById<TextView>(R.id.totalResults).text =
                         "${newsResponse.totalResults} ${frag.resources.getString(R.string.articles_found)}"
@@ -263,9 +337,28 @@ object Helper{
                     root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
                         layoutManager = LinearLayoutManager(frag.context)
                         articleArrayList.addAll(newsResponse.articles)
-                        hasFixedSize()
-                        adapter = AdsRecyclerView(articleArrayList, frag, frag.requireContext())
+                        val myMoPubAdapter = MoPubRecyclerAdapter(
+                            frag.requireActivity(), AdsRecyclerView(
+                                articleArrayList,
+                                frag,
+                                frag.requireContext()
+                            )
+                        )
+                        val viewBinder: ViewBinder =
+                            ViewBinder.Builder(R.layout.native_ad_list_item)
+                                .mainImageId(R.id.native_ad_main_image)
+                                .iconImageId(R.id.native_ad_icon_image)
+                                .titleId(R.id.native_ad_title)
+                                .textId(R.id.native_ad_text)
+                                .build()
+
+                        val myRenderer = MoPubStaticNativeAdRenderer(viewBinder)
+
+                        myMoPubAdapter.registerAdRenderer(myRenderer)
+                        adapter = myMoPubAdapter
+                        myMoPubAdapter.loadAds("63951017645141f3a3ede48a53ab4942")
                     }
+                    refresh.isRefreshing = false
                 }
 
             })

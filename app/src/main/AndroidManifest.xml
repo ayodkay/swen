@@ -67,6 +67,7 @@
         <activity
             android:name=".view.settings.SettingsActivity"
             android:theme="@style/PreferenceScreen"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_settings" />
 
         <meta-data
@@ -116,6 +117,11 @@
 
                 <data
                     android:host="swenio.page.link"
+                    android:pathPattern="/*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="oamaru.com.br/"
                     android:pathPattern="/*"
                     android:scheme="https" />
             </intent-filter>

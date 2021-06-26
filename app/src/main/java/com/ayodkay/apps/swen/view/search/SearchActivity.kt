@@ -18,6 +18,9 @@ import com.ayodkay.apps.swen.viewmodel.NewViewModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.mopub.nativeads.MoPubRecyclerAdapter
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer
+import com.mopub.nativeads.ViewBinder
 import kotlinx.android.synthetic.main.activity_search.*
 
 
@@ -120,12 +123,26 @@ class SearchActivity : AppCompatActivity() {
                 searchRecycle.apply {
                     layoutManager = LinearLayoutManager(this@SearchActivity)
                     articleArrayList.addAll(newsResponse.articles)
-                    hasFixedSize()
-                    adapter = AdsRecyclerView(
-                        articleArrayList,
-                        this@SearchActivity,
-                        this@SearchActivity
+                    val myMoPubAdapter = MoPubRecyclerAdapter(
+                        this@SearchActivity, AdsRecyclerView(
+                            articleArrayList,
+                            this@SearchActivity,
+                            this@SearchActivity
+                        )
                     )
+                    val viewBinder: ViewBinder =
+                        ViewBinder.Builder(R.layout.native_ad_list_item)
+                            .mainImageId(R.id.native_ad_main_image)
+                            .iconImageId(R.id.native_ad_icon_image)
+                            .titleId(R.id.native_ad_title)
+                            .textId(R.id.native_ad_text)
+                            .build()
+
+                    val myRenderer = MoPubStaticNativeAdRenderer(viewBinder)
+
+                    myMoPubAdapter.registerAdRenderer(myRenderer)
+                    adapter = myMoPubAdapter
+                    myMoPubAdapter.loadAds("63951017645141f3a3ede48a53ab4942")
                 }
             }
         })

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gnt_white">
+
+        <ImageView
+            android:id="@+id/native_ad_main_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <ImageView
+            android:id="@+id/native_ad_icon_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+
+        <ImageView
+            android:id="@+id/native_ad_daa_icon_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_below="@+id/native_ad_main_image" />
+
+        <TextView
+            android:id="@+id/native_ad_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/native_ad_main_image"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/native_ad_daa_icon_image"
+            android:textColor="@color/gnt_red"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/native_ad_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/native_ad_title"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toEndOf="@+id/native_ad_daa_icon_image"
+            android:textColor="@color/textPrimary"
+            android:textSize="12sp" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

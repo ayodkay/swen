@@ -12,15 +12,15 @@ import com.ayodkay.apps.swen.helper.countrypicker.CountryPicker
 import com.ayodkay.apps.swen.helper.countrypicker.CountryPickerListener
 import com.ayodkay.apps.swen.helper.room.country.Country
 import com.ayodkay.apps.swen.view.main.MainActivity
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
+import com.mopub.mobileads.MoPubErrorCode
+import com.mopub.mobileads.MoPubView
 import kotlinx.android.synthetic.main.activity_ask_location.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-class AskLocation : AppCompatActivity() {
-
+class AskLocation : AppCompatActivity(), MoPubView.BannerAdListener {
+    private lateinit var moPubView: MoPubView
 
     override fun onStart() {
         super.onStart()
@@ -35,13 +35,24 @@ class AskLocation : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        moPubView.destroy()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ask_location)
 
-        MobileAds.initialize(this)
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
+//        MobileAds.initialize(this)
+//        val adRequest = AdRequest.Builder().build()
+//        adView.loadAd(adRequest)
+        moPubView = findViewById(R.id.banner_mopubview)
+        moPubView.apply {
+            bannerAdListener = this@AskLocation
+            setAdUnitId("6f7de7b31dc2495e99f3643ce8ddda44")
+            loadAd()
+        }
 
         select_country.setOnClickListener {
             val picker =
@@ -84,5 +95,25 @@ class AskLocation : AppCompatActivity() {
         }
 
 
+    }
+
+    override fun onBannerLoaded(p0: MoPubView) {
+        AppLog.l("________onBannerLoaded________")
+    }
+
+    override fun onBannerFailed(p0: MoPubView?, p1: MoPubErrorCode?) {
+        AppLog.l("________onBannerFailed________//${p1.toString()}")
+    }
+
+    override fun onBannerClicked(p0: MoPubView?) {
+        AppLog.l("________onBannerClicked________")
+    }
+
+    override fun onBannerExpanded(p0: MoPubView?) {
+        AppLog.l("________onBannerExpanded________")
+    }
+
+    override fun onBannerCollapsed(p0: MoPubView?) {
+        AppLog.l("________onBannerCollapsed________")
     }
 }

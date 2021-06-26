@@ -12,14 +12,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.adapter.LinksAdapter
 import com.ayodkay.apps.swen.helper.room.links.Links
+import com.mopub.nativeads.MoPubRecyclerAdapter
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer
+import com.mopub.nativeads.ViewBinder
 import java.util.*
 
 class LinksFragment : Fragment() {
 
     private lateinit var linksViewModel: LinksViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val links: ArrayList<Links> = arrayListOf()
 
 
@@ -34,7 +39,7 @@ class LinksFragment : Fragment() {
             if (it.isEmpty()) {
                 noSaved.visibility = View.VISIBLE
                 savedRecycle.visibility = View.GONE
-            }else{
+            } else {
                 for (i in it.indices) {
                     if (add) {
                         links.add(Links(it[i].id, it[i].link))
@@ -44,7 +49,21 @@ class LinksFragment : Fragment() {
             }
             savedRecycle.apply {
                 layoutManager = LinearLayoutManager(requireContext())
-                adapter = LinksAdapter(requireContext(), links)
+                val myMoPubAdapter = MoPubRecyclerAdapter(
+                    requireActivity(), LinksAdapter(requireContext(), links)
+                )
+                val viewBinder: ViewBinder =
+                    ViewBinder.Builder(R.layout.native_ad_list_item)
+                        .mainImageId(R.id.native_ad_main_image)
+                        .iconImageId(R.id.native_ad_icon_image)
+                        .titleId(R.id.native_ad_title)
+                        .textId(R.id.native_ad_text)
+                        .build()
+
+                val myRenderer = MoPubStaticNativeAdRenderer(viewBinder)
+                myMoPubAdapter.registerAdRenderer(myRenderer)
+                adapter = myMoPubAdapter
+                myMoPubAdapter.loadAds("63951017645141f3a3ede48a53ab4942")
             }
         })
 

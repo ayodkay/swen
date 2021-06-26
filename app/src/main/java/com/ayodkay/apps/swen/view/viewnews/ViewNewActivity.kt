@@ -23,6 +23,9 @@ import com.ayodkay.apps.swen.view.main.MainActivity
 import com.ayodkay.apps.swen.view.viewimage.ViewImageActivity
 import com.ayodkay.apps.swen.viewmodel.NewViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mopub.nativeads.MoPubRecyclerAdapter
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer
+import com.mopub.nativeads.ViewBinder
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_viewnews.*
@@ -166,11 +169,27 @@ class ViewNewActivity : AppCompatActivity() {
                 layoutManager = LinearLayoutManager(context)
                 hasFixedSize()
                 articleArrayList.addAll(it.articles)
-                adapter = AdsRecyclerView(
-                    articleArrayList,
-                    this@ViewNewActivity,
-                    this@ViewNewActivity
+
+                val myMoPubAdapter = MoPubRecyclerAdapter(
+                    this@ViewNewActivity, AdsRecyclerView(
+                        articleArrayList,
+                        this@ViewNewActivity,
+                        this@ViewNewActivity
+                    )
                 )
+
+                val viewBinder: ViewBinder =
+                    ViewBinder.Builder(R.layout.native_ad_list_item)
+                        .mainImageId(R.id.native_ad_main_image)
+                        .iconImageId(R.id.native_ad_icon_image)
+                        .titleId(R.id.native_ad_title)
+                        .textId(R.id.native_ad_text)
+                        .build()
+
+                val myRenderer = MoPubStaticNativeAdRenderer(viewBinder)
+                myMoPubAdapter.registerAdRenderer(myRenderer)
+                adapter = myMoPubAdapter
+                myMoPubAdapter.loadAds("63951017645141f3a3ede48a53ab4942")
             }
         })
     }
