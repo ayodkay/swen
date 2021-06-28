@@ -25,14 +25,19 @@ import com.ayodkay.apps.swen.viewmodel.NewViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mopub.nativeads.MoPubRecyclerAdapter
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer
+import com.mopub.nativeads.RequestParameters
+import com.mopub.nativeads.RequestParameters.NativeAdAsset
 import com.mopub.nativeads.ViewBinder
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.activity_viewnews.*
 import kotlinx.android.synthetic.main.more.*
+import kotlinx.android.synthetic.main.more.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class ViewNewActivity : AppCompatActivity() {
 
@@ -164,32 +169,51 @@ class ViewNewActivity : AppCompatActivity() {
         newViewModel.getEveryThingFromRepo(
             pageSize = 100,
             q = query, sort_by = "publishedAt"
-        ).observe(this, {
+        ).observe(this, { newsResponse ->
             moreBy.apply {
                 layoutManager = LinearLayoutManager(context)
                 hasFixedSize()
-                articleArrayList.addAll(it.articles)
+                articleArrayList.addAll(newsResponse.articles)
 
-                val myMoPubAdapter = MoPubRecyclerAdapter(
+                val desiredAssets = EnumSet.of(
+                    NativeAdAsset.TITLE,
+                    NativeAdAsset.TEXT,
+                    NativeAdAsset.ICON_IMAGE,
+                    NativeAdAsset.MAIN_IMAGE,
+                    NativeAdAsset.CALL_TO_ACTION_TEXT,
+                    NativeAdAsset.SPONSORED
+                )
+                val requestParameters = RequestParameters.Builder()
+                    .desiredAssets(desiredAssets)
+                    .build()
+                val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
+                    ViewBinder.Builder(R.layout.native_ad_list_item)
+                        .titleId(R.id.native_title)
+                        .textId(R.id.native_text)
+                        .mainImageId(R.id.native_main_image)
+                        .iconImageId(R.id.native_icon_image)
+                        .callToActionId(R.id.native_cta)
+                        .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
+                        .sponsoredTextId(R.id.native_sponsored_text_view)
+                        .build()
+                )
+
+                MoPubRecyclerAdapter(
                     this@ViewNewActivity, AdsRecyclerView(
                         articleArrayList,
                         this@ViewNewActivity,
                         this@ViewNewActivity
                     )
-                )
-
-                val viewBinder: ViewBinder =
-                    ViewBinder.Builder(R.layout.native_ad_list_item)
-                        .mainImageId(R.id.native_ad_main_image)
-                        .iconImageId(R.id.native_ad_icon_image)
-                        .titleId(R.id.native_ad_title)
-                        .textId(R.id.native_ad_text)
-                        .build()
-
-                val myRenderer = MoPubStaticNativeAdRenderer(viewBinder)
-                myMoPubAdapter.registerAdRenderer(myRenderer)
-                adapter = myMoPubAdapter
-                myMoPubAdapter.loadAds("63951017645141f3a3ede48a53ab4942")
+                ).apply {
+                    registerAdRenderer(moPubStaticNativeAdRenderer)
+                }.also {
+                    moreBy.apply {
+                        articleArrayList.addAll(newsResponse.articles)
+                        adapter = it
+                        layoutManager = LinearLayoutManager(this@ViewNewActivity)
+                        it.loadAds("63951017645141f3a3ede48a53ab4942", requestParameters)
+                    }
+                }
             }
         })
     }

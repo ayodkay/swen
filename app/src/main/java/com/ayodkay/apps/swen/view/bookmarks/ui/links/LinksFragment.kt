@@ -14,6 +14,7 @@ import com.ayodkay.apps.swen.helper.adapter.LinksAdapter
 import com.ayodkay.apps.swen.helper.room.links.Links
 import com.mopub.nativeads.MoPubRecyclerAdapter
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer
+import com.mopub.nativeads.RequestParameters
 import com.mopub.nativeads.ViewBinder
 import java.util.*
 
@@ -47,23 +48,40 @@ class LinksFragment : Fragment() {
                 }
                 add = false
             }
-            savedRecycle.apply {
-                layoutManager = LinearLayoutManager(requireContext())
-                val myMoPubAdapter = MoPubRecyclerAdapter(
-                    requireActivity(), LinksAdapter(requireContext(), links)
-                )
-                val viewBinder: ViewBinder =
-                    ViewBinder.Builder(R.layout.native_ad_list_item)
-                        .mainImageId(R.id.native_ad_main_image)
-                        .iconImageId(R.id.native_ad_icon_image)
-                        .titleId(R.id.native_ad_title)
-                        .textId(R.id.native_ad_text)
-                        .build()
 
-                val myRenderer = MoPubStaticNativeAdRenderer(viewBinder)
-                myMoPubAdapter.registerAdRenderer(myRenderer)
-                adapter = myMoPubAdapter
-                myMoPubAdapter.loadAds("63951017645141f3a3ede48a53ab4942")
+            val desiredAssets = EnumSet.of(
+                RequestParameters.NativeAdAsset.TITLE,
+                RequestParameters.NativeAdAsset.TEXT,
+                RequestParameters.NativeAdAsset.ICON_IMAGE,
+                RequestParameters.NativeAdAsset.MAIN_IMAGE,
+                RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
+                RequestParameters.NativeAdAsset.SPONSORED
+            )
+            val requestParameters = RequestParameters.Builder()
+                .desiredAssets(desiredAssets)
+                .build()
+            val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
+                ViewBinder.Builder(R.layout.native_ad_list_item)
+                    .titleId(R.id.native_title)
+                    .textId(R.id.native_text)
+                    .mainImageId(R.id.native_main_image)
+                    .iconImageId(R.id.native_icon_image)
+                    .callToActionId(R.id.native_cta)
+                    .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
+                    .sponsoredTextId(R.id.native_sponsored_text_view)
+                    .build()
+            )
+
+            MoPubRecyclerAdapter(
+                requireActivity(), LinksAdapter(requireContext(), links)
+            ).apply {
+                registerAdRenderer(moPubStaticNativeAdRenderer)
+            }.also {
+                savedRecycle.apply {
+                    adapter = it
+                    layoutManager = LinearLayoutManager(requireContext())
+                    it.loadAds("63951017645141f3a3ede48a53ab4942", requestParameters)
+                }
             }
         })
 

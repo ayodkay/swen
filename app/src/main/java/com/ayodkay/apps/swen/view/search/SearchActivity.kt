@@ -120,29 +120,34 @@ class SearchActivity : AppCompatActivity() {
                 totalResults.visibility = View.VISIBLE
                 totalResults.text =
                     "${newsResponse.totalResults} ${resources.getString(R.string.articles_found)}"
-                searchRecycle.apply {
-                    layoutManager = LinearLayoutManager(this@SearchActivity)
-                    articleArrayList.addAll(newsResponse.articles)
-                    val myMoPubAdapter = MoPubRecyclerAdapter(
-                        this@SearchActivity, AdsRecyclerView(
-                            articleArrayList,
-                            this@SearchActivity,
-                            this@SearchActivity
-                        )
+
+                val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
+                    ViewBinder.Builder(R.layout.native_ad_list_item)
+                        .titleId(R.id.native_title)
+                        .textId(R.id.native_text)
+                        .mainImageId(R.id.native_main_image)
+                        .iconImageId(R.id.native_icon_image)
+                        .callToActionId(R.id.native_cta)
+                        .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
+                        .sponsoredTextId(R.id.native_sponsored_text_view)
+                        .build()
+                )
+
+                MoPubRecyclerAdapter(
+                    this@SearchActivity, AdsRecyclerView(
+                        articleArrayList,
+                        this@SearchActivity,
+                        this@SearchActivity
                     )
-                    val viewBinder: ViewBinder =
-                        ViewBinder.Builder(R.layout.native_ad_list_item)
-                            .mainImageId(R.id.native_ad_main_image)
-                            .iconImageId(R.id.native_ad_icon_image)
-                            .titleId(R.id.native_ad_title)
-                            .textId(R.id.native_ad_text)
-                            .build()
-
-                    val myRenderer = MoPubStaticNativeAdRenderer(viewBinder)
-
-                    myMoPubAdapter.registerAdRenderer(myRenderer)
-                    adapter = myMoPubAdapter
-                    myMoPubAdapter.loadAds("63951017645141f3a3ede48a53ab4942")
+                ).apply {
+                    registerAdRenderer(moPubStaticNativeAdRenderer)
+                }.also {
+                    searchRecycle.apply {
+                        articleArrayList.addAll(newsResponse.articles)
+                        adapter = it
+                        layoutManager = LinearLayoutManager(this@SearchActivity)
+                        it.loadAds("63951017645141f3a3ede48a53ab4942")
+                    }
                 }
             }
         })

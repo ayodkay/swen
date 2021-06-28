@@ -5,7 +5,8 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_height">176dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
-
+    <dimen name="native_main_image_height">200dp</dimen>
+    <dimen name="button_height">36dp</dimen>
 
     <item name="gnt_text_row_weight" format="float" type="dimen">0.25</item>
     <dimen name="gnt_default_margin">10dp</dimen>

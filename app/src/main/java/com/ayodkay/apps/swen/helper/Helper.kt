@@ -27,6 +27,7 @@ import com.ayodkay.apps.swen.view.AskLocation
 import com.ayodkay.apps.swen.viewmodel.NewViewModel
 import com.mopub.nativeads.MoPubRecyclerAdapter
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer
+import com.mopub.nativeads.RequestParameters
 import com.mopub.nativeads.ViewBinder
 import org.json.JSONObject
 import java.util.*
@@ -245,30 +246,48 @@ object Helper {
                                         R.string.articles_found
                                     )
                                 }"
-                            root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
-                                layoutManager = LinearLayoutManager(frag.context)
-                                hasFixedSize()
-                                articleArrayList.addAll(newsResponse.articles)
-                                val myMoPubAdapter = MoPubRecyclerAdapter(
-                                    frag.requireActivity(), AdsRecyclerView(
-                                        articleArrayList,
-                                        frag,
-                                        frag.requireContext()
-                                    )
+
+                            val desiredAssets = EnumSet.of(
+                                RequestParameters.NativeAdAsset.TITLE,
+                                RequestParameters.NativeAdAsset.TEXT,
+                                RequestParameters.NativeAdAsset.ICON_IMAGE,
+                                RequestParameters.NativeAdAsset.MAIN_IMAGE,
+                                RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
+                                RequestParameters.NativeAdAsset.SPONSORED
+                            )
+                            val requestParameters = RequestParameters.Builder()
+                                .desiredAssets(desiredAssets)
+                                .build()
+                            val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
+                                ViewBinder.Builder(R.layout.native_ad_list_item)
+                                    .titleId(R.id.native_title)
+                                    .textId(R.id.native_text)
+                                    .mainImageId(R.id.native_main_image)
+                                    .iconImageId(R.id.native_icon_image)
+                                    .callToActionId(R.id.native_cta)
+                                    .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
+                                    .sponsoredTextId(R.id.native_sponsored_text_view)
+                                    .build()
+                            )
+
+                            MoPubRecyclerAdapter(
+                                frag.requireActivity(), AdsRecyclerView(
+                                    articleArrayList,
+                                    frag,
+                                    frag.requireContext()
                                 )
-                                val viewBinder: ViewBinder =
-                                    ViewBinder.Builder(R.layout.native_ad_list_item)
-                                        .mainImageId(R.id.native_ad_main_image)
-                                        .iconImageId(R.id.native_ad_icon_image)
-                                        .titleId(R.id.native_ad_title)
-                                        .textId(R.id.native_ad_text)
-                                        .build()
-
-                                val myRenderer = MoPubStaticNativeAdRenderer(viewBinder)
-
-                                myMoPubAdapter.registerAdRenderer(myRenderer)
-                                adapter = myMoPubAdapter
-                                myMoPubAdapter.loadAds("63951017645141f3a3ede48a53ab4942")
+                            ).apply {
+                                registerAdRenderer(moPubStaticNativeAdRenderer)
+                            }.also {
+                                root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
+                                    articleArrayList.addAll(newsResponse.articles)
+                                    adapter = it
+                                    layoutManager = LinearLayoutManager(frag.context)
+                                    it.loadAds(
+                                        "63951017645141f3a3ede48a53ab4942",
+                                        requestParameters
+                                    )
+                                }
                             }
                             refresh.isRefreshing = false
                         }
@@ -334,29 +353,44 @@ object Helper {
                     root.findViewById<TextView>(R.id.totalResults).text =
                         "${newsResponse.totalResults} ${frag.resources.getString(R.string.articles_found)}"
 
-                    root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
-                        layoutManager = LinearLayoutManager(frag.context)
-                        articleArrayList.addAll(newsResponse.articles)
-                        val myMoPubAdapter = MoPubRecyclerAdapter(
-                            frag.requireActivity(), AdsRecyclerView(
-                                articleArrayList,
-                                frag,
-                                frag.requireContext()
-                            )
+                    val desiredAssets = EnumSet.of(
+                        RequestParameters.NativeAdAsset.TITLE,
+                        RequestParameters.NativeAdAsset.TEXT,
+                        RequestParameters.NativeAdAsset.ICON_IMAGE,
+                        RequestParameters.NativeAdAsset.MAIN_IMAGE,
+                        RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
+                        RequestParameters.NativeAdAsset.SPONSORED
+                    )
+                    val requestParameters = RequestParameters.Builder()
+                        .desiredAssets(desiredAssets)
+                        .build()
+                    val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
+                        ViewBinder.Builder(R.layout.native_ad_list_item)
+                            .titleId(R.id.native_title)
+                            .textId(R.id.native_text)
+                            .mainImageId(R.id.native_main_image)
+                            .iconImageId(R.id.native_icon_image)
+                            .callToActionId(R.id.native_cta)
+                            .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
+                            .sponsoredTextId(R.id.native_sponsored_text_view)
+                            .build()
+                    )
+
+                    MoPubRecyclerAdapter(
+                        frag.requireActivity(), AdsRecyclerView(
+                            articleArrayList,
+                            frag,
+                            frag.requireContext()
                         )
-                        val viewBinder: ViewBinder =
-                            ViewBinder.Builder(R.layout.native_ad_list_item)
-                                .mainImageId(R.id.native_ad_main_image)
-                                .iconImageId(R.id.native_ad_icon_image)
-                                .titleId(R.id.native_ad_title)
-                                .textId(R.id.native_ad_text)
-                                .build()
-
-                        val myRenderer = MoPubStaticNativeAdRenderer(viewBinder)
-
-                        myMoPubAdapter.registerAdRenderer(myRenderer)
-                        adapter = myMoPubAdapter
-                        myMoPubAdapter.loadAds("63951017645141f3a3ede48a53ab4942")
+                    ).apply {
+                        registerAdRenderer(moPubStaticNativeAdRenderer)
+                    }.also {
+                        root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
+                            articleArrayList.addAll(newsResponse.articles)
+                            adapter = it
+                            layoutManager = LinearLayoutManager(frag.context)
+                            it.loadAds("63951017645141f3a3ede48a53ab4942", requestParameters)
+                        }
                     }
                     refresh.isRefreshing = false
                 }
