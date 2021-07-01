@@ -20,17 +20,17 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mopub.nativeads.MoPubRecyclerAdapter
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer
+import com.mopub.nativeads.RequestParameters
 import com.mopub.nativeads.ViewBinder
 import kotlinx.android.synthetic.main.activity_search.*
+import java.util.*
 
 
 class SearchActivity : AppCompatActivity() {
 
     var queryValue: String = "null"
-    lateinit var sort : String
-    private var sortOptions = arrayListOf("popularity","publishedAt","relevancy")
-
-
+    lateinit var sort: String
+    private var sortOptions = arrayListOf("popularity", "publishedAt", "relevancy")
 
 
     override fun onStart() {
@@ -47,12 +47,15 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val singleSort = arrayOf(getString(R.string.popularity), getString(R.string.newest), getString(R.string.relevancy))
+        val singleSort = arrayOf(
+            getString(R.string.popularity),
+            getString(R.string.newest),
+            getString(R.string.relevancy)
+        )
         var checkedSort = 1
         sort = sortOptions[checkedSort]
 
@@ -60,7 +63,7 @@ class SearchActivity : AppCompatActivity() {
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
 
-        searchBar.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
+        searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 queryValue = query.toString()
                 loadNews(queryValue)
@@ -80,7 +83,7 @@ class SearchActivity : AppCompatActivity() {
                     dialog.dismiss()
                 }
                 .setPositiveButton(resources.getString(android.R.string.ok)) { _, _ ->
-                    if (queryValue != "null"){
+                    if (queryValue != "null") {
                         loadNews(queryValue)
                     }
 
@@ -121,6 +124,19 @@ class SearchActivity : AppCompatActivity() {
                 totalResults.text =
                     "${newsResponse.totalResults} ${resources.getString(R.string.articles_found)}"
 
+                articleArrayList.addAll(newsResponse.articles)
+                val desiredAssets = EnumSet.of(
+                    RequestParameters.NativeAdAsset.TITLE,
+                    RequestParameters.NativeAdAsset.TEXT,
+                    RequestParameters.NativeAdAsset.ICON_IMAGE,
+                    RequestParameters.NativeAdAsset.MAIN_IMAGE,
+                    RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
+                    RequestParameters.NativeAdAsset.SPONSORED
+                )
+                val requestParameters = RequestParameters.Builder()
+                    .desiredAssets(desiredAssets)
+                    .build()
+
                 val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
                     ViewBinder.Builder(R.layout.native_ad_list_item)
                         .titleId(R.id.native_title)
@@ -143,10 +159,9 @@ class SearchActivity : AppCompatActivity() {
                     registerAdRenderer(moPubStaticNativeAdRenderer)
                 }.also {
                     searchRecycle.apply {
-                        articleArrayList.addAll(newsResponse.articles)
                         adapter = it
                         layoutManager = LinearLayoutManager(this@SearchActivity)
-                        it.loadAds("63951017645141f3a3ede48a53ab4942")
+                        it.loadAds(getString(R.string.mopub_adunit_native), requestParameters)
                     }
                 }
             }

@@ -80,7 +80,7 @@ class LinksFragment : Fragment() {
                 savedRecycle.apply {
                     adapter = it
                     layoutManager = LinearLayoutManager(requireContext())
-                    it.loadAds("63951017645141f3a3ede48a53ab4942", requestParameters)
+                    it.loadAds(getString(R.string.mopub_adunit_native), requestParameters)
                 }
             }
         })

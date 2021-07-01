@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,9 @@ import com.ayodkay.apps.swen.model.News
 import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.view.AskLocation
 import com.ayodkay.apps.swen.viewmodel.NewViewModel
+import com.mopub.common.MoPub
+import com.mopub.common.SdkConfiguration
+import com.mopub.common.logging.MoPubLog
 import com.mopub.nativeads.MoPubRecyclerAdapter
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer
 import com.mopub.nativeads.RequestParameters
@@ -246,7 +250,7 @@ object Helper {
                                         R.string.articles_found
                                     )
                                 }"
-
+                            articleArrayList.addAll(newsResponse.articles)
                             val desiredAssets = EnumSet.of(
                                 RequestParameters.NativeAdAsset.TITLE,
                                 RequestParameters.NativeAdAsset.TEXT,
@@ -280,11 +284,10 @@ object Helper {
                                 registerAdRenderer(moPubStaticNativeAdRenderer)
                             }.also {
                                 root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
-                                    articleArrayList.addAll(newsResponse.articles)
                                     adapter = it
                                     layoutManager = LinearLayoutManager(frag.context)
                                     it.loadAds(
-                                        "63951017645141f3a3ede48a53ab4942",
+                                        frag.getString(R.string.mopub_adunit_native),
                                         requestParameters
                                     )
                                 }
@@ -352,7 +355,7 @@ object Helper {
                 } else {
                     root.findViewById<TextView>(R.id.totalResults).text =
                         "${newsResponse.totalResults} ${frag.resources.getString(R.string.articles_found)}"
-
+                    articleArrayList.addAll(newsResponse.articles)
                     val desiredAssets = EnumSet.of(
                         RequestParameters.NativeAdAsset.TITLE,
                         RequestParameters.NativeAdAsset.TEXT,
@@ -386,15 +389,26 @@ object Helper {
                         registerAdRenderer(moPubStaticNativeAdRenderer)
                     }.also {
                         root.findViewById<RecyclerView>(R.id.newsRecyclerView).apply {
-                            articleArrayList.addAll(newsResponse.articles)
                             adapter = it
                             layoutManager = LinearLayoutManager(frag.context)
-                            it.loadAds("63951017645141f3a3ede48a53ab4942", requestParameters)
+                            it.loadAds(
+                                frag.getString(R.string.mopub_adunit_native),
+                                requestParameters
+                            )
                         }
                     }
                     refresh.isRefreshing = false
                 }
 
             })
+    }
+
+    fun initializeAds(context: Context, adUnit: String) {
+        val sdkConfiguration = SdkConfiguration.Builder(adUnit)
+            .withLogLevel(MoPubLog.LogLevel.DEBUG)
+            .withLegitimateInterestAllowed(false)
+            .build()
+
+        MoPub.initializeSdk(context, sdkConfiguration) { Log.d("Mopub", "SDK initialized") }
     }
 }

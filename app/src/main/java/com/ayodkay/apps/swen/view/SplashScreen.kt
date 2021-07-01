@@ -60,16 +60,19 @@ class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
-
+        Helper.initializeAds(this, getString(R.string.mopub_adunit_native))
+        Helper.initializeAds(this, getString(R.string.mopub_adunit_banner))
         Firebase.dynamicLinks
             .getDynamicLink(intent)
             .addOnSuccessListener(this) { pendingDynamicLinkData ->
                 // Get deep link from result (may be null if no link is found)
                 if (pendingDynamicLinkData != null) {
                     AppEventsLogger.newLogger(context).logEvent("dynamicLink")
-                    startActivity(Intent(this, WebView::class.java)
-                        .putExtra("url",pendingDynamicLinkData.link.toString())
-                        .putExtra("toMain", true))
+                    startActivity(
+                        Intent(this, WebView::class.java)
+                            .putExtra("url", pendingDynamicLinkData.link.toString())
+                            .putExtra("toMain", true)
+                    )
 
                     finish()
                 }else{

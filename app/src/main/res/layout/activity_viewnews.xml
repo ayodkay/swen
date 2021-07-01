@@ -25,13 +25,31 @@
             app:toolbarId="@+id/toolbar">
 
 
-            <ImageView
-                android:id="@+id/dImage"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
-                tools:ignore="ContentDescription" />
+                android:fitsSystemWindows="true">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/dImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shadow_rect"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/progress"
@@ -62,9 +80,12 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomSheet"
-        style="@style/Widget.MaterialComponents.BottomSheet.Modal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="8dp"
+        app:strokeColor="@color/textPrimary"
+        app:strokeWidth="1dp"
         app:behavior_peekHeight="86dp"
         app:behavior_hideable="false"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">

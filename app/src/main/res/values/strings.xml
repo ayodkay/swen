@@ -11,6 +11,9 @@
     <string name="domainUriPrefix" translatable="false">https://swenio.page.link</string>
     <string name="facebook_app_id" translatable="false">3757923994237671</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb3757923994237671</string>
+    <string name="mopub_adunit_native" translatable="false">63951017645141f3a3ede48a53ab4942</string>
+    <string name="mopub_adunit_banner" translatable="false">6f7de7b31dc2495e99f3643ce8ddda44</string>
+    <string name="mopub_adunit_native_test" translatable="false">11a17b188668469fb0412708c3d16813</string>
 
 
     <string name="search">Search&#8230;</string>

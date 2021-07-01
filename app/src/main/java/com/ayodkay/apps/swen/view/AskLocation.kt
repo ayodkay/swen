@@ -43,14 +43,13 @@ class AskLocation : AppCompatActivity(), MoPubView.BannerAdListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ask_location)
-
 //        MobileAds.initialize(this)
 //        val adRequest = AdRequest.Builder().build()
 //        adView.loadAd(adRequest)
         moPubView = findViewById(R.id.banner_mopubview)
         moPubView.apply {
             bannerAdListener = this@AskLocation
-            setAdUnitId("6f7de7b31dc2495e99f3643ce8ddda44")
+            setAdUnitId(getString(R.string.mopub_adunit_banner))
             loadAd()
         }
 
