@@ -17,6 +17,12 @@ class BusinessFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return Helper.setupFragment("business",this,inflater,container)
+        return Helper.setupFragment(
+            "business",
+            this,
+            inflater,
+            container,
+            childFragmentManager = childFragmentManager
+        )
     }
 }

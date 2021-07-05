@@ -17,6 +17,12 @@ class EntertainmentFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return Helper.setupFragment("entertainment",this,inflater,container)
+        return Helper.setupFragment(
+            "entertainment",
+            this,
+            inflater,
+            container,
+            childFragmentManager = childFragmentManager
+        )
     }
 }

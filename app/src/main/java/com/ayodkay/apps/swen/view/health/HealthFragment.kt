@@ -15,6 +15,12 @@ class HealthFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return Helper.setupFragment("health",this,inflater,container)
+        return Helper.setupFragment(
+            "health",
+            this,
+            inflater,
+            container,
+            childFragmentManager = childFragmentManager
+        )
     }
 }

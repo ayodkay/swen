@@ -15,7 +15,12 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        return Helper.setupFragment("general",this,inflater,container)
+        return Helper.setupFragment(
+            "general",
+            this,
+            inflater,
+            container,
+            childFragmentManager = childFragmentManager
+        )
     }
 }

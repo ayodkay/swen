@@ -126,7 +126,6 @@ class RoomRecyclerview internal constructor(private val newsList: ArrayList<News
                 newsViewHolder.date.text = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                     .parse(date)?.toString()
                 newsViewHolder.title.text = newsPosition.title
-                newsViewHolder.description.text = newsPosition.description
 
                 if (newsModel.exist(newsPosition.url)) {
                     newsViewHolder.bookmark.setImageDrawable(ResourcesCompat
@@ -240,7 +239,6 @@ class RoomRecyclerview internal constructor(private val newsList: ArrayList<News
         var image: ImageView = itemView.findViewById(R.id.image)
         var bookmark: ImageView = itemView.findViewById(R.id.bookmark)
         var bookmarkView: RelativeLayout = itemView.findViewById(R.id.bookmarkView)
-        var description: TextView = itemView.findViewById(R.id.description)
         var source: TextView = itemView.findViewById(R.id.source)
         var date: TextView = itemView.findViewById(R.id.date)
         var progressBar: LottieAnimationView = itemView.findViewById(R.id.progressBar)

@@ -19,7 +19,9 @@ class CoronaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return Helper.setupFragment(q= "covid",category = "health",frag = this,
-            inflater = inflater,container = container)
+        return Helper.setupFragment(
+            q = "covid", category = "health", frag = this,
+            inflater = inflater, container = container, childFragmentManager = childFragmentManager
+        )
     }
 }

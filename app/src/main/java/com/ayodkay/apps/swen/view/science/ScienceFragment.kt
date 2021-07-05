@@ -16,6 +16,12 @@ class ScienceFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return Helper.setupFragment("science",this,inflater,container)
+        return Helper.setupFragment(
+            "science",
+            this,
+            inflater,
+            container,
+            childFragmentManager = childFragmentManager
+        )
     }
 }

@@ -144,11 +144,6 @@ class AdsRecyclerView internal constructor(
                 newsViewHolder.date.text = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                     .parse(date)?.toString()
                 newsViewHolder.title.text = newsPosition.title
-                try {
-                    newsViewHolder.description.text = newsPosition.description
-                        .replace(regex = Regex("<.*?>"), "")
-                } catch (e: Exception) {
-                }
 
                 if (newsModel.exist(newsPosition.url)) {
                     newsViewHolder.bookmark.setImageDrawable(
@@ -290,7 +285,6 @@ class AdsRecyclerView internal constructor(
         var image: ImageView = itemView.findViewById(R.id.image)
         var bookmark: ImageView = itemView.findViewById(R.id.bookmark)
         var bookmarkView: RelativeLayout = itemView.findViewById(R.id.bookmarkView)
-        var description: TextView = itemView.findViewById(R.id.description)
         var source: TextView = itemView.findViewById(R.id.source)
         var date: TextView = itemView.findViewById(R.id.date)
         var progressBar: LottieAnimationView = itemView.findViewById(R.id.progressBar)

@@ -16,6 +16,12 @@ class SportFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return Helper.setupFragment("sport",this,inflater,container)
+        return Helper.setupFragment(
+            "sport",
+            this,
+            inflater,
+            container,
+            childFragmentManager = childFragmentManager
+        )
     }
 }

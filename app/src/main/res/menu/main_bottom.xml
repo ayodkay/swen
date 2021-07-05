@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:checked="true"
+        android:color="@color/home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/app_name" />
+
+    <item
+        android:id="@+id/navigation_main_bookmarks"
+        android:icon="@drawable/ic_bookmarks"
+        android:title="@string/bookmarks" />
+
+    <item
+        android:id="@+id/search"
+        android:contentDescription="@string/content_description_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search" />
+
+    <item
+        android:id="@+id/navigation_main_links"
+        android:icon="@drawable/ic_link"
+        android:title="@string/links" />
+
+    <item
+        android:id="@+id/settings"
+        android:color="@color/settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/action_settings" />
+
+</menu>

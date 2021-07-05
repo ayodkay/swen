@@ -14,6 +14,12 @@ class TechnologyFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return Helper.setupFragment("technology",this,inflater,container)
+        return Helper.setupFragment(
+            "technology",
+            this,
+            inflater,
+            container,
+            childFragmentManager = childFragmentManager
+        )
     }
 }
