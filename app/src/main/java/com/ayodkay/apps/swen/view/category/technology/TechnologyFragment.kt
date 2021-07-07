@@ -1,5 +1,4 @@
-package com.ayodkay.apps.swen.view.entertainment
-
+package com.ayodkay.apps.swen.view.category.technology
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,9 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.ayodkay.apps.swen.helper.Helper
 
-
-class EntertainmentFragment : Fragment() {
-
+class TechnologyFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -18,7 +15,7 @@ class EntertainmentFragment : Fragment() {
     ): View? {
 
         return Helper.setupFragment(
-            "entertainment",
+            "technology",
             this,
             inflater,
             container,

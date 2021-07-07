@@ -1,6 +1,5 @@
-package com.ayodkay.apps.swen.view.coronavirus
+package com.ayodkay.apps.swen.view.category.sport
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +8,8 @@ import androidx.fragment.app.Fragment
 import com.ayodkay.apps.swen.helper.Helper
 
 
-class CoronaFragment : Fragment() {
+class SportFragment : Fragment() {
 
-
-    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -20,8 +17,11 @@ class CoronaFragment : Fragment() {
     ): View? {
 
         return Helper.setupFragment(
-            q = "covid", category = "health", frag = this,
-            inflater = inflater, container = container, childFragmentManager = childFragmentManager
+            "sport",
+            this,
+            inflater,
+            container,
+            childFragmentManager = childFragmentManager
         )
     }
 }

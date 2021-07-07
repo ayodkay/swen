@@ -21,7 +21,6 @@ import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.country.Country
 import com.ayodkay.apps.swen.view.AskLocation
 import com.ayodkay.apps.swen.view.ThemeActivity
-import com.ayodkay.apps.swen.view.bookmarks.BookMarkActivity
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.AdRequest
@@ -105,10 +104,6 @@ class SettingsActivity : AppCompatActivity() {
                 true
             }
 
-            saved?.setOnPreferenceClickListener {
-                startActivity(Intent(this.context, BookMarkActivity::class.java))
-                true
-            }
 
             country?.setOnPreferenceClickListener {
                 startActivity(Intent(this.context, AskLocation::class.java))

@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -17,22 +16,16 @@ import android.view.Menu
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.notification.jobs.GetTimeJob
-import com.ayodkay.apps.swen.view.search.SearchActivity
 import com.google.android.gms.location.*
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.messaging.FirebaseMessaging
 import java.io.IOException
 import java.util.*
@@ -136,47 +129,47 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val toolbar: Toolbar = findViewById(R.id.main_toolbar)
-        setSupportActionBar(toolbar)
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
-
-        //setUpAlarm(this)ta
-        toolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.search -> {
-                    startActivity(
-                        Intent(
-                            this, SearchActivity::class.java
-                        )
-                    )
-                    true
-                }
-
-                else -> false
-            }
-        }
-
-        val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_main,
-                R.id.nav_business,
-                R.id.nav_entertainment,
-                R.id.nav_health,
-                R.id.nav_science,
-                R.id.nav_sports,
-                R.id.nav_technology,
-                R.id.nav_corona,
-                R.id.nav_politics,
-                R.id.nav_beauty,
-                R.id.settings
-            ), drawerLayout
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+//        val toolbar: Toolbar = findViewById(R.id.main_toolbar)
+//        setSupportActionBar(toolbar)
+//        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+//        val navView: NavigationView = findViewById(R.id.nav_view)
+//
+//        //setUpAlarm(this)ta
+//        toolbar.setOnMenuItemClickListener { menuItem ->
+//            when (menuItem.itemId) {
+//                R.id.search -> {
+//                    startActivity(
+//                        Intent(
+//                            this, SearchActivity::class.java
+//                        )
+//                    )
+//                    true
+//                }
+//
+//                else -> false
+//            }
+//        }
+//
+//        val navController = findNavController(R.id.nav_host_fragment)
+//        // Passing each menu ID as a set of Ids because each
+//        // menu should be considered as top level destinations.
+//        appBarConfiguration = AppBarConfiguration(
+//            setOf(
+//                R.id.nav_main,
+//                R.id.nav_business,
+//                R.id.nav_entertainment,
+//                R.id.nav_health,
+//                R.id.nav_science,
+//                R.id.nav_sports,
+//                R.id.nav_technology,
+//                R.id.nav_corona,
+//                R.id.nav_politics,
+//                R.id.nav_beauty,
+//                R.id.settings
+//            ), drawerLayout
+//        )
+//        setupActionBarWithNavController(navController, appBarConfiguration)
+//        navView.setupWithNavController(navController)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

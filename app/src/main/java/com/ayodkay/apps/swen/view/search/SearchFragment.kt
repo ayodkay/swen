@@ -2,15 +2,17 @@ package com.ayodkay.apps.swen.view.search
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.databinding.ActivitySearchBinding
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
 import com.ayodkay.apps.swen.model.NewsArticle
@@ -25,32 +27,25 @@ import com.mopub.nativeads.ViewBinder
 import kotlinx.android.synthetic.main.activity_search.*
 import java.util.*
 
-@Deprecated("changed to fragment")
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
     var queryValue: String = "null"
     lateinit var sort: String
     private var sortOptions = arrayListOf("popularity", "publishedAt", "relevancy")
 
+    private var _binding: ActivitySearchBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onStart() {
-        super.onStart()
-
-        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-            Configuration.UI_MODE_NIGHT_NO -> {
-
-            } // Night mode is not active, we're using the light theme
-            Configuration.UI_MODE_NIGHT_YES -> {
-                setTheme(R.style.AppThemeNight)
-            } // Night mode is active, we're using dark theme
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = ActivitySearchBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val singleSort = arrayOf(
             getString(R.string.popularity),
             getString(R.string.newest),
@@ -59,11 +54,11 @@ class SearchActivity : AppCompatActivity() {
         var checkedSort = 1
         sort = sortOptions[checkedSort]
 
-        MobileAds.initialize(this)
+        MobileAds.initialize(requireContext())
         val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
+        binding.adView.loadAd(adRequest)
 
-        searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 queryValue = query.toString()
                 loadNews(queryValue)
@@ -76,8 +71,8 @@ class SearchActivity : AppCompatActivity() {
 
         })
 
-        sortBy.setOnClickListener {
-            MaterialAlertDialogBuilder(this)
+        binding.sortBy.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.sort_news))
                 .setNeutralButton(resources.getString(android.R.string.cancel)) { dialog, _ ->
                     dialog.dismiss()
@@ -95,22 +90,24 @@ class SearchActivity : AppCompatActivity() {
                 }
                 .show()
         }
+
     }
+
 
     @SuppressLint("SetTextI18n")
     fun loadNews(query: String?) {
-        val db = Helper.getCountryDatabase(this@SearchActivity)
+        val db = Helper.getCountryDatabase(requireContext())
         val newViewModel = ViewModelProvider(this).get(NewViewModel::class.java)
         val articleArrayList = arrayListOf<NewsArticle>()
-
 
         newViewModel.getEveryThingFromRepo(
             q = query, sort_by = sort,
             language = db.countryDao().getAll().iso, pageSize = 100
-        ).observe(this, { newsResponse ->
+        ).observe(requireActivity(), { newsResponse ->
 
-            this.currentFocus?.let { view ->
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            requireActivity().currentFocus?.let { view ->
+                val imm =
+                    requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(view.windowToken, 0)
             }
             if (newsResponse.totalResults == 0) {
@@ -150,23 +147,21 @@ class SearchActivity : AppCompatActivity() {
                 )
 
                 MoPubRecyclerAdapter(
-                    this@SearchActivity, AdsRecyclerView(
+                    requireActivity(), AdsRecyclerView(
                         articleArrayList,
-                        this@SearchActivity,
-                        this@SearchActivity
+                        requireActivity(),
+                        requireActivity()
                     )
                 ).apply {
                     registerAdRenderer(moPubStaticNativeAdRenderer)
                 }.also {
                     searchRecycle.apply {
                         adapter = it
-                        layoutManager = LinearLayoutManager(this@SearchActivity)
+                        layoutManager = LinearLayoutManager(requireActivity())
                         it.loadAds(getString(R.string.mopub_adunit_native), requestParameters)
                     }
                 }
             }
         })
     }
-
-
 }

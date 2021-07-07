@@ -20,9 +20,9 @@
 
     <fragment
         android:id="@+id/nav_main_search"
-        android:name="com.ayodkay.apps.swen.view.main.MainFragment"
+        android:name="com.ayodkay.apps.swen.view.search.SearchFragment"
         android:label="@string/search"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/activity_search" />
 
 
     <fragment

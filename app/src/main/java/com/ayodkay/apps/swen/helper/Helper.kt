@@ -422,7 +422,7 @@ object Helper {
     }
 
 
-    private fun BubbleTabBar.onNavDestinationSelected(
+    fun BubbleTabBar.onNavDestinationSelected(
         itemId: Int,
         navController: NavController
     ): Boolean {

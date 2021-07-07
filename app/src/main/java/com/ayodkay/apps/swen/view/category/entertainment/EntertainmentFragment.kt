@@ -1,4 +1,5 @@
-package com.ayodkay.apps.swen.view.sport
+package com.ayodkay.apps.swen.view.category.entertainment
+
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.ayodkay.apps.swen.helper.Helper
 
 
-class SportFragment : Fragment() {
+class EntertainmentFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -17,7 +18,7 @@ class SportFragment : Fragment() {
     ): View? {
 
         return Helper.setupFragment(
-            "sport",
+            "entertainment",
             this,
             inflater,
             container,

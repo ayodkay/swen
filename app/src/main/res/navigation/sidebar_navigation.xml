@@ -7,58 +7,58 @@
 
     <fragment
         android:id="@+id/nav_main"
-        android:name="com.ayodkay.apps.swen.view.main.MainFragment"
-        tools:layout="@layout/fragment_main" />
+        android:name="com.ayodkay.apps.swen.view.category.general.GeneralFragment"
+        tools:layout="@layout/fragment_general" />
 
 
     <fragment
         android:id="@+id/nav_business"
-        android:name="com.ayodkay.apps.swen.view.business.BusinessFragment"
-        tools:layout="@layout/fragment_main" />
+        android:name="com.ayodkay.apps.swen.view.category.business.BusinessFragment"
+        tools:layout="@layout/fragment_general" />
 
     <fragment
         android:id="@+id/nav_entertainment"
-        android:name="com.ayodkay.apps.swen.view.entertainment.EntertainmentFragment"
-        tools:layout="@layout/fragment_main" />
+        android:name="com.ayodkay.apps.swen.view.category.entertainment.EntertainmentFragment"
+        tools:layout="@layout/fragment_general" />
 
 
     <fragment
         android:id="@+id/nav_health"
-        android:name="com.ayodkay.apps.swen.view.health.HealthFragment"
-        tools:layout="@layout/fragment_main" />
+        android:name="com.ayodkay.apps.swen.view.category.health.HealthFragment"
+        tools:layout="@layout/fragment_general" />
 
 
     <fragment
         android:id="@+id/nav_science"
-        android:name="com.ayodkay.apps.swen.view.science.ScienceFragment"
-        tools:layout="@layout/fragment_main" />
+        android:name="com.ayodkay.apps.swen.view.category.science.ScienceFragment"
+        tools:layout="@layout/fragment_general" />
 
     <fragment
         android:id="@+id/nav_sports"
-        android:name="com.ayodkay.apps.swen.view.sport.SportFragment"
-        tools:layout="@layout/fragment_main" />
+        android:name="com.ayodkay.apps.swen.view.category.sport.SportFragment"
+        tools:layout="@layout/fragment_general" />
 
 
     <fragment
         android:id="@+id/nav_technology"
-        android:name="com.ayodkay.apps.swen.view.technology.TechnologyFragment"
-        tools:layout="@layout/fragment_main" />
+        android:name="com.ayodkay.apps.swen.view.category.technology.TechnologyFragment"
+        tools:layout="@layout/fragment_general" />
 
     <fragment
         android:id="@+id/nav_corona"
-        android:name="com.ayodkay.apps.swen.view.coronavirus.CoronaFragment"
-        tools:layout="@layout/fragment_main" />
+        android:name="com.ayodkay.apps.swen.view.category.coronavirus.CoronaFragment"
+        tools:layout="@layout/fragment_general" />
 
     <fragment
         android:id="@+id/nav_politics"
-        android:name="com.ayodkay.apps.swen.view.politics.PoliticsFragment"
-        tools:layout="@layout/fragment_main" />
+        android:name="com.ayodkay.apps.swen.view.category.politics.PoliticsFragment"
+        tools:layout="@layout/fragment_general" />
 
 
     <fragment
         android:id="@+id/nav_beauty"
-        android:name="com.ayodkay.apps.swen.view.beauty.BeautyFragment"
-        tools:layout="@layout/fragment_main" />
+        android:name="com.ayodkay.apps.swen.view.category.beauty.BeautyFragment"
+        tools:layout="@layout/fragment_general" />
 
     <fragment
         android:id="@+id/nav_settings"

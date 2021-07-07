@@ -1,25 +1,25 @@
-package com.ayodkay.apps.swen.view.beauty
+package com.ayodkay.apps.swen.view.category.health
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.Helper
 
-class BeautyFragment : Fragment() {
+class HealthFragment : Fragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        return Helper.setupEveryThingFragment(
-            frag = this,
-            inflater = inflater,
-            container = container,
-            q = resources.getString(R.string.menu_beauty),
+        return Helper.setupFragment(
+            "health",
+            this,
+            inflater,
+            container,
             childFragmentManager = childFragmentManager
         )
     }

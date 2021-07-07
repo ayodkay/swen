@@ -1,48 +1,37 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <PreferenceCategory app:title="@string/action_settings">
-
-        <Preference
-            app:key="saved"
-            app:title="@string/bookmarks"
-            app:summary="@string/bookmark_summary" />
-
-        <EditTextPreference
-            app:key="feedback"
-            app:title="@string/feedback"
-            app:summary="@string/feedback_summary"/>
-
         <Preference
             app:key="country"
             app:title="@string/country"
-            app:summary="@string/country_summary"/>
+            app:summary="@string/country_summary" />
 
+        <Preference
+            app:key="color"
+            app:summary="@string/color_summary"
+            app:title="@string/color" />
 
         <Preference
             app:key="share"
             app:title="@string/share"
-            app:summary="@string/share_summary"/>
+            app:summary="@string/share_summary" />
 
         <Preference
             app:key="rate"
             app:title="@string/rate"
-            app:summary="@string/rate_summary"/>
-
-
-        <Preference
-            app:key="color"
-            app:title="@string/color"
-            app:summary="@string/color_summary"/>
+            app:summary="@string/rate_summary" />
 
         <Preference
             app:key="search"
             app:title="@string/search_language"
-            app:summary="@string/search_language_summary"/>
+            app:summary="@string/search_language_summary" />
+
+        <EditTextPreference
+            app:key="feedback"
+            app:summary="@string/feedback_summary"
+            app:title="@string/feedback" />
 
         <Preference
             app:key="policy"
-            app:title="@string/disclaimer"/>
-
+            app:title="@string/disclaimer" />
     </PreferenceCategory>
-
 </PreferenceScreen>
