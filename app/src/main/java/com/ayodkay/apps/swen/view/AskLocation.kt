@@ -6,21 +6,17 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
+import com.ayodkay.apps.swen.databinding.ActivityAskLocationBinding
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.countrypicker.CountryPicker
 import com.ayodkay.apps.swen.helper.countrypicker.CountryPickerListener
 import com.ayodkay.apps.swen.helper.room.country.Country
 import com.ayodkay.apps.swen.view.main.MainActivity
-import com.mopub.mobileads.MoPubErrorCode
-import com.mopub.mobileads.MoPubView
 import kotlinx.android.synthetic.main.activity_ask_location.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
-class AskLocation : AppCompatActivity(), MoPubView.BannerAdListener {
-    private lateinit var moPubView: MoPubView
+class AskLocation : AppCompatActivity() {
+    private lateinit var binding: ActivityAskLocationBinding
 
     override fun onStart() {
         super.onStart()
@@ -37,18 +33,19 @@ class AskLocation : AppCompatActivity(), MoPubView.BannerAdListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        moPubView.destroy()
+        binding.bannerMopubview.destroy()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_ask_location)
+        binding = ActivityAskLocationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
 //        MobileAds.initialize(this)
 //        val adRequest = AdRequest.Builder().build()
 //        adView.loadAd(adRequest)
-        moPubView = findViewById(R.id.banner_mopubview)
-        moPubView.apply {
-            bannerAdListener = this@AskLocation
+
+        binding.bannerMopubview.apply {
             setAdUnitId(getString(R.string.mopub_adunit_banner))
             loadAd()
         }
@@ -64,8 +61,7 @@ class AskLocation : AppCompatActivity(), MoPubView.BannerAdListener {
                             iso: String,
                             language: String
                         ) {
-                            AppLog.l(iso)
-                            GlobalScope.launch {
+                            runOnUiThread {
                                 val db = Helper.getCountryDatabase(applicationContext)
                                 db.countryDao().delete()
                                 db.countryDao().insertAll(
@@ -94,25 +90,5 @@ class AskLocation : AppCompatActivity(), MoPubView.BannerAdListener {
         }
 
 
-    }
-
-    override fun onBannerLoaded(p0: MoPubView) {
-        AppLog.l("________onBannerLoaded________")
-    }
-
-    override fun onBannerFailed(p0: MoPubView?, p1: MoPubErrorCode?) {
-        AppLog.l("________onBannerFailed________//${p1.toString()}")
-    }
-
-    override fun onBannerClicked(p0: MoPubView?) {
-        AppLog.l("________onBannerClicked________")
-    }
-
-    override fun onBannerExpanded(p0: MoPubView?) {
-        AppLog.l("________onBannerExpanded________")
-    }
-
-    override fun onBannerCollapsed(p0: MoPubView?) {
-        AppLog.l("________onBannerCollapsed________")
     }
 }

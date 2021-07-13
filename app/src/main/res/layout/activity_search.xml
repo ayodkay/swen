@@ -1,63 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    tools:context=".view.search.SearchActivity">
+    tools:context=".view.search.SearchFragment">
 
-    <com.google.android.material.card.MaterialCardView
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="12dp">
+        android:background="@color/background">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchBar"
+        <com.google.android.material.appbar.MaterialToolbar
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusable="true"
-            app:queryHint="@string/search"
-            app:queryBackground="@android:color/transparent"
-            android:layoutDirection="rtl"
-            tools:targetApi="jelly_bean_mr1" />
+            android:layout_marginEnd="15dp"
+            app:layout_scrollFlags="scroll|enterAlways">
 
-    </com.google.android.material.card.MaterialCardView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:weightSum="1">
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    app:cardCornerRadius="8dp">
 
-        <TextView
-            android:id="@+id/totalResults"
-            android:layout_width="0dp"
-            android:layout_weight="0.7"
-            android:layout_marginStart="4dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceSubtitle1" />
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/sortBy"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_weight="0.3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_sort"
-            android:text="@string/sort"
-            android:textAllCaps="false" />
-    </LinearLayout>
+                    <androidx.appcompat.widget.SearchView
+                        android:id="@+id/searchBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:focusable="true"
+                        android:layoutDirection="rtl"
+                        app:queryBackground="@android:color/transparent"
+                        app:queryHint="@string/search"
+                        tools:targetApi="jelly_bean_mr1" />
 
+                </com.google.android.material.card.MaterialCardView>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:weightSum="1">
 
-    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/totalResults"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="0.7"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/sortBy"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:drawableEnd="@drawable/ic_sort"
+                        android:text="@string/sort"
+                        android:textAllCaps="false" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -78,15 +90,21 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
+
+        <com.mopub.mobileads.MoPubView
+            android:id="@+id/banner_mopubview"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-7312232171503509/5964904907" />
+            app:moPubAdSize="height_250" />
+        <!--        <com.google.android.gms.ads.AdView-->
+        <!--            android:id="@+id/adView"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_alignParentBottom="true"-->
+        <!--            android:layout_centerInParent="true"-->
+        <!--            ads:adSize="BANNER"-->
+        <!--            ads:adUnitId="ca-app-pub-7312232171503509/5964904907" />-->
     </RelativeLayout>
 
-
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

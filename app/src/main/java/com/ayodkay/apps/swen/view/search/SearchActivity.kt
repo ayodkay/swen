@@ -15,8 +15,6 @@ import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
 import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.viewmodel.NewViewModel
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mopub.nativeads.MoPubRecyclerAdapter
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer
@@ -59,9 +57,9 @@ class SearchActivity : AppCompatActivity() {
         var checkedSort = 1
         sort = sortOptions[checkedSort]
 
-        MobileAds.initialize(this)
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
+//        MobileAds.initialize(this)
+//        val adRequest = AdRequest.Builder().build()
+//        adView.loadAd(adRequest)
 
         searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {

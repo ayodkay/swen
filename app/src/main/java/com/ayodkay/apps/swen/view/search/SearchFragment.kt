@@ -17,14 +17,11 @@ import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
 import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.viewmodel.NewViewModel
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mopub.nativeads.MoPubRecyclerAdapter
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer
 import com.mopub.nativeads.RequestParameters
 import com.mopub.nativeads.ViewBinder
-import kotlinx.android.synthetic.main.activity_search.*
 import java.util.*
 
 class SearchFragment : Fragment() {
@@ -54,9 +51,14 @@ class SearchFragment : Fragment() {
         var checkedSort = 1
         sort = sortOptions[checkedSort]
 
-        MobileAds.initialize(requireContext())
-        val adRequest = AdRequest.Builder().build()
-        binding.adView.loadAd(adRequest)
+//        MobileAds.initialize(requireContext())
+//        val adRequest = AdRequest.Builder().build()
+//        binding.adView.loadAd(adRequest)
+
+        binding.bannerMopubview.apply {
+            setAdUnitId(getString(R.string.mopub_adunit_banner))
+            loadAd()
+        }
 
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -66,6 +68,7 @@ class SearchFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                binding.bannerMopubview.visibility = View.VISIBLE
                 return false
             }
 
@@ -111,14 +114,14 @@ class SearchFragment : Fragment() {
                 imm?.hideSoftInputFromWindow(view.windowToken, 0)
             }
             if (newsResponse.totalResults == 0) {
-                empty.visibility = View.VISIBLE
-                searchRecycle.visibility = View.GONE
-                totalResults.visibility = View.GONE
+                binding.empty.visibility = View.VISIBLE
+                binding.searchRecycle.visibility = View.GONE
+                binding.totalResults.visibility = View.GONE
             } else {
-                empty.visibility = View.GONE
-                searchRecycle.visibility = View.VISIBLE
-                totalResults.visibility = View.VISIBLE
-                totalResults.text =
+                binding.empty.visibility = View.GONE
+                binding.searchRecycle.visibility = View.VISIBLE
+                binding.totalResults.visibility = View.VISIBLE
+                binding.totalResults.text =
                     "${newsResponse.totalResults} ${resources.getString(R.string.articles_found)}"
 
                 articleArrayList.addAll(newsResponse.articles)
@@ -155,7 +158,8 @@ class SearchFragment : Fragment() {
                 ).apply {
                     registerAdRenderer(moPubStaticNativeAdRenderer)
                 }.also {
-                    searchRecycle.apply {
+                    binding.bannerMopubview.visibility = View.GONE
+                    binding.searchRecycle.apply {
                         adapter = it
                         layoutManager = LinearLayoutManager(requireActivity())
                         it.loadAds(getString(R.string.mopub_adunit_native), requestParameters)

@@ -8,22 +8,21 @@ import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.os.Looper
-import android.util.Log
-import android.view.Menu
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.helper.Helper
+import com.ayodkay.apps.swen.helper.location.CoGeocoder
+import com.ayodkay.apps.swen.helper.location.CoLocation
 import com.ayodkay.apps.swen.notification.jobs.GetTimeJob
 import com.google.android.gms.location.*
 import com.google.firebase.messaging.FirebaseMessaging
@@ -36,32 +35,25 @@ private const val REQUEST_CODE = 101
 private const val JOB_SCHEDULER_ID = 200
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
     override fun onStart() {
         super.onStart()
         Helper.goDark(this)
     }
 
-    private fun createLocationRequest() {
-        val mLocationRequest = LocationRequest.create()
-        mLocationRequest.interval = 60000
-        mLocationRequest.fastestInterval = 5000
-        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        val mLocationCallback: LocationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                if (locationResult == null) {
-                    return
-                }
-                for (location in locationResult.locations) {
-                    if (location != null) {
-                        Log.d("log", "AppLog: $location")
-                    }
-                }
+    private val viewModel: MainViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return MainViewModel(
+                    CoLocation.from(this@MainActivity),
+                    CoGeocoder.from(this@MainActivity)
+                ) as T
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -85,103 +77,13 @@ class MainActivity : AppCompatActivity() {
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE
                 )
             }
-            return
+        } else {
+            viewModel.locationUpdates.observe(this, this::onLocationUpdate)
         }
-        LocationServices.getFusedLocationProviderClient(context)
-            .requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper())
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            startJobScheduler()
-        }
-
-        createLocationRequest()
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE
-                )
-            } else {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE
-                )
-            }
-        }
-
-        fusedLocationClient.lastLocation.addOnSuccessListener {
-            if (it != null) {
-                subscribeCountryName(it.latitude, it.longitude)
-            }
-        }
-
-
-//        val toolbar: Toolbar = findViewById(R.id.main_toolbar)
-//        setSupportActionBar(toolbar)
-//        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-//        val navView: NavigationView = findViewById(R.id.nav_view)
-//
-//        //setUpAlarm(this)ta
-//        toolbar.setOnMenuItemClickListener { menuItem ->
-//            when (menuItem.itemId) {
-//                R.id.search -> {
-//                    startActivity(
-//                        Intent(
-//                            this, SearchActivity::class.java
-//                        )
-//                    )
-//                    true
-//                }
-//
-//                else -> false
-//            }
-//        }
-//
-//        val navController = findNavController(R.id.nav_host_fragment)
-//        // Passing each menu ID as a set of Ids because each
-//        // menu should be considered as top level destinations.
-//        appBarConfiguration = AppBarConfiguration(
-//            setOf(
-//                R.id.nav_main,
-//                R.id.nav_business,
-//                R.id.nav_entertainment,
-//                R.id.nav_health,
-//                R.id.nav_science,
-//                R.id.nav_sports,
-//                R.id.nav_technology,
-//                R.id.nav_corona,
-//                R.id.nav_politics,
-//                R.id.nav_beauty,
-//                R.id.settings
-//            ), drawerLayout
-//        )
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-//        navView.setupWithNavController(navController)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.top_app_bar, menu)
-
-        return true
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    private fun onLocationUpdate(location: Location?) {
+        location?.run { subscribeCountryName(latitude, longitude) }
     }
 
     @SuppressLint("MissingPermission")
@@ -196,9 +98,7 @@ class MainActivity : AppCompatActivity() {
                 if ((grantResults.isNotEmpty() &&
                             grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 ) {
-                    fusedLocationClient.lastLocation.addOnSuccessListener {
-                        subscribeCountryName(it.latitude, it.longitude)
-                    }
+                    viewModel.locationUpdates.observe(this, this::onLocationUpdate)
                     Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
@@ -213,8 +113,8 @@ class MainActivity : AppCompatActivity() {
         try {
             addresses = geoCoder.getFromLocation(latitude, longitude, 1)
             if (addresses != null && addresses.isNotEmpty()) {
-                val addressCode = addresses[0].countryCode.toLowerCase(Locale.ROOT)
-                if (Helper.topCountries(addresses[0].countryCode.toLowerCase(Locale.ROOT))) {
+                val addressCode = addresses[0].countryCode.lowercase(Locale.ROOT)
+                if (Helper.topCountries(addresses[0].countryCode.lowercase(Locale.ROOT))) {
                     FirebaseMessaging.getInstance()
                         .unsubscribeFromTopic("engage")
                         .addOnCompleteListener { }

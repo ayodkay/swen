@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
@@ -34,9 +33,6 @@ import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.activity_viewnews.*
 import kotlinx.android.synthetic.main.more.*
 import kotlinx.android.synthetic.main.more.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 
 class ViewNewActivity : AppCompatActivity() {
@@ -95,45 +91,41 @@ class ViewNewActivity : AppCompatActivity() {
             }
         })
 
-
-        lifecycleScope.launch {
-            withContext(Dispatchers.Main) {
-                if (title.contains("- ")) {
-                    loadMore(title.substringAfter("- "))
-                } else {
-                    loadMore(source)
-                }
+        runOnUiThread {
+            if (title.contains("- ")) {
+                loadMore(title.substringAfter("- "))
+            } else {
+                loadMore(source)
             }
-        }
+            try {
+                Picasso.get().load(image).into(dImage, object : Callback {
+                    override fun onSuccess() {
+                        progress.visibility = View.GONE
+                    }
 
-        try {
-            Picasso.get().load(image).into(dImage, object : Callback {
-                override fun onSuccess() {
-                    progress.visibility = View.GONE
-                }
-
-                override fun onError(e: Exception?) {
-                    progress.visibility = View.GONE
-                    dImage.setImageDrawable(
-                        ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.ic_undraw_page_not_found_su7k,
-                            null
+                    override fun onError(e: Exception?) {
+                        progress.visibility = View.GONE
+                        dImage.setImageDrawable(
+                            ResourcesCompat.getDrawable(
+                                resources,
+                                R.drawable.ic_undraw_page_not_found_su7k,
+                                null
+                            )
                         )
+
+                    }
+
+                })
+            } catch (e: Exception) {
+                progress.visibility = View.GONE
+                dImage.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_undraw_page_not_found_su7k,
+                        null
                     )
-
-                }
-
-            })
-        } catch (e: Exception) {
-            progress.visibility = View.GONE
-            dImage.setImageDrawable(
-                ResourcesCompat.getDrawable(
-                    resources,
-                    R.drawable.ic_undraw_page_not_found_su7k,
-                    null
                 )
-            )
+            }
         }
 
         dImage.setOnClickListener {

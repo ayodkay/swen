@@ -21,10 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".beta.view.MainActivity"></activity>
-        <activity
-            android:name=".view.bookmarks.BookMarkActivity"
-            android:theme="@style/AppActionBarTheme" />
         <activity android:name=".view.viewimage.ViewImageActivity" />
         <activity android:name=".view.BookMarkNews" />
         <activity

@@ -106,21 +106,19 @@ class ViewFragment : Fragment(){
                 talky.speak(title + content, TextToSpeech.QUEUE_FLUSH, null, null)
 
             }
-        }else{
+        } else {
             playView.visibility = View.GONE
         }
 
-        Firebase.dynamicLinks.shortLinkAsync {
-            link = Uri.parse(url)
-            domainUriPrefix = getString(R.string.domainUriPrefix)
-            androidParameters{}
-        }.addOnSuccessListener { result ->
-            dynamicLink = result.shortLink.toString()
-        }.addOnFailureListener {}
-
-
 
         shareView.setOnClickListener {
+            Firebase.dynamicLinks.shortLinkAsync {
+                link = Uri.parse(url)
+                domainUriPrefix = getString(R.string.domainUriPrefix)
+                androidParameters {}
+            }.addOnSuccessListener { result ->
+                dynamicLink = result.shortLink.toString()
+            }.addOnFailureListener {}
             if (image.isNotBlank()) {
                 Picasso.get().load(image).into(object : Target {
                     override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {

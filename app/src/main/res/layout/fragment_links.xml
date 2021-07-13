@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="?actionBarSize"
+    android:background="@color/background"
     tools:context=".view.bookmarks.ui.links.LinksFragment">
 
     <androidx.recyclerview.widget.RecyclerView

@@ -1,6 +1,7 @@
 package com.ayodkay.apps.swen.helper.adapter
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -32,8 +33,6 @@ import com.bumptech.glide.request.target.Target
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.formats.NativeAdOptions
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
 
@@ -45,6 +44,8 @@ class AdsRecyclerView internal constructor(
     private val context: Context
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    val activity = context as Activity
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
@@ -75,14 +76,14 @@ class AdsRecyclerView internal constructor(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             ITEM_TYPE_BANNER_AD -> {
-                val progressBar: LottieAnimationView =
-                    holder.itemView.findViewById(R.id.adsProgress)
+                activity.runOnUiThread {
+                    val progressBar: LottieAnimationView =
+                        holder.itemView.findViewById(R.id.adsProgress)
 
-                val error: LottieAnimationView =
-                    holder.itemView.findViewById(R.id.error)
-                val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
-                MobileAds.initialize(context)
-                GlobalScope.launch {
+                    val error: LottieAnimationView =
+                        holder.itemView.findViewById(R.id.error)
+                    val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
+                    MobileAds.initialize(context)
                     val background =
                         ColorDrawable(ContextCompat.getColor(context, R.color.toolbar))
                     AdLoader.Builder(
@@ -196,55 +197,57 @@ class AdsRecyclerView internal constructor(
                     }
                 }
 
-                try {
-                    Glide.with(context)
-                        .load(newsPosition.urlToImage)
-                        .listener(object : RequestListener<Drawable> {
-                            override fun onLoadFailed(
-                                e: GlideException?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                isFirstResource: Boolean
-                            ): Boolean {
-                                newsViewHolder.progressBar.visibility = View.GONE
-                                newsViewHolder.image
-                                    .setImageDrawable(
-                                        ResourcesCompat
-                                            .getDrawable(
-                                                context.resources,
-                                                R.drawable.ic_undraw_page_not_found_su7k, null
-                                            )
-                                    )
+
+                activity.runOnUiThread {
+                    try {
+                        Glide.with(context)
+                            .load(newsPosition.urlToImage)
+                            .listener(object : RequestListener<Drawable> {
+                                override fun onLoadFailed(
+                                    e: GlideException?,
+                                    model: Any?,
+                                    target: Target<Drawable>?,
+                                    isFirstResource: Boolean
+                                ): Boolean {
+                                    newsViewHolder.progressBar.visibility = View.GONE
+                                    newsViewHolder.image
+                                        .setImageDrawable(
+                                            ResourcesCompat
+                                                .getDrawable(
+                                                    context.resources,
+                                                    R.drawable.ic_undraw_page_not_found_su7k, null
+                                                )
+                                        )
 
 
-                                return true
-                            }
+                                    return true
+                                }
 
-                            override fun onResourceReady(
-                                resource: Drawable?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                dataSource: DataSource?,
-                                isFirstResource: Boolean
-                            ): Boolean {
-                                newsViewHolder.progressBar.visibility = View.GONE
-                                return false
-                            }
+                                override fun onResourceReady(
+                                    resource: Drawable?,
+                                    model: Any?,
+                                    target: Target<Drawable>?,
+                                    dataSource: DataSource?,
+                                    isFirstResource: Boolean
+                                ): Boolean {
+                                    newsViewHolder.progressBar.visibility = View.GONE
+                                    return false
+                                }
 
-                        })
-                        .into(holder.image)
+                            })
+                            .into(holder.image)
 
-                } catch (e: RuntimeException) {
-                    newsViewHolder.progressBar.visibility = View.GONE
-                    newsViewHolder.image.setImageDrawable(
-                        ResourcesCompat.getDrawable(
-                            context.resources,
-                            R.drawable.ic_undraw_page_not_found_su7k,
-                            null
+                    } catch (e: RuntimeException) {
+                        newsViewHolder.progressBar.visibility = View.GONE
+                        newsViewHolder.image.setImageDrawable(
+                            ResourcesCompat.getDrawable(
+                                context.resources,
+                                R.drawable.ic_undraw_page_not_found_su7k,
+                                null
+                            )
                         )
-                    )
+                    }
                 }
-
 
                 newsViewHolder.itemView.setOnClickListener {
                     cardClick()

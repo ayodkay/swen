@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f0f0f0"
+    android:background="@color/background"
     tools:context=".view.main.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
@@ -23,7 +23,7 @@
         android:id="@+id/cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background"
+        app:cardBackgroundColor="@color/background"
         app:cardCornerRadius="8dp"
         app:cardElevation="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -34,6 +34,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="6dp"
-            app:bubbletab_menuResource="@menu/main_bottom"></io.ak1.BubbleTabBar>
+            app:bubbletab_menuResource="@menu/main_bottom">
+
+        </io.ak1.BubbleTabBar>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

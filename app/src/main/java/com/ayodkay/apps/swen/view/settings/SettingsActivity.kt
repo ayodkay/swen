@@ -182,8 +182,8 @@ class SettingsActivity : AppCompatActivity() {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
         ): View? {
+            container?.setPadding(0, 0, 0, 150)
             val view = super.onCreateView(inflater, container, savedInstanceState)
-
             view?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background))
             return view
         }

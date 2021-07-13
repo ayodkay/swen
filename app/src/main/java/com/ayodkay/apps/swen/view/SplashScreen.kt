@@ -3,63 +3,45 @@ package com.ayodkay.apps.swen.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.databinding.ActivitySplashScreenBinding
 import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.helper.Helper
+import com.ayodkay.apps.swen.helper.work.UpdateWorkManager
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.facebook.appevents.AppEventsLogger
-import com.google.android.play.core.appupdate.AppUpdateManager
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.google.android.play.core.install.InstallStateUpdatedListener
-import com.google.android.play.core.install.model.AppUpdateType
-import com.google.android.play.core.install.model.InstallStatus
-import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_splash_screen.*
 
 
 private const val MY_REQUEST_CODE = 1
-private var TAG = SplashScreen::class.java.name
+private const val TAG_OUTPUT = "update"
+private val TAG = SplashScreen::class.java.name
 
 class SplashScreen : AppCompatActivity() {
-    private val appUpdateManager: AppUpdateManager = AppUpdateManagerFactory.create(context)
+    private lateinit var binding: ActivitySplashScreenBinding
 
+    private var outputWorkInfos: LiveData<List<WorkInfo>>? = null
 
     override fun onResume() {
         super.onResume()
-        appUpdateManager.appUpdateInfo
-            .addOnSuccessListener { appUpdateInfo ->
-                if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
-                    nextActivity()
-                }
-            }
-    }
-
-    private val listener: InstallStateUpdatedListener =
-        InstallStateUpdatedListener { installState ->
-            if (installState.installStatus() == InstallStatus.DOWNLOADED) {
-                updating.visibility = View.GONE
-                Toast.makeText(this, getString(R.string.updated), Toast.LENGTH_LONG).show()
-                nextActivity()
-
-            }
-
-            if (installState.installStatus() == InstallStatus.DOWNLOADING) {
-                updating.visibility = View.VISIBLE
-                Toast.makeText(this, getString(R.string.updating), Toast.LENGTH_LONG).show()
-        }
+        outputWorkInfos?.observe(this, workInfosObserver())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash_screen)
+        binding = ActivitySplashScreenBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         Helper.initializeAds(this, getString(R.string.mopub_adunit_native))
         Helper.initializeAds(this, getString(R.string.mopub_adunit_banner))
         Firebase.dynamicLinks
@@ -75,38 +57,42 @@ class SplashScreen : AppCompatActivity() {
                     )
 
                     finish()
-                }else{
-                    // Returns an intent object that you use to check for an update.
-                    val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-                    // Checks that the platform will allow the specified type of update.
-                    appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-                        if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                            && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-
-                            AppEventsLogger.newLogger(context).logEvent("in-appUpdate")
-
-                            appUpdateManager.registerListener(listener)
-                            appUpdateManager.startUpdateFlowForResult(
-                                // Pass the intent that is returned by 'getAppUpdateInfo()'.
-                                appUpdateInfo,
-                                // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
-                                AppUpdateType.FLEXIBLE,
-                                // The current activity making the update request.
-                                this,
-                                // Include a request code to later monitor this update request.
-                                MY_REQUEST_CODE
-                            )
-                        }else{
-                            nextActivity()
-                        }
-                    }.addOnFailureListener {
-                        nextActivity()
-                    }
-
+                } else {
+                    val workManager = WorkManager.getInstance(this)
+                    val uploadWorkRequest: WorkRequest =
+                        OneTimeWorkRequestBuilder<UpdateWorkManager>()
+                            .addTag(TAG_OUTPUT)
+                            .build()
+                    workManager.enqueue(uploadWorkRequest)
+                    outputWorkInfos =
+                        workManager.getWorkInfosByTagLiveData(TAG_OUTPUT) as LiveData<List<WorkInfo>>
+                    outputWorkInfos!!.observe(this, workInfosObserver())
                 }
             }
             .addOnFailureListener(this) { e -> Log.w(TAG, "getDynamicLink:onFailure", e) }
 
+    }
+
+    private fun workInfosObserver(): Observer<List<WorkInfo>> {
+        return Observer { listOfWorkInfo ->
+
+            // Note that these next few lines grab a single WorkInfo if it exists
+            // This code could be in a Transformation in the ViewModel; they are included here
+            // so that the entire process of displaying a WorkInfo is in one location.
+
+            // If there are no matching work info, do nothing
+            if (listOfWorkInfo.isNullOrEmpty()) {
+                return@Observer
+            }
+
+            // We only care about the one output status.
+            // Every continuation has only one worker tagged TAG_OUTPUT
+            val workInfo = listOfWorkInfo[0]
+
+            if (workInfo.state.isFinished) {
+                nextActivity()
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -120,17 +106,14 @@ class SplashScreen : AppCompatActivity() {
     }
 
     @Suppress("SENSELESS_COMPARISON")
-    private fun nextActivity(){
-        Handler(Looper.getMainLooper()).postDelayed({
-            appUpdateManager.unregisterListener(listener)
-            val db = Helper.getCountryDatabase(this)
-            if (db.countryDao().getAll() != null) {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            } else {
-                startActivity(Intent(this, AskLocation::class.java))
-                finish()
-            }
-        }, 1000)
+    private fun nextActivity() {
+        val db = Helper.getCountryDatabase(this)
+        if (db.countryDao().getAll() != null) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        } else {
+            startActivity(Intent(this, AskLocation::class.java))
+            finish()
+        }
     }
 }
