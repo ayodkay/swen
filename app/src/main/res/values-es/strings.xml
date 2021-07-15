@@ -76,7 +76,7 @@
     <string name="ad">Ad</string>
     <string name="search_language">Idioma de búsqueda</string>
     <string name="search_language_summary">cambiar el idioma utilizado al buscar noticias</string>
-    <string name="supporting_text">Nuestra aplicación es 100% segura, por lo que no necesita preocuparse por su información o algunos archivos que dañarán su dispositivo. Cuidamos tu privacidad. Tenga en cuenta que esta aplicación no está afiliada ni relacionada con ninguno de los periódicos citados aquí. El contenido que muestra la aplicación está disponible de forma privada en https://newsapi.org/, que conserva todos los derechos de autor y, por lo tanto, la aplicación no se hace responsable. para cualquiera de los contenidos mostrados. para más información sobre las fuentes y los editores, visite https://newsapi.org/ o póngase en contacto con support@newsapi.org</string>
+    <string name="supporting_text">Nuestra aplicación es 100\% segura, por lo que no necesita preocuparse por su información o algunos archivos que dañarán su dispositivo. Cuidamos tu privacidad. Tenga en cuenta que esta aplicación no está afiliada ni relacionada con ninguno de los periódicos citados aquí. El contenido que muestra la aplicación está disponible de forma privada en https://newsapi.org/, que conserva todos los derechos de autor y, por lo tanto, la aplicación no se hace responsable. para cualquiera de los contenidos mostrados. para más información sobre las fuentes y los editores, visite https://newsapi.org/ o póngase en contacto con support@newsapi.org</string>
     <string name="refresh">Deslizar para refrescar</string>
     <string name="links">Enlaces</string>
     <string name="system_theme">Sistema por defecto.</string>

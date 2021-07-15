@@ -16,6 +16,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.databinding.ActivityViewnewsBinding
 import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
 import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.view.main.MainActivity
@@ -29,14 +30,11 @@ import com.mopub.nativeads.RequestParameters.NativeAdAsset
 import com.mopub.nativeads.ViewBinder
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_search.*
-import kotlinx.android.synthetic.main.activity_viewnews.*
 import kotlinx.android.synthetic.main.more.*
-import kotlinx.android.synthetic.main.more.view.*
 import java.util.*
 
 class ViewNewActivity : AppCompatActivity() {
-
+    private lateinit var binding: ActivityViewnewsBinding
     override fun onStart() {
         super.onStart()
         when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
@@ -45,15 +43,22 @@ class ViewNewActivity : AppCompatActivity() {
             } // Night mode is not active, we're using the light theme
             Configuration.UI_MODE_NIGHT_YES -> {
                 setTheme(R.style.AppThemeNight)
-                background.setBackgroundColor(ContextCompat.getColor(this, R.color.background))
+                binding.background.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.background
+                    )
+                )
             } // Night mode is active, we're using dark theme
         }
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_viewnews)
-        setSupportActionBar(findViewById(R.id.detail_toolbar))
+        binding = ActivityViewnewsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.detailToolbar)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             initWindow()
@@ -86,9 +91,7 @@ class ViewNewActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
-            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
         runOnUiThread {
@@ -98,14 +101,14 @@ class ViewNewActivity : AppCompatActivity() {
                 loadMore(source)
             }
             try {
-                Picasso.get().load(image).into(dImage, object : Callback {
+                Picasso.get().load(image).into(binding.dImage, object : Callback {
                     override fun onSuccess() {
-                        progress.visibility = View.GONE
+                        binding.progress.visibility = View.GONE
                     }
 
                     override fun onError(e: Exception?) {
-                        progress.visibility = View.GONE
-                        dImage.setImageDrawable(
+                        binding.progress.visibility = View.GONE
+                        binding.dImage.setImageDrawable(
                             ResourcesCompat.getDrawable(
                                 resources,
                                 R.drawable.ic_undraw_page_not_found_su7k,
@@ -117,8 +120,8 @@ class ViewNewActivity : AppCompatActivity() {
 
                 })
             } catch (e: Exception) {
-                progress.visibility = View.GONE
-                dImage.setImageDrawable(
+                binding.progress.visibility = View.GONE
+                binding.dImage.setImageDrawable(
                     ResourcesCompat.getDrawable(
                         resources,
                         R.drawable.ic_undraw_page_not_found_su7k,
@@ -128,7 +131,7 @@ class ViewNewActivity : AppCompatActivity() {
             }
         }
 
-        dImage.setOnClickListener {
+        binding.dImage.setOnClickListener {
             startActivity(
                 Intent(this, ViewImageActivity::class.java)
                     .putExtra("image", image)
@@ -166,7 +169,6 @@ class ViewNewActivity : AppCompatActivity() {
                 layoutManager = LinearLayoutManager(context)
                 hasFixedSize()
                 articleArrayList.addAll(newsResponse.articles)
-
                 val desiredAssets = EnumSet.of(
                     NativeAdAsset.TITLE,
                     NativeAdAsset.TEXT,
@@ -200,7 +202,6 @@ class ViewNewActivity : AppCompatActivity() {
                     registerAdRenderer(moPubStaticNativeAdRenderer)
                 }.also {
                     moreBy.apply {
-                        articleArrayList.addAll(newsResponse.articles)
                         adapter = it
                         layoutManager = LinearLayoutManager(this@ViewNewActivity)
                         it.loadAds("63951017645141f3a3ede48a53ab4942", requestParameters)

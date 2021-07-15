@@ -10,16 +10,6 @@
         <item name="bottomSheetStyle">@style/Theme.NoWiredStrapInNavigationBar</item>
     </style>
 
-    <style name="AppActionBarTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="drawerArrowStyle">@style/DrawerIconStyle</item>
-
-        <item name="bottomSheetStyle">@style/Theme.NoWiredStrapInNavigationBar</item>
-    </style>
-
     <style name="DrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@color/textPrimary</item>
     </style>
@@ -30,10 +20,6 @@
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
-
-    </style>
 
     <style name="AppThemeNight" parent="Theme.MaterialComponents.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>

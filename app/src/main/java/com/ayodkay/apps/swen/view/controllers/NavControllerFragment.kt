@@ -21,8 +21,7 @@ class NavControllerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNavControllerBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

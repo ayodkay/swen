@@ -53,7 +53,7 @@ class MainFragment : Fragment() {
             p.setMargins(10, 0, 10, 0)
             tab.requestLayout()
         }
-        root.isFocusableInTouchMode = true;
+        root.isFocusableInTouchMode = true
         root.requestFocus()
 
         root.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->

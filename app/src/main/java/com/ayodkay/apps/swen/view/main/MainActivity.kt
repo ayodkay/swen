@@ -11,14 +11,13 @@ import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.databinding.ActivityMainBinding
 import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.location.CoGeocoder
@@ -35,6 +34,7 @@ private const val REQUEST_CODE = 101
 private const val JOB_SCHEDULER_ID = 200
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     override fun onStart() {
         super.onStart()
         Helper.goDark(this)
@@ -53,7 +53,35 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        startJobScheduler()
+        permissionCheck()
+    }
+
+    private fun onLocationUpdate(location: Location?) {
+        location?.run { subscribeCountryName(latitude, longitude) }
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_CODE -> {
+                if ((grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                ) {
+                    viewModel.locationUpdates.observe(this, this::onLocationUpdate)
+                }
+            }
+        }
+    }
+
+    private fun permissionCheck() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -79,31 +107,6 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             viewModel.locationUpdates.observe(this, this::onLocationUpdate)
-        }
-    }
-
-    private fun onLocationUpdate(location: Location?) {
-        location?.run { subscribeCountryName(latitude, longitude) }
-    }
-
-    @SuppressLint("MissingPermission")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            REQUEST_CODE -> {
-                if ((grantResults.isNotEmpty() &&
-                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                ) {
-                    viewModel.locationUpdates.observe(this, this::onLocationUpdate)
-                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
-                }
-            }
         }
     }
 

@@ -28,7 +28,7 @@ class CountryAdapter(private val mCountryPicker: CountryPicker, listener: Countr
         val country = mFilteredCountries[position]
         holder.textView.text = country.name
         val drawableName =
-            "flag_" + country.code!!.toLowerCase(Locale.ENGLISH)
+            "flag_" + country.code!!.lowercase(Locale.ENGLISH)
         val drawableId = mCountryPicker.resources
             .getIdentifier(drawableName, "drawable", mCountryPicker.requireActivity().packageName)
         if (drawableId != 0) {
@@ -96,8 +96,8 @@ class CountryAdapter(private val mCountryPicker: CountryPicker, listener: Countr
         name: String?,
         constraint: String
     ): Boolean {
-        return removeAccents(name)!!.toLowerCase(Locale.getDefault())
-            .contains(removeAccents(constraint)!!.toLowerCase(Locale.getDefault()))
+        return removeAccents(name)!!.lowercase(Locale.getDefault())
+            .contains(removeAccents(constraint)!!.lowercase(Locale.getDefault()))
     }
 
     private fun removeAccents(string: String?): String? {

@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/country_picker_search"
@@ -14,13 +15,17 @@
         android:drawableStart="@drawable/search_icon"
         android:autofillHints="canada" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/country_picker_recycler_view"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="10dp"
         android:layout_weight="1"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp" />
+        app:cardCornerRadius="10dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/country_picker_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

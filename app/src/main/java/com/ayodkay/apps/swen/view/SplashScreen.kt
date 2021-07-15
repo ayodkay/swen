@@ -65,7 +65,7 @@ class SplashScreen : AppCompatActivity() {
                             .build()
                     workManager.enqueue(uploadWorkRequest)
                     outputWorkInfos =
-                        workManager.getWorkInfosByTagLiveData(TAG_OUTPUT) as LiveData<List<WorkInfo>>
+                        workManager.getWorkInfosByTagLiveData(TAG_OUTPUT)
                     outputWorkInfos!!.observe(this, workInfosObserver())
                 }
             }

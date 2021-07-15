@@ -26,6 +26,7 @@
                 android:layout_margin="12dp"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content"
+                android:contentDescription="@null"
                 android:src="@drawable/ic_back" />
 
             <TextView
@@ -70,6 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_bookmark" />
 
                 </RelativeLayout>
@@ -85,6 +87,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_bookmarked" />
 
                 </RelativeLayout>
@@ -99,6 +102,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_refresh" />
 
                 </RelativeLayout>

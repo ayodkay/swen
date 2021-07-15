@@ -59,7 +59,6 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".view.search.SearchActivity" />
         <activity android:name=".view.ThemeActivity" />
         <activity
             android:name=".view.settings.SettingsActivity"
