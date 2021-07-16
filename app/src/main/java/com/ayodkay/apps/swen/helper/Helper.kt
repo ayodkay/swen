@@ -135,16 +135,18 @@ object Helper {
         q: String? = "",
         isEverything: Boolean = false
     ): View {
-        if (isEverything) {
-            binding.swipeRefresh.setOnRefreshListener {
+        if (frag.isAdded) {
+            if (isEverything) {
+                binding.swipeRefresh.setOnRefreshListener {
+                    setUpObserverEveryTime(q, binding, frag)
+                }
                 setUpObserverEveryTime(q, binding, frag)
-            }
-            setUpObserverEveryTime(q, binding, frag)
-        } else {
-            binding.swipeRefresh.setOnRefreshListener {
+            } else {
+                binding.swipeRefresh.setOnRefreshListener {
+                    setUpObserver(category.orEmpty(), frag, binding, q)
+                }
                 setUpObserver(category.orEmpty(), frag, binding, q)
             }
-            setUpObserver(category.orEmpty(), frag, binding, q)
         }
         return binding.root
     }
@@ -190,6 +192,7 @@ object Helper {
 
                     if (newsResponse != null) {
                         if (newsResponse.totalResults == 0) {
+                            binding.progressBar.visibility = View.GONE
                             binding.empty.visibility =
                                 View.VISIBLE
                             if (newsResponse.status == "400") {
@@ -242,6 +245,7 @@ object Helper {
                             ).apply {
                                 registerAdRenderer(moPubStaticNativeAdRenderer)
                             }.also {
+                                binding.progressBar.visibility = View.GONE
                                 binding.newsRecyclerView
                                     .apply {
                                         adapter = it
@@ -290,6 +294,7 @@ object Helper {
                     binding.empty.visibility = View.VISIBLE
                     binding.emptyText.visibility = View.VISIBLE
                     binding.swipeText.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.GONE
 
                     if (newsResponse.status == "400") {
                         binding.emptyText.text = "Internet Error"
@@ -330,6 +335,7 @@ object Helper {
                     ).apply {
                         registerAdRenderer(moPubStaticNativeAdRenderer)
                     }.also {
+                        binding.progressBar.visibility = View.GONE
                         binding.newsRecyclerView.apply {
                             adapter = it
                             layoutManager = LinearLayoutManager(frag.context)
