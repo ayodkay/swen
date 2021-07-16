@@ -16,12 +16,12 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.work.Data
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.App
-import com.ayodkay.apps.swen.helper.App.Companion.context
+import com.ayodkay.apps.swen.helper.work.NotifyWork
 import com.ayodkay.apps.swen.view.WebView
 import com.ayodkay.apps.swen.view.main.MainActivity
-import com.ayodkay.apps.swen.view.main.MainActivity.Companion.startJobScheduler
+import com.ayodkay.apps.swen.view.main.MainActivity.Companion.scheduleNotification
 import com.facebook.appevents.AppEventsLogger
 import com.squareup.picasso.Picasso
 import kotlin.random.Random
@@ -32,23 +32,20 @@ class Notification internal constructor(private val context: Context) {
     companion object {
         private const val ENGAGE_NOTIFICATION = 101
         private val COUNTRY_NOTIFICATION = Random.nextInt(0, 1000000)
-        private val CHANNEL_ID = context.getString(R.string.notification_id)
-
-        private val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        fun deleteNotification() {
-            notificationManager.cancel(
-                ENGAGE_NOTIFICATION
-            )
-        }
-
-
     }
 
+    private val CHANNEL_ID = context.getString(R.string.notification_id)
+    private val notificationManager =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    fun deleteNotification() {
+        notificationManager.cancel(
+            ENGAGE_NOTIFICATION
+        )
+    }
 
     internal fun sendUpdateNotification(message: String) {
-        AppEventsLogger.newLogger(App.context).logEvent("sentNotification")
+        AppEventsLogger.newLogger(context).logEvent("sentNotification")
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -95,7 +92,7 @@ class Notification internal constructor(private val context: Context) {
     }
 
     internal fun sendEngageNotification(message: String) {
-        AppEventsLogger.newLogger(App.context).logEvent("sentNotification")
+        AppEventsLogger.newLogger(context).logEvent("sentNotification")
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -140,16 +137,15 @@ class Notification internal constructor(private val context: Context) {
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            startJobScheduler()
-        }
+        val data = Data.Builder().putInt(NotifyWork.NOTIFICATION_ID, 0).build()
+        scheduleNotification(data, context)
     }
 
     internal fun sendCountryNotification(
         title: String, descriptions: String, url: String,
         image: String
     ) {
-        AppEventsLogger.newLogger(App.context).logEvent("sentCountryNotification")
+        AppEventsLogger.newLogger(context).logEvent("sentCountryNotification")
         val intent = Intent(context, WebView::class.java).apply {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
 

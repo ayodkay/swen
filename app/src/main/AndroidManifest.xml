@@ -37,11 +37,6 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".notification.jobs.GetTimeJob"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
         <receiver
             android:name=".helper.backend.PowerButtonBroadcastReceiver"
             android:exported="false">

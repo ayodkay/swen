@@ -1,5 +1,6 @@
 package com.ayodkay.apps.swen.helper.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -19,15 +20,13 @@ import com.ayodkay.apps.swen.helper.room.links.Links
 import com.ayodkay.apps.swen.view.WebView
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.formats.NativeAdOptions
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 private val ITEM_TYPE_COUNTRY by lazy { 0 }
 private val ITEM_TYPE_BANNER_AD by lazy { 1 }
 class LinksAdapter internal constructor(private val context: Context, private val links: ArrayList<Links>):
     RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
-
+    private val activity = context as Activity
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when(viewType){
             ITEM_TYPE_BANNER_AD->{
@@ -51,13 +50,13 @@ class LinksAdapter internal constructor(private val context: Context, private va
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             ITEM_TYPE_BANNER_AD -> {
-                val progressBar: LottieAnimationView =
-                    holder.itemView.findViewById(R.id.adsProgress)
-                val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
-                val error: LottieAnimationView =
-                    holder.itemView.findViewById(R.id.error)
-                MobileAds.initialize(context)
-                GlobalScope.launch {
+                activity.runOnUiThread {
+                    val progressBar: LottieAnimationView =
+                        holder.itemView.findViewById(R.id.adsProgress)
+                    val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
+                    val error: LottieAnimationView =
+                        holder.itemView.findViewById(R.id.error)
+                    MobileAds.initialize(context)
                     val background =
                         ColorDrawable(ContextCompat.getColor(context, R.color.toolbar))
                     AdLoader.Builder(
@@ -93,6 +92,7 @@ class LinksAdapter internal constructor(private val context: Context, private va
                             it.loadAd(AdRequest.Builder().build())
                         }
                 }
+
             }
 
             else-> {

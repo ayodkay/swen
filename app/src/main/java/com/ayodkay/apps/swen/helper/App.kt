@@ -7,7 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.multidex.BuildConfig
+import com.ayodkay.apps.swen.BuildConfig
 import com.ayodkay.apps.swen.helper.backend.BootReceiver
 import com.ayodkay.apps.swen.helper.backend.PowerButtonBroadcastReceiver
 import com.ayodkay.apps.swen.view.KEY_THEME
@@ -22,11 +22,10 @@ class App : Application(){
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
     override fun onCreate() {
         super.onCreate()
-
+        application = this
         if (BuildConfig.DEBUG) {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
         }
-        context = this.applicationContext
         when(sharedPrefs.getInt(KEY_THEME, THEME_UNDEFINED)){
             1->{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -36,9 +35,9 @@ class App : Application(){
             }
         }
 
-        val receiver = ComponentName(context, BootReceiver::class.java)
+        val receiver = ComponentName(this, BootReceiver::class.java)
 
-        context.packageManager.setComponentEnabledSetting(
+        packageManager.setComponentEnabledSetting(
             receiver,
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
             PackageManager.DONT_KILL_APP
@@ -50,8 +49,10 @@ class App : Application(){
         val mReceiver = PowerButtonBroadcastReceiver()
         registerReceiver(mReceiver, filter)
     }
-
-    companion object{
-        lateinit var context:Context
+    companion object {
+        var application: Application? = null
+            private set
+        val context: Context
+            get() = application!!.applicationContext
     }
 }

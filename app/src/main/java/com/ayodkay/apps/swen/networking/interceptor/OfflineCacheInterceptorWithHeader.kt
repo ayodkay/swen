@@ -1,8 +1,9 @@
 package com.ayodkay.apps.swen.networking.interceptor
 
+
 import android.content.Context
 import android.net.ConnectivityManager
-import com.ayodkay.apps.swen.helper.App
+import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.networking.constants.Constant.Companion.HEADER_CACHE_CONTROL
 import com.ayodkay.apps.swen.networking.constants.Constant.Companion.HEADER_PRAGMA
@@ -43,7 +44,7 @@ open class OfflineCacheInterceptorWithHeader : Interceptor {
 
     private fun isNetworkConnected(): Boolean {
         val cm: ConnectivityManager =
-            App.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = cm.activeNetworkInfo
         return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting

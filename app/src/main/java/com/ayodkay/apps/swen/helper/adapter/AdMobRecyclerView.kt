@@ -23,7 +23,7 @@ import com.ayodkay.apps.swen.helper.ads.NativeTemplateStyle
 import com.ayodkay.apps.swen.helper.ads.TemplateView
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookMarkRoom
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
-import com.ayodkay.apps.swen.model.News
+import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.view.viewnews.ViewNewActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -39,13 +39,14 @@ import java.text.SimpleDateFormat
 private val ITEM_TYPE_COUNTRY by lazy { 0 }
 private val ITEM_TYPE_BANNER_AD by lazy { 1 }
 
-class RoomRecyclerview internal constructor(
-    private val newsList: ArrayList<News>,
-    private val owner: ViewModelStoreOwner,
+class AdMobRecyclerView internal constructor(
+    private val newsList: ArrayList<NewsArticle>, private val owner: ViewModelStoreOwner,
     private val context: Context
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val activity = context as Activity
+
+    val activity = context as Activity
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
             ITEM_TYPE_BANNER_AD -> {
@@ -57,7 +58,8 @@ class RoomRecyclerview internal constructor(
 
             else -> {
                 val view: View =
-                    LayoutInflater.from(context).inflate(R.layout.news_list_card, parent, false)
+                    LayoutInflater.from(context)
+                        .inflate(R.layout.news_list_card, parent, false)
                 return NewsViewHolder(view)
             }
 
@@ -70,15 +72,17 @@ class RoomRecyclerview internal constructor(
     }
 
     @SuppressLint("SimpleDateFormat")
+    @Suppress("SENSELESS_COMPARISON")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             ITEM_TYPE_BANNER_AD -> {
                 activity.runOnUiThread {
                     val progressBar: LottieAnimationView =
                         holder.itemView.findViewById(R.id.adsProgress)
-                    val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
+
                     val error: LottieAnimationView =
                         holder.itemView.findViewById(R.id.error)
+                    val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
                     MobileAds.initialize(context)
                     val background =
                         ColorDrawable(ContextCompat.getColor(context, R.color.toolbar))
@@ -109,6 +113,7 @@ class RoomRecyclerview internal constructor(
                                 progressBar.visibility = View.GONE
                                 error.visibility = View.GONE
                                 template.visibility = View.VISIBLE
+
                             }
                         })
                         .build().also {
@@ -118,12 +123,25 @@ class RoomRecyclerview internal constructor(
             }
 
             else -> {
-                val newsViewHolder = holder as NewsViewHolder
+                val newsViewHolder: NewsViewHolder = holder as NewsViewHolder
                 val newsModel = ViewModelProvider(owner).get(BookmarkRoomVM::class.java)
                 val newsPosition = newsList[position]
+
+                val author =
+                    if (newsPosition.author != null) newsPosition.author else ""
+                val title =
+                    if (newsPosition.title != null) newsPosition.title else ""
+                val description =
+                    if (newsPosition.description != null) newsPosition.description else ""
+                val urlToImage =
+                    if (newsPosition.urlToImage != null) newsPosition.urlToImage else ""
+                val content =
+                    if (newsPosition.content != null) newsPosition.content else ""
+
+
                 val date = newsPosition.publishedAt
                     .replace("T", " ").replace("Z", "")
-                newsViewHolder.source.text = newsPosition.source
+                newsViewHolder.source.text = newsPosition.source.name
                 newsViewHolder.date.text = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                     .parse(date)?.toString()
                 newsViewHolder.title.text = newsPosition.title
@@ -160,13 +178,13 @@ class RoomRecyclerview internal constructor(
                         newsModel.insert(
                             BookMarkRoom(
                                 url = newsPosition.url,
-                                source = newsPosition.source,
-                                author = newsPosition.author,
-                                title = newsPosition.title,
-                                description = newsPosition.description,
-                                urlToImage = newsPosition.urlToImage,
+                                source = newsPosition.source.name,
+                                author = author,
+                                title = title,
+                                description = description.replace(regex = Regex("<.*?>"), ""),
+                                urlToImage = urlToImage,
                                 publishedAt = newsPosition.publishedAt,
-                                content = newsPosition.content,
+                                content = content.replace(regex = Regex("<.*?>"), ""),
                             )
                         )
                         newsViewHolder.bookmark.setImageDrawable(
@@ -179,67 +197,73 @@ class RoomRecyclerview internal constructor(
                     }
                 }
 
-                try {
-                    Glide.with(context)
-                        .load(newsPosition.urlToImage)
-                        .listener(object : RequestListener<Drawable> {
-                            override fun onLoadFailed(
-                                e: GlideException?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                isFirstResource: Boolean
-                            ): Boolean {
-                                newsViewHolder.progressBar.visibility = View.GONE
-                                newsViewHolder.image.post {
-                                    newsViewHolder.image.setImageDrawable(
-                                        ResourcesCompat
-                                            .getDrawable(
-                                                context.resources,
-                                                R.drawable.ic_undraw_page_not_found_su7k, null
-                                            )
-                                    )
+
+                activity.runOnUiThread {
+                    try {
+                        Glide.with(context)
+                            .load(newsPosition.urlToImage)
+                            .listener(object : RequestListener<Drawable> {
+                                override fun onLoadFailed(
+                                    e: GlideException?,
+                                    model: Any?,
+                                    target: Target<Drawable>?,
+                                    isFirstResource: Boolean
+                                ): Boolean {
+                                    newsViewHolder.progressBar.visibility = View.GONE
+                                    newsViewHolder.image.post {
+                                        newsViewHolder.image.setImageDrawable(
+                                            ResourcesCompat
+                                                .getDrawable(
+                                                    context.resources,
+                                                    R.drawable.ic_undraw_page_not_found_su7k, null
+                                                )
+                                        )
+                                    }
+                                    return true
                                 }
-                                return true
-                            }
 
-                            override fun onResourceReady(
-                                resource: Drawable?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                dataSource: DataSource?,
-                                isFirstResource: Boolean
-                            ): Boolean {
-                                newsViewHolder.progressBar.visibility = View.GONE
-                                return false
-                            }
+                                override fun onResourceReady(
+                                    resource: Drawable?,
+                                    model: Any?,
+                                    target: Target<Drawable>?,
+                                    dataSource: DataSource?,
+                                    isFirstResource: Boolean
+                                ): Boolean {
+                                    newsViewHolder.progressBar.visibility = View.GONE
+                                    return false
+                                }
 
-                        })
-                        .into(holder.image)
+                            })
+                            .into(holder.image)
 
-                } catch (e: RuntimeException) {
-                    newsViewHolder.progressBar.visibility = View.GONE
-                    newsViewHolder.image.post {
+                    } catch (e: RuntimeException) {
+                        newsViewHolder.progressBar.visibility = View.GONE
                         newsViewHolder.image.setImageDrawable(
-                            ResourcesCompat
-                                .getDrawable(
-                                    context.resources,
-                                    R.drawable.ic_undraw_page_not_found_su7k, null
-                                )
+                            ResourcesCompat.getDrawable(
+                                context.resources,
+                                R.drawable.ic_undraw_page_not_found_su7k,
+                                null
+                            )
                         )
                     }
                 }
-
 
                 newsViewHolder.itemView.setOnClickListener {
                     cardClick()
                     context.startActivity(
                         Intent(context, ViewNewActivity::class.java)
                             .putExtra("url", newsPosition.url)
-                            .putExtra("image", newsPosition.urlToImage)
-                            .putExtra("title", newsPosition.title)
-                            .putExtra("content", newsPosition.content)
-                            .putExtra("description", newsPosition.description)
-                            .putExtra("source", newsPosition.source)
+                            .putExtra("image", urlToImage)
+                            .putExtra("title", title)
+                            .putExtra(
+                                "content", content
+                                    .replace(regex = Regex("<.*?>"), "")
+                            )
+                            .putExtra(
+                                "description", description
+                                    .replace(regex = Regex("<.*?>"), "")
+                            )
+                            .putExtra("source", newsPosition.source.name)
                     )
                 }
             }
@@ -275,4 +299,5 @@ class RoomRecyclerview internal constructor(
     private fun newsBookMark() {
         AppEventsLogger.newLogger(context).logEvent("newsBookMark")
     }
+
 }

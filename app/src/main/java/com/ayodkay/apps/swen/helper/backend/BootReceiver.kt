@@ -3,10 +3,11 @@ package com.ayodkay.apps.swen.helper.backend
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import androidx.work.Data
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.work.NotifyWork
 import com.ayodkay.apps.swen.notification.Notification
-import com.ayodkay.apps.swen.view.main.MainActivity.Companion.startJobScheduler
+import com.ayodkay.apps.swen.view.main.MainActivity.Companion.scheduleNotification
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
@@ -15,9 +16,9 @@ import com.google.android.play.core.install.model.UpdateAvailability
 class BootReceiver :BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == "android.intent.action.BOOT_COMPLETED") {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                startJobScheduler()
-            }
+            val data = Data.Builder().putInt(NotifyWork.NOTIFICATION_ID, 0).build()
+            scheduleNotification(data, context)
+
             val appUpdateManager: AppUpdateManager = AppUpdateManagerFactory.create(context)
             // Returns an intent object that you use to check for an update.
             val appUpdateInfoTask = appUpdateManager.appUpdateInfo

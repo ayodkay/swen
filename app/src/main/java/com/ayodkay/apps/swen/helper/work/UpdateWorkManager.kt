@@ -23,7 +23,6 @@ class UpdateWorkManager(
 ) :
     Worker(appContext, workerParams) {
     private val appUpdateManager: AppUpdateManager = AppUpdateManagerFactory.create(appContext)
-    val activity = appContext as Activity
     private var listener: InstallStateUpdatedListener? = null
 
     override fun doWork(): Result {
@@ -74,7 +73,7 @@ class UpdateWorkManager(
                     // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
                     AppUpdateType.FLEXIBLE,
                     // The current activity making the update request.
-                    activity,
+                    appContext as Activity,
                     // Include a request code to later monitor this update request.
                     MY_REQUEST_CODE
                 )

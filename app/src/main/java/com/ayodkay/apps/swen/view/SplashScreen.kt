@@ -13,7 +13,6 @@ import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivitySplashScreenBinding
-import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.work.UpdateWorkManager
 import com.ayodkay.apps.swen.view.main.MainActivity
@@ -49,7 +48,7 @@ class SplashScreen : AppCompatActivity() {
             .addOnSuccessListener(this) { pendingDynamicLinkData ->
                 // Get deep link from result (may be null if no link is found)
                 if (pendingDynamicLinkData != null) {
-                    AppEventsLogger.newLogger(context).logEvent("dynamicLink")
+                    AppEventsLogger.newLogger(this).logEvent("dynamicLink")
                     startActivity(
                         Intent(this, WebView::class.java)
                             .putExtra("url", pendingDynamicLinkData.link.toString())

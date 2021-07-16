@@ -1,14 +1,15 @@
 package com.ayodkay.apps.swen.view.bookmarks.ui.links
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.links.Links
 
-class LinksViewModel : ViewModel() {
-    private val getLinks = Helper.getLinksDatabase(context).linksDao().getAll()
+class LinksViewModel internal constructor(application: Application) :
+    AndroidViewModel(application) {
+    private val getLinks = Helper.getLinksDatabase(getApplication()).linksDao().getAll()
     private val _links = MutableLiveData<List<Links>>().apply {
         value = getLinks
     }

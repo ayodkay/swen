@@ -2,31 +2,30 @@ package com.ayodkay.apps.swen.view.main
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
-import android.content.ComponentName
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.*
 import com.ayodkay.apps.swen.databinding.ActivityMainBinding
-import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.location.CoGeocoder
 import com.ayodkay.apps.swen.helper.location.CoLocation
-import com.ayodkay.apps.swen.notification.jobs.GetTimeJob
+import com.ayodkay.apps.swen.helper.work.NotifyWork
+import com.ayodkay.apps.swen.helper.work.NotifyWork.Companion.NOTIFICATION_ID
+import com.ayodkay.apps.swen.helper.work.NotifyWork.Companion.NOTIFICATION_WORK
 import com.google.android.gms.location.*
 import com.google.firebase.messaging.FirebaseMessaging
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 private const val REQUEST_CODE = 101
@@ -55,7 +54,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        startJobScheduler()
+        val data = Data.Builder().putInt(NOTIFICATION_ID, 0).build()
+        scheduleNotification(data, this)
         permissionCheck()
     }
 
@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun subscribeCountryName(latitude: Double, longitude: Double) {
-        val geoCoder = Geocoder(context, Locale.getDefault())
+        val geoCoder = Geocoder(this, Locale.getDefault())
         val addresses: List<Address>?
         try {
             addresses = geoCoder.getFromLocation(latitude, longitude, 1)
@@ -138,27 +138,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-        fun startJobScheduler() {
-            val job = JobInfo.Builder(
-                JOB_SCHEDULER_ID, ComponentName(
-                    context,
-                    GetTimeJob::class.java
+        fun scheduleNotification(data: Data, context: Context) {
+            val nWorkerParameters =
+                PeriodicWorkRequest.Builder(
+                    NotifyWork::class.java, 4, TimeUnit.HOURS,
+                    30, TimeUnit.MINUTES
                 )
-            )
-                .setMinimumLatency(1000)
-                .setOverrideDeadline(2000)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
-                .setRequiresCharging(false)
-                .build()
-            val jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-            jobScheduler.schedule(job)
-        }
+                    .setInitialDelay(3, TimeUnit.HOURS).setInputData(data).build()
 
-        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-        fun stopJobScheduler() {
-            val jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-            jobScheduler.cancel(JOB_SCHEDULER_ID)
+            WorkManager.getInstance(context).apply {
+                enqueueUniquePeriodicWork(
+                    NOTIFICATION_WORK, ExistingPeriodicWorkPolicy.REPLACE,
+                    nWorkerParameters
+                )
+            }
         }
     }
 }
