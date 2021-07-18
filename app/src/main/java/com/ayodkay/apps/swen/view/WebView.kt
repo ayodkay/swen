@@ -2,53 +2,59 @@ package com.ayodkay.apps.swen.view
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
-import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.databinding.ActivityWebViewBinding
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.links.Links
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.ayodkay.apps.swen.view.webview.WebViewSuite
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
-import kotlinx.android.synthetic.main.activity_web_view.*
+import com.mopub.common.MoPub
+import com.mopub.mobileads.MoPubErrorCode
+import com.mopub.mobileads.MoPubInterstitial
 
-class WebView : AppCompatActivity() {
 
-    private lateinit var mInterstitialAd: InterstitialAd
+class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
+    private lateinit var binding: ActivityWebViewBinding
+    private lateinit var moPubInterstitial: MoPubInterstitial
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web_view)
+        binding = ActivityWebViewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        mInterstitialAd = InterstitialAd(this)
+        moPubInterstitial = MoPubInterstitial(this, "7255cbc578d1408a913044bfc5759fa9")
+        moPubInterstitial.interstitialAdListener = this
+        moPubInterstitial.load()
 
-        mInterstitialAd.adUnitId = "ca-app-pub-7312232171503509/8595637711"
-
-        mInterstitialAd.loadAd(AdRequest.Builder().build())
 
         val link = intent.extras?.get("url") as String
 
-        webViewSuite.startLoading(link)
+        binding.webViewSuite.startLoading(link)
 
-        back_button.setOnClickListener {
+        binding.backButton.setOnClickListener {
             onBackPressed()
         }
 
-        refresh.setOnClickListener {
-            webViewSuite.refresh()
+        binding.refresh.setOnClickListener {
+            binding.webViewSuite.refresh()
+        }
+        binding.openBrowser.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+            startActivity(browserIntent)
         }
 
-        webViewSuite.customizeClient(object : WebViewSuite.WebViewSuiteCallback {
+        binding.webViewSuite.customizeClient(object : WebViewSuite.WebViewSuiteCallback {
             var reload = true
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 val slash = url!!.indexOf("//") + 2
                 val domain = url.substring(slash, url.indexOf('/', slash))
-                urlLink.text = domain
+                binding.urlLink.text = domain
 
-                shareLink.setOnClickListener {
+                binding.shareLink.setOnClickListener {
                     val sendIntent: Intent = Intent().apply {
                         action = Intent.ACTION_SEND
                         putExtra(Intent.EXTRA_TEXT, url)
@@ -62,16 +68,16 @@ class WebView : AppCompatActivity() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 if (link.contains("news.google.com")) {
                     if (reload) {
-                        webViewSuite.startLoading(url)
+                        binding.webViewSuite.startLoading(url)
                         reload = false
                     }
                 }
 
                 val slash = url!!.indexOf("//") + 2
                 val domain = url.substring(slash, url.indexOf('/', slash))
-                urlLink.text = domain
+                binding.urlLink.text = domain
 
-                shareLink.setOnClickListener {
+                binding.shareLink.setOnClickListener {
                     val sendIntent: Intent = Intent().apply {
                         action = Intent.ACTION_SEND
                         putExtra(Intent.EXTRA_TEXT, url)
@@ -90,27 +96,27 @@ class WebView : AppCompatActivity() {
             }
         })
 
-        saveLink.setOnClickListener {
+        binding.saveLink.setOnClickListener {
             Helper.getLinksDatabase(this).linksDao().insertAll(Links(link = link))
 
-            removeLink.visibility = VISIBLE
-            saveLink.visibility = GONE
+            binding.removeLink.visibility = VISIBLE
+            binding.saveLink.visibility = GONE
         }
 
-        removeLink.setOnClickListener {
+        binding.removeLink.setOnClickListener {
             Helper.getLinksDatabase(this).linksDao().deleteOne(link)
 
-            removeLink.visibility = GONE
-            saveLink.visibility = VISIBLE
+            binding.removeLink.visibility = GONE
+            binding.saveLink.visibility = VISIBLE
         }
 
-        refresh.setOnClickListener {
-            webViewSuite.refresh()
+        binding.refresh.setOnClickListener {
+            binding.webViewSuite.refresh()
         }
 
         if (Helper.getLinksDatabase(this).linksDao().exist(link)) {
-            removeLink.visibility = VISIBLE
-            saveLink.visibility = GONE
+            binding.removeLink.visibility = VISIBLE
+            binding.saveLink.visibility = GONE
         }
 
     }
@@ -118,11 +124,37 @@ class WebView : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        mInterstitialAd.show()
+        if (moPubInterstitial.isReady) {
+            moPubInterstitial.show()
+        }
         val toMain = intent.extras?.get("toMain") as Boolean
-        if (toMain){
+        if (toMain) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        MoPub.onPause(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        MoPub.onStop(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        MoPub.onResume(this)
+    }
+
+    override fun onInterstitialLoaded(p0: MoPubInterstitial?) {}
+    override fun onInterstitialFailed(p0: MoPubInterstitial?, p1: MoPubErrorCode?) {
+        moPubInterstitial.load()
+    }
+
+    override fun onInterstitialShown(p0: MoPubInterstitial?) {}
+    override fun onInterstitialClicked(p0: MoPubInterstitial?) {}
+    override fun onInterstitialDismissed(p0: MoPubInterstitial?) {}
 }

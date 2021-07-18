@@ -27,10 +27,7 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-
 private const val REQUEST_CODE = 101
-
-private const val JOB_SCHEDULER_ID = 200
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

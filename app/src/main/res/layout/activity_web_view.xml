@@ -6,111 +6,138 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".view.WebView">
-
     <androidx.cardview.widget.CardView
-        android:id="@+id/card"
-        app:cardBackgroundColor="@color/toolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:weightSum="3"
-            android:orientation="horizontal">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/back_button"
-                android:layout_width="0dp"
-                android:layout_weight=".2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="12dp"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_back" />
+                android:src="@drawable/ic_close"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/urlLink"
-                android:textColor="@color/textPrimary"
+            <RelativeLayout
+                android:id="@+id/textContainer"
                 android:layout_width="0dp"
-                android:layout_weight="1.8"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/openBrowser"
+                app:layout_constraintStart_toEndOf="@+id/back_button"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+                <TextView
+                    android:id="@+id/urlLink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/openBrowser"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:weightSum="3"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/refresh"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <RelativeLayout
-                    android:id="@+id/shareLink"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="48dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_open_in_browser" />
+            </RelativeLayout>
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@string/share"
-                        android:src="@drawable/ic_share" />
-                </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/refresh"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/shareLink"
+                app:layout_constraintTop_toTopOf="parent">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_refresh" />
+            </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/saveLink"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="48dp"
-                    android:layout_gravity="start">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_bookmark" />
+            <RelativeLayout
+                android:id="@+id/shareLink"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="38dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                </RelativeLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_share" />
+            </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/removeLink"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:visibility="gone"
-                    android:layout_height="48dp"
-                    android:layout_gravity="start">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_bookmarked" />
+            <RelativeLayout
+                android:id="@+id/removeLink"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/shareLink"
+                app:layout_constraintTop_toTopOf="parent">
 
-                </RelativeLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_bookmarked" />
+            </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/refresh"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="48dp"
-                    android:layout_gravity="start">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_refresh" />
+            <RelativeLayout
+                android:id="@+id/saveLink"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/shareLink"
+                app:layout_constraintTop_toTopOf="parent">
 
-                </RelativeLayout>
-
-            </LinearLayout>
-        </LinearLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_bookmark" />
+            </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-
     <com.ayodkay.apps.swen.view.webview.WebViewSuite
         android:id="@+id/webViewSuite"
         android:layout_width="match_parent"
