@@ -39,14 +39,14 @@ class MainFragment : Fragment() {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         val root = binding.root
         val sectionsPagerAdapter = SectionsPagerAdapter(requireActivity())
-        viewPager = binding.viewPager
-        viewPager.isUserInputEnabled = false
-        viewPager.adapter = sectionsPagerAdapter
+        viewPager = binding.viewPager.apply {
+            isUserInputEnabled = false
+            isSaveEnabled = false
+            adapter = sectionsPagerAdapter
+        }
         val tabLayout: TabLayout = binding.tabs
         val tabs = tabLayout.getChildAt(0) as ViewGroup
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = getString(TAB_TITLES[position])
-        }.attach()
+
         for (i in 0 until tabs.childCount) {
             val tab = tabs.getChildAt(i)
             val p = tab.layoutParams as ViewGroup.MarginLayoutParams
@@ -71,6 +71,9 @@ class MainFragment : Fragment() {
             }
             false
         })
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = getString(TAB_TITLES[position])
+        }.attach()
         return root
     }
 }

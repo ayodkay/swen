@@ -114,13 +114,9 @@ class SearchActivity : AppCompatActivity() {
             if (newsResponse.totalResults == 0) {
                 empty.visibility = View.VISIBLE
                 searchRecycle.visibility = View.GONE
-                totalResults.visibility = View.GONE
             } else {
                 empty.visibility = View.GONE
                 searchRecycle.visibility = View.VISIBLE
-                totalResults.visibility = View.VISIBLE
-                totalResults.text =
-                    "${newsResponse.totalResults} ${resources.getString(R.string.articles_found)}"
 
                 articleArrayList.addAll(newsResponse.articles)
                 val desiredAssets = EnumSet.of(

@@ -162,6 +162,8 @@ object Helper {
         val newViewModel = ViewModelProvider(frag).get(NewViewModel::class.java)
         val articleArrayList = arrayListOf<NewsArticle>()
 
+        val activity = frag.requireActivity()
+
         val db = getCountryDatabase(frag.requireContext())
 
         var country = ""
@@ -237,23 +239,21 @@ object Helper {
                             )
 
                             MoPubRecyclerAdapter(
-                                frag.requireActivity(), AdsRecyclerView(
-                                    articleArrayList,
-                                    frag.requireActivity(),
-                                    frag.requireContext()
-                                )
+                                activity,
+                                AdsRecyclerView(articleArrayList, activity, frag.requireContext())
                             ).apply {
                                 registerAdRenderer(moPubStaticNativeAdRenderer)
                             }.also {
                                 binding.progressBar.visibility = View.GONE
                                 binding.newsRecyclerView
                                     .apply {
-                                        adapter = it
-                                        layoutManager = LinearLayoutManager(context)
                                         it.loadAds(
                                             frag.getString(R.string.mopub_adunit_native),
                                             requestParameters
                                         )
+                                        adapter = it
+                                        layoutManager = LinearLayoutManager(context)
+                                        scrollToPosition(0)
                                     }
                             }
                             binding.swipeRefresh.isRefreshing = false

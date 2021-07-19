@@ -94,18 +94,34 @@
                     </RelativeLayout>
                 </LinearLayout>
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp">
 
-                <com.google.android.gms.ads.AdView
-                    android:id="@+id/adView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    ads:adSize="BANNER"
-                    ads:adUnitId="ca-app-pub-7312232171503509/8638142033" />
+                    <com.mopub.mobileads.MoPubView
+                        android:id="@+id/banner_mopubview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        ads:layout_constraintEnd_toEndOf="parent"
+                        ads:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:moPubAdSize="height_250" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!--                <com.google.android.gms.ads.AdView-->
+                <!--                    android:id="@+id/adView"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_gravity="center"-->
+                <!--                    android:layout_marginTop="20dp"-->
+                <!--                    ads:adSize="BANNER"-->
+                <!--                    ads:adUnitId="ca-app-pub-7312232171503509/8638142033" />-->
 
             </LinearLayout>
+
         </ScrollView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -18,34 +18,16 @@ class SectionsPagerAdapter(fa: FragmentActivity) :
     FragmentStateAdapter(fa) {
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            1 -> {
-                EntertainmentFragment()
-            }
-            2 -> {
-                SportFragment()
-            }
-            3 -> {
-                BusinessFragment()
-            }
-            4 -> {
-                HealthFragment()
-            }
-            5 -> {
-                ScienceFragment()
-            }
-            6 -> {
-                TechnologyFragment()
-            }
-            7 -> {
-                CoronaFragment()
-            }
-            8 -> {
-                BeautyFragment()
-            }
-            9 -> {
-                PoliticsFragment()
-            }
-            else -> return GeneralFragment()
+            1 -> EntertainmentFragment()
+            2 -> SportFragment()
+            3 -> BusinessFragment()
+            4 -> HealthFragment()
+            5 -> ScienceFragment()
+            6 -> TechnologyFragment()
+            7 -> CoronaFragment()
+            8 -> BeautyFragment()
+            9 -> PoliticsFragment()
+            else -> GeneralFragment()
         }
 
     }

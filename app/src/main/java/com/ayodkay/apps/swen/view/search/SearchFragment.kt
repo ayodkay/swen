@@ -116,13 +116,9 @@ class SearchFragment : Fragment() {
             if (newsResponse.totalResults == 0) {
                 binding.empty.visibility = View.VISIBLE
                 binding.searchRecycle.visibility = View.GONE
-                binding.totalResults.visibility = View.GONE
             } else {
                 binding.empty.visibility = View.GONE
                 binding.searchRecycle.visibility = View.VISIBLE
-                binding.totalResults.visibility = View.VISIBLE
-                binding.totalResults.text =
-                    "${newsResponse.totalResults} ${resources.getString(R.string.articles_found)}"
 
                 articleArrayList.addAll(newsResponse.articles)
                 val desiredAssets = EnumSet.of(
