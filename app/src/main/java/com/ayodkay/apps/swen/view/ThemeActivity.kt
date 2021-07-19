@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.ayodkay.apps.swen.R
-import kotlinx.android.synthetic.main.activity_theme.*
+import com.ayodkay.apps.swen.databinding.ActivityThemeBinding
 
 
 const val PREFS_NAME = "theme_prefs"
@@ -20,7 +20,7 @@ const val THEME_DARK = 1
 class ThemeActivity : AppCompatActivity() {
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
 
-
+    private lateinit var binding: ActivityThemeBinding
     override fun onStart() {
         super.onStart()
 
@@ -30,7 +30,8 @@ class ThemeActivity : AppCompatActivity() {
             } // Night mode is not active, we're using the light theme
             Configuration.UI_MODE_NIGHT_YES -> {
                 setTheme(R.style.AppThemeNight)
-                background.setBackgroundColor(ContextCompat.getColor(this,R.color.background))
+                binding.background.setBackgroundColor(ContextCompat.getColor(this,
+                    R.color.background))
             } // Night mode is active, we're using dark theme
         }
     }
@@ -38,13 +39,20 @@ class ThemeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_theme)
+        binding = ActivityThemeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        themeGroup.setOnCheckedChangeListener { _, checkedId ->
+        binding.bannerMopubview.apply {
+            setAdUnitId(getString(R.string.mopub_adunit_banner))
+            loadAd()
+        }
+
+        binding.themeGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.themeLight -> setTheme(AppCompatDelegate.MODE_NIGHT_NO, THEME_LIGHT)
                 R.id.themeDark -> setTheme(AppCompatDelegate.MODE_NIGHT_YES, THEME_DARK)
-                R.id.themeSystem -> setTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, THEME_UNDEFINED)
+                R.id.themeSystem -> setTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
+                    THEME_UNDEFINED)
             }
         }
         initTheme()
@@ -57,9 +65,9 @@ class ThemeActivity : AppCompatActivity() {
 
     private fun initTheme() {
         when (getSavedTheme()) {
-            THEME_LIGHT -> themeLight.isChecked = true
-            THEME_DARK -> themeDark.isChecked = true
-            THEME_UNDEFINED -> themeSystem.isChecked = true
+            THEME_LIGHT -> binding.themeLight.isChecked = true
+            THEME_DARK -> binding.themeDark.isChecked = true
+            THEME_UNDEFINED -> binding.themeSystem.isChecked = true
         }
     }
 

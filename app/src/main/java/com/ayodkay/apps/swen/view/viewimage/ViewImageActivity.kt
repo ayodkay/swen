@@ -8,13 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.databinding.ActivityViewImageBinding
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_view_image.*
 
 
 class ViewImageActivity : AppCompatActivity() {
     private var imageView: ImageView? = null
+
+    private lateinit var binding: ActivityViewImageBinding
 
     override fun onStart() {
         super.onStart()
@@ -25,14 +27,16 @@ class ViewImageActivity : AppCompatActivity() {
             } // Night mode is not active, we're using the light theme
             Configuration.UI_MODE_NIGHT_YES -> {
                 setTheme(R.style.AppThemeNight)
-                background.setBackgroundColor(ContextCompat.getColor(this, R.color.background))
+                binding.background.setBackgroundColor(ContextCompat.getColor(this,
+                    R.color.background))
             } // Night mode is active, we're using dark theme
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_image)
+        binding = ActivityViewImageBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val image = intent?.extras?.get("image") as String
         imageView = findViewById(R.id.newsImage)
 
@@ -41,7 +45,7 @@ class ViewImageActivity : AppCompatActivity() {
                 override fun onSuccess() {
                     imageView?.apply {
                         setOnClickListener {
-                            pinch.visibility = View.GONE
+                            binding.pinch.visibility = View.GONE
                         }
                     }
                 }
@@ -49,7 +53,7 @@ class ViewImageActivity : AppCompatActivity() {
                 override fun onError(e: Exception?) {
                     imageView?.apply {
                         setOnClickListener {
-                            pinch.visibility = View.GONE
+                            binding.pinch.visibility = View.GONE
                         }
                         setImageDrawable(
                             ResourcesCompat.getDrawable(
@@ -68,7 +72,7 @@ class ViewImageActivity : AppCompatActivity() {
             imageView?.apply {
 
                 setOnClickListener {
-                    pinch.visibility = View.GONE
+                    binding.pinch.visibility = View.GONE
                 }
                 setImageDrawable(
                     ResourcesCompat.getDrawable(

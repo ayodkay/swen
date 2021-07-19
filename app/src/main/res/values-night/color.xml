@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#2F2F2F</color>
     <color name="colorAccent">#E29C9C</color>
 
-    <color name="textPrimary">#FFF</color>
+    <color name="textPrimary">#ffffff</color>
     <color name="textSecondary">#4CFAFAFA</color>
 
     <color name="tabColor">#808080</color>
@@ -12,6 +12,6 @@
 
     <color name="background">#121212</color>
 
-    <color name="iconColor">#000000</color>
+    <color name="iconColor">#ffffff</color>
 
 </resources>

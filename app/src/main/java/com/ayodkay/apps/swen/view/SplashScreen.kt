@@ -19,7 +19,6 @@ import com.ayodkay.apps.swen.view.main.MainActivity
 import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_splash_screen.*
 
 
 private const val MY_REQUEST_CODE = 1

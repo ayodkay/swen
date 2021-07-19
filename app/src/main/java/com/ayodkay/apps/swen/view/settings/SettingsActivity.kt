@@ -17,6 +17,7 @@ import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.databinding.SettingsActivityBinding
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.country.Country
 import com.ayodkay.apps.swen.view.AskLocation
@@ -27,11 +28,10 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.review.ReviewManagerFactory
-import kotlinx.android.synthetic.main.settings_activity.*
 
 
 class SettingsActivity : AppCompatActivity() {
-
+    private lateinit var binding: SettingsActivityBinding
     override fun onStart() {
         super.onStart()
 
@@ -41,18 +41,20 @@ class SettingsActivity : AppCompatActivity() {
             }
             Configuration.UI_MODE_NIGHT_YES -> {
                 setTheme(R.style.AppThemeNight)
-                background.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                binding.background.setBackgroundColor(ContextCompat.getColor(this,
+                    R.color.colorPrimary))
             }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.settings_activity)
+        binding = SettingsActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         MobileAds.initialize(this)
         val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
+        binding.adView.loadAd(adRequest)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.settings, SettingsFragment())
@@ -85,7 +87,6 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             val feedback: EditTextPreference? = findPreference("feedback")
-            val saved: Preference? = findPreference("saved")
             val country: Preference? = findPreference("country")
             val share: Preference? = findPreference("share")
             val rate: Preference? = findPreference("rate")

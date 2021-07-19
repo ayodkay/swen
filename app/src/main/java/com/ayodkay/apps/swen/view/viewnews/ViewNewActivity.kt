@@ -166,7 +166,7 @@ class ViewNewActivity : AppCompatActivity() {
             q = query, sort_by = "publishedAt"
         ).observe(this, { newsResponse ->
             moreBy.apply {
-                layoutManager = LinearLayoutManager(context)
+                layoutManager = LinearLayoutManager(this@ViewNewActivity)
                 hasFixedSize()
                 articleArrayList.addAll(newsResponse.articles)
                 val desiredAssets = EnumSet.of(

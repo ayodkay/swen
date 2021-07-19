@@ -54,15 +54,24 @@
     </RadioGroup>
 
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-7312232171503509/9944933005"
+    <!--    <com.google.android.gms.ads.AdView-->
+    <!--        android:id="@+id/adView"-->
+    <!--        ads:adSize="BANNER"-->
+    <!--        ads:adUnitId="ca-app-pub-7312232171503509/9944933005"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+    <com.mopub.mobileads.MoPubView
+        android:id="@+id/banner_mopubview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:moPubAdSize="height_250" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

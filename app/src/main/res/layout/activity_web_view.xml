@@ -8,6 +8,7 @@
     tools:context=".view.WebView">
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
+        app:cardBackgroundColor="@color/background"
         android:layout_height="50dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
+                    android:textColor="@color/textPrimary"
                     android:textSize="12sp" />
             </RelativeLayout>
 

@@ -12,7 +12,6 @@ import com.ayodkay.apps.swen.helper.countrypicker.CountryPicker
 import com.ayodkay.apps.swen.helper.countrypicker.CountryPickerListener
 import com.ayodkay.apps.swen.helper.room.country.Country
 import com.ayodkay.apps.swen.view.main.MainActivity
-import kotlinx.android.synthetic.main.activity_ask_location.*
 
 
 class AskLocation : AppCompatActivity() {
@@ -50,7 +49,7 @@ class AskLocation : AppCompatActivity() {
             loadAd()
         }
 
-        select_country.setOnClickListener {
+        binding.selectCountry.setOnClickListener {
             val picker =
                 CountryPicker.getInstance(
                     resources.getString(R.string.select_country),
@@ -59,7 +58,7 @@ class AskLocation : AppCompatActivity() {
                             name: String,
                             code: String,
                             iso: String,
-                            language: String
+                            language: String,
                         ) {
                             runOnUiThread {
                                 val db = Helper.getCountryDatabase(applicationContext)
