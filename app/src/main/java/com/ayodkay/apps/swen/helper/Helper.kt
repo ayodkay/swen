@@ -135,18 +135,16 @@ object Helper {
         q: String? = "",
         isEverything: Boolean = false
     ): View {
-        if (frag.isAdded) {
-            if (isEverything) {
-                binding.swipeRefresh.setOnRefreshListener {
-                    setUpObserverEveryTime(q, binding, frag)
-                }
+        if (isEverything) {
+            binding.swipeRefresh.setOnRefreshListener {
                 setUpObserverEveryTime(q, binding, frag)
-            } else {
-                binding.swipeRefresh.setOnRefreshListener {
-                    setUpObserver(category.orEmpty(), frag, binding, q)
-                }
+            }
+            setUpObserverEveryTime(q, binding, frag)
+        } else {
+            binding.swipeRefresh.setOnRefreshListener {
                 setUpObserver(category.orEmpty(), frag, binding, q)
             }
+            setUpObserver(category.orEmpty(), frag, binding, q)
         }
         return binding.root
     }
