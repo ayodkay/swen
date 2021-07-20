@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivityViewnewsBinding
-import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
+import com.ayodkay.apps.swen.helper.adapter.AdMobRecyclerView
 import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.ayodkay.apps.swen.view.viewimage.ViewImageActivity
@@ -71,10 +71,9 @@ class ViewNewActivity : AppCompatActivity() {
         val title = intent?.extras?.get("title") as String
         val source = intent?.extras?.get("source") as String
 
-        val bottomSheet: View = findViewById(R.id.bottomSheet)
-        bottomSheet.fitsSystemWindows = false
+        binding.bottomSheet.fitsSystemWindows = false
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
 
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
@@ -193,7 +192,7 @@ class ViewNewActivity : AppCompatActivity() {
                 )
 
                 MoPubRecyclerAdapter(
-                    this@ViewNewActivity, AdsRecyclerView(
+                    this@ViewNewActivity, AdMobRecyclerView(
                         articleArrayList,
                         this@ViewNewActivity,
                         this@ViewNewActivity
@@ -202,13 +201,22 @@ class ViewNewActivity : AppCompatActivity() {
                     registerAdRenderer(moPubStaticNativeAdRenderer)
                 }.also {
                     moreBy.apply {
+                        it.loadAds(getString(R.string.mopub_adunit_native), requestParameters)
                         adapter = it
                         layoutManager = LinearLayoutManager(this@ViewNewActivity)
-                        it.loadAds(getString(R.string.mopub_adunit_native), requestParameters)
                     }
                 }
             }
         })
+    }
+
+    override fun onBackPressed() {
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
+        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+            super.onBackPressed()
+        } else {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =

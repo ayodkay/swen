@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivitySearchBinding
 import com.ayodkay.apps.swen.helper.Helper
-import com.ayodkay.apps.swen.helper.adapter.AdsRecyclerView
+import com.ayodkay.apps.swen.helper.adapter.AdMobRecyclerView
 import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.viewmodel.NewViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -146,7 +146,7 @@ class SearchFragment : Fragment() {
                 )
 
                 MoPubRecyclerAdapter(
-                    requireActivity(), AdsRecyclerView(
+                    requireActivity(), AdMobRecyclerView(
                         articleArrayList,
                         requireActivity(),
                         requireActivity()
@@ -156,9 +156,9 @@ class SearchFragment : Fragment() {
                 }.also {
                     binding.bannerMopubview.visibility = View.GONE
                     binding.searchRecycle.apply {
+                        it.loadAds(getString(R.string.mopub_adunit_native), requestParameters)
                         adapter = it
                         layoutManager = LinearLayoutManager(requireActivity())
-                        it.loadAds(getString(R.string.mopub_adunit_native), requestParameters)
                     }
                 }
             }

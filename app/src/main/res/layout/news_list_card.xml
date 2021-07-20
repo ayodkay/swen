@@ -6,12 +6,12 @@
     android:layout_height="wrap_content"
     app:cardElevation="16dp"
     app:cardCornerRadius="14dp"
-    android:background="#FFFFFF"
+    android:background="@color/background"
     android:layout_margin="14dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp">
+        android:layout_height="450dp">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/progressBar"
