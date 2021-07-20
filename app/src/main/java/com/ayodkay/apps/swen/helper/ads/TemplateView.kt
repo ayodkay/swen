@@ -2,25 +2,23 @@ package com.ayodkay.apps.swen.helper.ads
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.ayodkay.apps.swen.R
-import com.google.android.gms.ads.formats.MediaView
-import com.google.android.gms.ads.formats.UnifiedNativeAd
-import com.google.android.gms.ads.formats.UnifiedNativeAdView
+import com.google.android.gms.ads.nativead.MediaView
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdView
 
-/** Base class for a template view. *  */
 class TemplateView : FrameLayout {
     private var templateType = 0
     private var styles: NativeTemplateStyle? = null
-    private var nativeAd: UnifiedNativeAd? = null
-    private var nativeAdView: UnifiedNativeAdView? = null
+    private var nativeAd: NativeAd? = null
+    var nativeAdView: NativeAdView? = null
+        private set
     private var primaryView: TextView? = null
     private var secondaryView: TextView? = null
     private var ratingBar: RatingBar? = null
@@ -30,20 +28,17 @@ class TemplateView : FrameLayout {
     private var callToActionView: Button? = null
     private var background: ConstraintLayout? = null
 
-    constructor(context: Context?) : super(context!!)
+    constructor(context: Context?) : super(context!!) {}
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         initView(context, attrs)
     }
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context,
         attrs,
-        defStyleAttr
-    ) {
+        defStyleAttr) {
         initView(context, attrs)
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -140,13 +135,13 @@ class TemplateView : FrameLayout {
         requestLayout()
     }
 
-    private fun adHasOnlyStore(nativeAd: UnifiedNativeAd): Boolean {
+    private fun adHasOnlyStore(nativeAd: NativeAd): Boolean {
         val store = nativeAd.store
         val advertiser = nativeAd.advertiser
         return !TextUtils.isEmpty(store) && TextUtils.isEmpty(advertiser)
     }
 
-    fun setNativeAd(nativeAd: UnifiedNativeAd) {
+    fun setNativeAd(nativeAd: NativeAd) {
         this.nativeAd = nativeAd
         val store = nativeAd.store
         val advertiser = nativeAd.advertiser
@@ -176,7 +171,7 @@ class TemplateView : FrameLayout {
         if (starRating != null && starRating > 0) {
             secondaryView!!.visibility = GONE
             ratingBar!!.visibility = VISIBLE
-            ratingBar!!.max = 5
+            ratingBar!!.rating = starRating.toFloat()
             nativeAdView!!.starRatingView = ratingBar
         } else {
             secondaryView!!.text = secondaryText
@@ -220,8 +215,7 @@ class TemplateView : FrameLayout {
             context.theme.obtainStyledAttributes(attributeSet, R.styleable.TemplateView, 0, 0)
         templateType = try {
             attributes.getResourceId(
-                R.styleable.TemplateView_gnt_template_type, R.layout.gnt_medium_template_view
-            )
+                R.styleable.TemplateView_gnt_template_type, R.layout.gnt_medium_template_view)
         } finally {
             attributes.recycle()
         }
@@ -231,7 +225,7 @@ class TemplateView : FrameLayout {
 
     public override fun onFinishInflate() {
         super.onFinishInflate()
-        nativeAdView = findViewById<View>(R.id.native_ad_view) as UnifiedNativeAdView
+        nativeAdView = findViewById<View>(R.id.native_ad_view) as NativeAdView
         primaryView = findViewById<View>(R.id.primary) as TextView
         secondaryView = findViewById<View>(R.id.secondary) as TextView
         tertiaryView = findViewById<View>(R.id.body) as TextView

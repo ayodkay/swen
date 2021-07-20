@@ -32,7 +32,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.*
-import com.google.android.gms.ads.formats.NativeAdOptions
 import java.text.SimpleDateFormat
 
 
@@ -81,23 +80,15 @@ class RoomRecyclerview internal constructor(
                         holder.itemView.findViewById(R.id.error)
                     MobileAds.initialize(context)
                     val background =
-                        ColorDrawable(ContextCompat.getColor(context, R.color.toolbar))
-                    AdLoader.Builder(
-                        context,
-                        context.resources.getString(R.string.custom_ads_unit)
-                    )
-                        .forUnifiedNativeAd { unifiedNativeAd ->
-                            val styles =
-                                NativeTemplateStyle.Builder().withMainBackgroundColor(background)
-                                    .build()
+                        ColorDrawable(ContextCompat.getColor(context, R.color.background))
+
+                    AdLoader.Builder(context, context.resources.getString(R.string.custom_ads_unit))
+                        .forNativeAd { nativeAd ->
+                            val styles = NativeTemplateStyle.Builder()
+                                .withMainBackgroundColor(background).build()
                             template.setStyles(styles)
-                            template.setNativeAd(unifiedNativeAd)
+                            template.setNativeAd(nativeAd)
                         }
-                        .withNativeAdOptions(
-                            NativeAdOptions.Builder()
-                                .setRequestCustomMuteThisAd(true)
-                                .build()
-                        )
                         .withAdListener(object : AdListener() {
                             override fun onAdFailedToLoad(adError: LoadAdError) {
                                 error.visibility = View.VISIBLE
@@ -109,10 +100,11 @@ class RoomRecyclerview internal constructor(
                                 progressBar.visibility = View.GONE
                                 error.visibility = View.GONE
                                 template.visibility = View.VISIBLE
+
                             }
                         })
-                        .build().also {
-                            it.loadAd(AdRequest.Builder().build())
+                        .build().apply {
+                            loadAd(AdRequest.Builder().build())
                         }
                 }
             }

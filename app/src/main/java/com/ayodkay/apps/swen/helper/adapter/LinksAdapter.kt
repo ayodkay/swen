@@ -19,7 +19,6 @@ import com.ayodkay.apps.swen.helper.ads.TemplateView
 import com.ayodkay.apps.swen.helper.room.links.Links
 import com.ayodkay.apps.swen.view.WebView
 import com.google.android.gms.ads.*
-import com.google.android.gms.ads.formats.NativeAdOptions
 
 private val ITEM_TYPE_COUNTRY by lazy { 0 }
 private val ITEM_TYPE_BANNER_AD by lazy { 1 }
@@ -58,23 +57,15 @@ class LinksAdapter internal constructor(private val context: Context, private va
                         holder.itemView.findViewById(R.id.error)
                     MobileAds.initialize(context)
                     val background =
-                        ColorDrawable(ContextCompat.getColor(context, R.color.toolbar))
-                    AdLoader.Builder(
-                        context,
-                        context.resources.getString(R.string.custom_ads_unit)
-                    )
-                        .forUnifiedNativeAd { unifiedNativeAd ->
-                            val styles =
-                                NativeTemplateStyle.Builder().withMainBackgroundColor(background)
-                                    .build()
+                        ColorDrawable(ContextCompat.getColor(context, R.color.background))
+
+                    AdLoader.Builder(context, context.resources.getString(R.string.custom_ads_unit))
+                        .forNativeAd { nativeAd ->
+                            val styles = NativeTemplateStyle.Builder()
+                                .withMainBackgroundColor(background).build()
                             template.setStyles(styles)
-                            template.setNativeAd(unifiedNativeAd)
+                            template.setNativeAd(nativeAd)
                         }
-                        .withNativeAdOptions(
-                            NativeAdOptions.Builder()
-                                .setRequestCustomMuteThisAd(true)
-                                .build()
-                        )
                         .withAdListener(object : AdListener() {
                             override fun onAdFailedToLoad(adError: LoadAdError) {
                                 error.visibility = View.VISIBLE
@@ -86,10 +77,11 @@ class LinksAdapter internal constructor(private val context: Context, private va
                                 progressBar.visibility = View.GONE
                                 error.visibility = View.GONE
                                 template.visibility = View.VISIBLE
+
                             }
                         })
-                        .build().also {
-                            it.loadAd(AdRequest.Builder().build())
+                        .build().apply {
+                            loadAd(AdRequest.Builder().build())
                         }
                 }
 

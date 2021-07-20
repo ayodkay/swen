@@ -32,7 +32,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.*
-import com.google.android.gms.ads.formats.NativeAdOptions
+import com.google.android.gms.ads.nativead.NativeAdOptions
 import java.text.SimpleDateFormat
 
 
@@ -41,7 +41,7 @@ private val ITEM_TYPE_BANNER_AD by lazy { 1 }
 
 class AdMobRecyclerView internal constructor(
     private val newsList: ArrayList<NewsArticle>, private val owner: ViewModelStoreOwner,
-    private val context: Context
+    private val context: Context,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -85,23 +85,15 @@ class AdMobRecyclerView internal constructor(
                     val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
                     MobileAds.initialize(context)
                     val background =
-                        ColorDrawable(ContextCompat.getColor(context, R.color.toolbar))
-                    AdLoader.Builder(
-                        context,
-                        context.resources.getString(R.string.custom_ads_unit)
-                    )
-                        .forUnifiedNativeAd { unifiedNativeAd ->
-                            val styles =
-                                NativeTemplateStyle.Builder().withMainBackgroundColor(background)
-                                    .build()
+                        ColorDrawable(ContextCompat.getColor(context, R.color.background))
+
+                    AdLoader.Builder(context, context.resources.getString(R.string.custom_ads_unit))
+                        .forNativeAd { nativeAd ->
+                            val styles = NativeTemplateStyle.Builder()
+                                .withMainBackgroundColor(background).build()
                             template.setStyles(styles)
-                            template.setNativeAd(unifiedNativeAd)
+                            template.setNativeAd(nativeAd)
                         }
-                        .withNativeAdOptions(
-                            NativeAdOptions.Builder()
-                                .setRequestCustomMuteThisAd(true)
-                                .build()
-                        )
                         .withAdListener(object : AdListener() {
                             override fun onAdFailedToLoad(adError: LoadAdError) {
                                 error.visibility = View.VISIBLE
@@ -116,8 +108,11 @@ class AdMobRecyclerView internal constructor(
 
                             }
                         })
-                        .build().also {
-                            it.loadAd(AdRequest.Builder().build())
+                        .withNativeAdOptions(NativeAdOptions.Builder()
+                            .setRequestCustomMuteThisAd(true)
+                            .build())
+                        .build().apply {
+                            loadAd(AdRequest.Builder().build())
                         }
                 }
             }
@@ -207,7 +202,7 @@ class AdMobRecyclerView internal constructor(
                                     e: GlideException?,
                                     model: Any?,
                                     target: Target<Drawable>?,
-                                    isFirstResource: Boolean
+                                    isFirstResource: Boolean,
                                 ): Boolean {
                                     newsViewHolder.progressBar.visibility = View.GONE
                                     newsViewHolder.image.post {
@@ -227,7 +222,7 @@ class AdMobRecyclerView internal constructor(
                                     model: Any?,
                                     target: Target<Drawable>?,
                                     dataSource: DataSource?,
-                                    isFirstResource: Boolean
+                                    isFirstResource: Boolean,
                                 ): Boolean {
                                     newsViewHolder.progressBar.visibility = View.GONE
                                     return false

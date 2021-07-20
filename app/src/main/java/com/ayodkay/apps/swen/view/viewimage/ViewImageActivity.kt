@@ -3,6 +3,7 @@ package com.ayodkay.apps.swen.view.viewimage
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -37,6 +38,11 @@ class ViewImageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityViewImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val windows = window // in Activity's onCreate() for instance
+        windows.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
         val image = intent?.extras?.get("image") as String
         imageView = findViewById(R.id.newsImage)
 
