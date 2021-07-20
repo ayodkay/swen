@@ -1,6 +1,7 @@
 package com.ayodkay.apps.swen.networking
 
 import androidx.lifecycle.MutableLiveData
+import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.model.NewsResponse
 import com.ayodkay.apps.swen.networking.api.NewsApi
 import com.ayodkay.apps.swen.networking.service.RetrofitService
@@ -49,6 +50,7 @@ class NewsRepository {
             }
 
             override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
+                AppLog.l("Throwable Response $t")
                 newsData.value = NewsResponse("400",0, emptyList())
             }
         })

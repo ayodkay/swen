@@ -17,8 +17,7 @@ class TemplateView : FrameLayout {
     private var templateType = 0
     private var styles: NativeTemplateStyle? = null
     private var nativeAd: NativeAd? = null
-    var nativeAdView: NativeAdView? = null
-        private set
+    private var nativeAdView: NativeAdView? = null
     private var primaryView: TextView? = null
     private var secondaryView: TextView? = null
     private var ratingBar: RatingBar? = null

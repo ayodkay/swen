@@ -15,9 +15,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitService {
     // HttpLoggingInterceptor
     //https://medium.com/swlh/annotation-based-offline-caching-in-retrofit-d7dbd775ac74
-    private val httpLoggingInterceptor = HttpLoggingInterceptor { message: String ->
-        AppLog.l(message)
-    }
+    private val httpLoggingInterceptor =
+        HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
+            override fun log(message: String) {
+                AppLog.l(message)
+            }
+        })
 
     fun <S> createService(serviceClass: Class<S>): S {
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY

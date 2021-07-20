@@ -18,6 +18,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.work.Data
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.helper.work.NotifyWork
 import com.ayodkay.apps.swen.view.WebView
 import com.ayodkay.apps.swen.view.main.MainActivity
@@ -32,9 +33,10 @@ class Notification internal constructor(private val context: Context) {
     companion object {
         private const val ENGAGE_NOTIFICATION = 101
         private val COUNTRY_NOTIFICATION = Random.nextInt(0, 1000000)
+        private val CHANNEL_ID = context.getString(R.string.notification_id)
     }
 
-    private val CHANNEL_ID = context.getString(R.string.notification_id)
+
     private val notificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 

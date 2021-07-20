@@ -181,7 +181,7 @@ object Helper {
             }
 
             getHeadlineFromRepo(country = country, category = category, q = q, pageSize = 100)
-                .observe(frag.requireActivity(), { newsResponse ->
+                .observe(frag.viewLifecycleOwner, { newsResponse ->
 
                     if (newsResponse != null) {
                         if (newsResponse.totalResults == 0) {
@@ -280,7 +280,7 @@ object Helper {
             language = language,
             pageSize = 100
         )
-            .observe(frag, { newsResponse ->
+            .observe(frag.viewLifecycleOwner, { newsResponse ->
                 if (newsResponse.totalResults == 0) {
                     binding.empty.visibility = View.VISIBLE
                     binding.emptyText.visibility = View.VISIBLE

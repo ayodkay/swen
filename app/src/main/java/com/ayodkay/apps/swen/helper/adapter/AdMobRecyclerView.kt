@@ -76,45 +76,45 @@ class AdMobRecyclerView internal constructor(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             ITEM_TYPE_BANNER_AD -> {
-                activity.runOnUiThread {
-                    val progressBar: LottieAnimationView =
-                        holder.itemView.findViewById(R.id.adsProgress)
+                val progressBar: LottieAnimationView =
+                    holder.itemView.findViewById(R.id.adsProgress)
 
-                    val error: LottieAnimationView =
-                        holder.itemView.findViewById(R.id.error)
-                    val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
-                    MobileAds.initialize(context)
-                    val background =
-                        ColorDrawable(ContextCompat.getColor(context, R.color.background))
+                val error: LottieAnimationView =
+                    holder.itemView.findViewById(R.id.error)
+                val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
+                MobileAds.initialize(context)
+                val background =
+                    ColorDrawable(ContextCompat.getColor(context, R.color.background))
 
-                    AdLoader.Builder(context, context.resources.getString(R.string.custom_ads_unit))
-                        .forNativeAd { nativeAd ->
-                            val styles = NativeTemplateStyle.Builder()
-                                .withMainBackgroundColor(background).build()
-                            template.setStyles(styles)
-                            template.setNativeAd(nativeAd)
+                AdLoader.Builder(context, context.resources.getString(R.string.custom_ads_unit))
+                    .forNativeAd { nativeAd ->
+                        val styles = NativeTemplateStyle.Builder()
+                            .withMainBackgroundColor(background).build()
+                        template.setStyles(styles)
+                        template.setNativeAd(nativeAd)
+                    }
+                    .withAdListener(object : AdListener() {
+                        override fun onAdFailedToLoad(adError: LoadAdError) {
+                            error.visibility = View.VISIBLE
+                            progressBar.visibility = View.GONE
+                            template.visibility = View.GONE
                         }
-                        .withAdListener(object : AdListener() {
-                            override fun onAdFailedToLoad(adError: LoadAdError) {
-                                error.visibility = View.VISIBLE
-                                progressBar.visibility = View.GONE
-                                template.visibility = View.GONE
-                            }
 
-                            override fun onAdLoaded() {
-                                progressBar.visibility = View.GONE
-                                error.visibility = View.GONE
-                                template.visibility = View.VISIBLE
+                        override fun onAdLoaded() {
+                            progressBar.visibility = View.GONE
+                            error.visibility = View.GONE
+                            template.visibility = View.VISIBLE
 
-                            }
-                        })
-                        .withNativeAdOptions(NativeAdOptions.Builder()
-                            .setRequestCustomMuteThisAd(true)
-                            .build())
-                        .build().apply {
+                        }
+                    })
+                    .withNativeAdOptions(NativeAdOptions.Builder()
+                        .setRequestCustomMuteThisAd(true)
+                        .build())
+                    .build().apply {
+                        activity.runOnUiThread {
                             loadAd(AdRequest.Builder().build())
                         }
-                }
+                    }
             }
 
             else -> {
