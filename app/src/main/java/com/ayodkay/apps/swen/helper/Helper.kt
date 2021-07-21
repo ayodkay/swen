@@ -81,7 +81,7 @@ object Helper {
 
     fun topCountries(country: String): Boolean {
         val ac = arrayListOf(
-            "br", "in", "ar", "us", "ng", "de", "fr"
+            "br", "in", "ar", "us", "ng", "de", "fr", "nl"
         )
         if (ac.contains(country.lowercase(Locale.ROOT))) {
             return true

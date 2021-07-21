@@ -114,7 +114,7 @@ dependencies {
         transitive = true
     }
 
-    implementation  'io.ak1:bubbletabbar:1.0.7'
+    implementation  'io.ak1:bubbletabbar:1.0.8'
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.0"

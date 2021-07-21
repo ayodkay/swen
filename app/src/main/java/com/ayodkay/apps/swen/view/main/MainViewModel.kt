@@ -1,6 +1,5 @@
 package com.ayodkay.apps.swen.view.main
 
-import android.annotation.SuppressLint
 import android.location.Address
 import android.location.Location
 import android.util.Log
@@ -51,24 +50,22 @@ class MainViewModel(
         locationUpdatesJob = null
     }
 
-    @SuppressLint("MissingPermission")
     private fun startLocationUpdatesAfterCheck() {
         viewModelScope.launch {
-            when (val settingsResult = coLocation.checkLocationSettings(locationRequest)) {
+            val settingsResult = coLocation.checkLocationSettings(locationRequest)
+            when (settingsResult) {
                 CoLocation.SettingsResult.Satisfied -> {
                     coLocation.getLastLocation()?.run(mutableLocationUpdates::postValue)
                     startLocationUpdates()
                 }
                 is CoLocation.SettingsResult.Resolvable -> mutableResolveSettingsEvent.postValue(
-                    settingsResult
-                )
+                    settingsResult)
                 else -> { /* Ignore for now, we can't resolve this anyway */
                 }
             }
         }
     }
 
-    @SuppressLint("MissingPermission")
     fun startLocationUpdates() {
         locationUpdatesJob?.cancel()
         locationUpdatesJob = viewModelScope.launch {
@@ -81,6 +78,11 @@ class MainViewModel(
                 Log.e("MainViewModel", "Location updates cancelled", e)
             }
         }
+    }
+
+    fun stopJob() {
+        locationUpdatesJob?.cancel()
+        locationUpdatesJob = null
     }
 
 }

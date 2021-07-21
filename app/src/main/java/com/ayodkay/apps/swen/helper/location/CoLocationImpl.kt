@@ -67,11 +67,8 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
                 }
             }.let(::ClearableLocationCallback) // Needed since we would have memory leaks otherwise
 
-            locationProvider.requestLocationUpdates(
-                locationRequest,
-                callback,
-                Looper.getMainLooper()
-            ).apply {
+            locationProvider.requestLocationUpdates(locationRequest, callback,
+                Looper.getMainLooper()).apply {
                 addOnCanceledListener {
                     callback.clear()
                     cont.resumeWithException(TaskCancelledException(cancelledMessage))
@@ -87,7 +84,7 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
     override fun getLocationUpdates(
         locationRequest: LocationRequest,
-        capacity: Int
+        capacity: Int,
     ): Flow<Location> =
         callbackFlow<Location> {
             val callback = object : LocationCallback() {
@@ -98,16 +95,12 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
                 }
             }.let(::ClearableLocationCallback) // Needed since we would have memory leaks otherwise
 
-            locationProvider.requestLocationUpdates(
-                locationRequest,
+            locationProvider.requestLocationUpdates(locationRequest,
                 callback,
-                Looper.getMainLooper()
-            ).apply {
+                Looper.getMainLooper()).apply {
                 addOnCanceledListener {
-                    cancel(
-                        cancelledMessage,
-                        TaskCancelledException(cancelledMessage)
-                    )
+                    cancel(cancelledMessage,
+                        TaskCancelledException(cancelledMessage))
                 }
                 addOnFailureListener { cancel("Error requesting location updates", it) }
             }
@@ -123,11 +116,7 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
             settings.checkLocationSettings(locationSettingsRequest)
                 .addOnSuccessListener { cont.resume(CoLocation.SettingsResult.Satisfied) }
                 .addOnCanceledListener {
-                    cont.resumeWithException(
-                        TaskCancelledException(
-                            cancelledMessage
-                        )
-                    )
+                    cont.resumeWithException(TaskCancelledException(cancelledMessage))
                 }
                 .addOnFailureListener { exception ->
                     if (exception is ResolvableApiException) {
@@ -139,9 +128,8 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
         }
 
     override suspend fun checkLocationSettings(locationRequest: LocationRequest): CoLocation.SettingsResult =
-        checkLocationSettings(
-            LocationSettingsRequest.Builder().addLocationRequest(locationRequest).build()
-        )
+        checkLocationSettings(LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+            .build())
 
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
     override suspend fun setMockLocation(location: Location) {

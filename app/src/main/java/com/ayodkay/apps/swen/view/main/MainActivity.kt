@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Address
-import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -23,7 +22,6 @@ import com.ayodkay.apps.swen.helper.work.NotifyWork.Companion.NOTIFICATION_ID
 import com.ayodkay.apps.swen.helper.work.NotifyWork.Companion.NOTIFICATION_WORK
 import com.google.android.gms.location.*
 import com.google.firebase.messaging.FirebaseMessaging
-import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -56,23 +54,33 @@ class MainActivity : AppCompatActivity() {
         permissionCheck()
     }
 
-    private fun onLocationUpdate(location: Location?) {
-        location?.run { subscribeCountryName(latitude, longitude) }
+    private fun onAddressUpdate(address: Address?) {
+        if (address != null) {
+            subscribeCountryName(address)
+        }
     }
+
+    private fun onLocationUpdate(location: Location) {}
 
     @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            REQUEST_CODE -> {
+            REQUEST_SHOW_SETTINGS -> {
                 if ((grantResults.isNotEmpty() &&
                             grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 ) {
+                    lifecycle.addObserver(viewModel)
+                    viewModel.addressUpdates.observe(this, this::onAddressUpdate)
                     viewModel.locationUpdates.observe(this, this::onLocationUpdate)
+                    viewModel.resolveSettingsEvent.observe(this) {
+                        it.resolve(this,
+                            REQUEST_SHOW_SETTINGS)
+                    }
                 }
             }
         }
@@ -94,47 +102,57 @@ class MainActivity : AppCompatActivity() {
             ) {
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_SHOW_SETTINGS
                 )
             } else {
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_SHOW_SETTINGS
                 )
             }
         } else {
+            lifecycle.addObserver(viewModel)
+            viewModel.addressUpdates.observe(this, this::onAddressUpdate)
             viewModel.locationUpdates.observe(this, this::onLocationUpdate)
+            viewModel.resolveSettingsEvent.observe(this) { it.resolve(this, REQUEST_SHOW_SETTINGS) }
         }
     }
 
-    private fun subscribeCountryName(latitude: Double, longitude: Double) {
-        val geoCoder = Geocoder(this, Locale.getDefault())
-        val addresses: List<Address>?
-        try {
-            addresses = geoCoder.getFromLocation(latitude, longitude, 1)
-            if (addresses != null && addresses.isNotEmpty()) {
-                val addressCode = addresses[0].countryCode.lowercase(Locale.ROOT)
-                if (Helper.topCountries(addresses[0].countryCode.lowercase(Locale.ROOT))) {
-                    FirebaseMessaging.getInstance()
-                        .unsubscribeFromTopic("engage")
-                        .addOnCompleteListener { }
+    private fun subscribeCountryName(addresses: Address) {
+        val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
+        val isSubscribeToUpdate = sharedPref.getBoolean("isSubscribeToUpdate", false)
 
-                    FirebaseMessaging.getInstance()
-                        .subscribeToTopic(addressCode)
-                        .addOnCompleteListener {}
-
-                } else {
-                    FirebaseMessaging.getInstance()
-                        .subscribeToTopic("engage")
-                        .addOnCompleteListener { }
+        if (!isSubscribeToUpdate) {
+            FirebaseMessaging.getInstance()
+                .subscribeToTopic("update")
+                .addOnCompleteListener {
+                    with(sharedPref.edit()) {
+                        putBoolean("isSubscribeToUpdate", true)
+                        apply()
+                    }
                 }
-            }
-        } catch (ignored: IOException) {
-            //do something
         }
+
+        val addressCode = addresses.countryCode.lowercase(Locale.ROOT)
+        if (Helper.topCountries(addressCode)) {
+            FirebaseMessaging.getInstance()
+                .unsubscribeFromTopic("engage")
+                .addOnCompleteListener { }
+
+            FirebaseMessaging.getInstance()
+                .subscribeToTopic(addressCode)
+                .addOnCompleteListener {}
+
+        } else {
+            FirebaseMessaging.getInstance()
+                .subscribeToTopic("engage")
+                .addOnCompleteListener { }
+        }
+        viewModel.stopJob()
     }
 
     companion object {
+        private const val REQUEST_SHOW_SETTINGS = 123
         fun scheduleNotification(data: Data, context: Context) {
             val nWorkerParameters =
                 PeriodicWorkRequest.Builder(
