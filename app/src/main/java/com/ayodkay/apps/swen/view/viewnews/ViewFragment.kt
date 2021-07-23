@@ -27,6 +27,7 @@ import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 class ViewFragment : Fragment() {
     private lateinit var shareNews: Intent
@@ -74,6 +75,7 @@ class ViewFragment : Fragment() {
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            talky.language = Locale.CANADA
             playView.setOnClickListener {
                 talky.speak(title + content, TextToSpeech.QUEUE_FLUSH, null, null)
 

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/background"
     tools:context=".view.viewimage.ViewImageActivity">
@@ -21,5 +22,14 @@
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/pinch" />
+
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-7312232171503509/8638142033" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

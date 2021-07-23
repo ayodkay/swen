@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivityViewImageBinding
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
@@ -43,8 +45,13 @@ class ViewImageActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
+
+        MobileAds.initialize(this) {}
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
+
         val image = intent?.extras?.get("image") as String
-        imageView = findViewById(R.id.newsImage)
+        imageView = binding.newsImage
 
         try {
             Picasso.get().load(image).into(imageView, object : Callback {
