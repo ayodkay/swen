@@ -23,7 +23,6 @@ import com.ayodkay.apps.swen.helper.ads.NativeTemplateStyle
 import com.ayodkay.apps.swen.helper.ads.TemplateView
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookMarkRoom
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
-import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.view.viewnews.ViewNewActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -31,6 +30,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.facebook.appevents.AppEventsLogger
+import com.github.ayodkay.models.Article
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import java.text.SimpleDateFormat
@@ -40,7 +40,7 @@ private val ITEM_TYPE_COUNTRY by lazy { 0 }
 private val ITEM_TYPE_BANNER_AD by lazy { 1 }
 
 class AdMobRecyclerView internal constructor(
-    private val newsList: ArrayList<NewsArticle>, private val owner: ViewModelStoreOwner,
+    private val newsList: ArrayList<Article>, private val owner: ViewModelStoreOwner,
     private val context: Context,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -84,7 +84,7 @@ class AdMobRecyclerView internal constructor(
                 val template: TemplateView = holder.itemView.findViewById(R.id.my_template)
                 MobileAds.initialize(context)
                 val background =
-                    ColorDrawable(ContextCompat.getColor(context, R.color.background))
+                    ColorDrawable(ContextCompat.getColor(context, R.color.ads_background))
 
                 AdLoader.Builder(context, context.resources.getString(R.string.custom_ads_unit))
                     .forNativeAd { nativeAd ->

@@ -13,15 +13,18 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivityViewnewsBinding
+import com.ayodkay.apps.swen.helper.Helper.setUpNewsClient
 import com.ayodkay.apps.swen.helper.adapter.AdMobRecyclerView
-import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.ayodkay.apps.swen.view.viewimage.ViewImageActivity
-import com.ayodkay.apps.swen.viewmodel.NewViewModel
+import com.github.ayodkay.builder.EverythingBuilder
+import com.github.ayodkay.models.Article
+import com.github.ayodkay.models.ArticleResponse
+import com.github.ayodkay.mvvm.interfaces.ArticlesLiveDataResponseCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mopub.nativeads.MoPubRecyclerAdapter
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer
@@ -158,56 +161,71 @@ class ViewNewActivity : AppCompatActivity() {
 
 
     private fun loadMore(query: String) {
-        val newViewModel = ViewModelProvider(this).get(NewViewModel::class.java)
-        val articleArrayList = arrayListOf<NewsArticle>()
-        newViewModel.getEveryThingFromRepo(
-            pageSize = 100,
-            q = query, sort_by = "publishedAt"
-        ).observe(this, { newsResponse ->
-            moreBy.apply {
-                layoutManager = LinearLayoutManager(this@ViewNewActivity)
-                hasFixedSize()
-                articleArrayList.addAll(newsResponse.articles)
-                val desiredAssets = EnumSet.of(
-                    NativeAdAsset.TITLE,
-                    NativeAdAsset.TEXT,
-                    NativeAdAsset.ICON_IMAGE,
-                    NativeAdAsset.MAIN_IMAGE,
-                    NativeAdAsset.CALL_TO_ACTION_TEXT,
-                    NativeAdAsset.SPONSORED
-                )
-                val requestParameters = RequestParameters.Builder()
-                    .desiredAssets(desiredAssets)
-                    .build()
-                val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
-                    ViewBinder.Builder(R.layout.native_ad_list_item)
-                        .titleId(R.id.native_title)
-                        .textId(R.id.native_text)
-                        .mainImageId(R.id.native_main_image)
-                        .iconImageId(R.id.native_icon_image)
-                        .callToActionId(R.id.native_cta)
-                        .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
-                        .sponsoredTextId(R.id.native_sponsored_text_view)
-                        .build()
-                )
+        val newsResponseList = arrayListOf<Article>()
 
-                MoPubRecyclerAdapter(
-                    this@ViewNewActivity, AdMobRecyclerView(
-                        articleArrayList,
-                        this@ViewNewActivity,
-                        this@ViewNewActivity
-                    )
-                ).apply {
-                    registerAdRenderer(moPubStaticNativeAdRenderer)
-                }.also {
-                    moreBy.apply {
-                        it.loadAds(getString(R.string.mopub_adunit_native), requestParameters)
-                        adapter = it
-                        layoutManager = LinearLayoutManager(this@ViewNewActivity)
-                    }
+        val everythingBuilder = EverythingBuilder.Builder()
+            .q(query)
+            .sortBy("publishedAt")
+            .pageSize(100)
+            .build()
+
+        with(setUpNewsClient(this)) {
+            getEverything(everythingBuilder, object : ArticlesLiveDataResponseCallback {
+                override fun onFailure(throwable: Throwable) {
+                    binding.bottomSheet.visibility = View.GONE
                 }
-            }
-        })
+
+                override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
+                    response.observe(this@ViewNewActivity, { newsResponse ->
+                        moreBy.apply {
+                            layoutManager = LinearLayoutManager(this@ViewNewActivity)
+                            hasFixedSize()
+                            newsResponseList.addAll(newsResponse.articles)
+                            val desiredAssets = EnumSet.of(
+                                NativeAdAsset.TITLE,
+                                NativeAdAsset.TEXT,
+                                NativeAdAsset.ICON_IMAGE,
+                                NativeAdAsset.MAIN_IMAGE,
+                                NativeAdAsset.CALL_TO_ACTION_TEXT,
+                                NativeAdAsset.SPONSORED
+                            )
+                            val requestParameters = RequestParameters.Builder()
+                                .desiredAssets(desiredAssets)
+                                .build()
+                            val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
+                                ViewBinder.Builder(R.layout.native_ad_list_item)
+                                    .titleId(R.id.native_title)
+                                    .textId(R.id.native_text)
+                                    .mainImageId(R.id.native_main_image)
+                                    .iconImageId(R.id.native_icon_image)
+                                    .callToActionId(R.id.native_cta)
+                                    .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
+                                    .sponsoredTextId(R.id.native_sponsored_text_view)
+                                    .build()
+                            )
+
+                            MoPubRecyclerAdapter(
+                                this@ViewNewActivity, AdMobRecyclerView(
+                                    newsResponseList,
+                                    this@ViewNewActivity,
+                                    this@ViewNewActivity
+                                )
+                            ).apply {
+                                registerAdRenderer(moPubStaticNativeAdRenderer)
+                            }.also {
+                                moreBy.apply {
+                                    it.loadAds(getString(R.string.mopub_adunit_native),
+                                        requestParameters)
+                                    adapter = it
+                                    layoutManager = LinearLayoutManager(this@ViewNewActivity)
+                                }
+                            }
+                        }
+                    })
+                }
+
+            })
+        }
     }
 
     override fun onBackPressed() {

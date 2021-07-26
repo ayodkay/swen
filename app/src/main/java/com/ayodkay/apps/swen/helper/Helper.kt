@@ -7,20 +7,28 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.util.Log
 import android.view.View
+import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.FragmentGeneralBinding
 import com.ayodkay.apps.swen.helper.adapter.AdMobRecyclerView
+import com.ayodkay.apps.swen.helper.constant.ErrorMessage
 import com.ayodkay.apps.swen.helper.room.country.CountryDatabase
 import com.ayodkay.apps.swen.helper.room.links.LinksDatabase
 import com.ayodkay.apps.swen.helper.room.userlocation.LocationDatabase
-import com.ayodkay.apps.swen.model.News
-import com.ayodkay.apps.swen.model.NewsArticle
 import com.ayodkay.apps.swen.view.AskLocation
-import com.ayodkay.apps.swen.viewmodel.NewViewModel
+import com.github.ayodkay.builder.EverythingBuilder
+import com.github.ayodkay.builder.TopHeadlinesBuilder
+import com.github.ayodkay.init.NewsApi
+import com.github.ayodkay.models.Article
+import com.github.ayodkay.models.ArticleResponse
+import com.github.ayodkay.models.NetworkInterceptorModel
+import com.github.ayodkay.models.OfflineCacheInterceptorModel
+import com.github.ayodkay.mvvm.client.NewsApiClientWithObserver
+import com.github.ayodkay.mvvm.interfaces.ArticlesLiveDataResponseCallback
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
 import com.mopub.common.logging.MoPubLog
@@ -28,7 +36,6 @@ import com.mopub.nativeads.MoPubRecyclerAdapter
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer
 import com.mopub.nativeads.RequestParameters
 import com.mopub.nativeads.ViewBinder
-import org.json.JSONObject
 import java.util.*
 
 
@@ -89,35 +96,11 @@ object Helper {
         return false
     }
 
-    @JvmStatic
-    @Deprecated("changed to retrofit")
-    fun handleJson(response: JSONObject): ArrayList<News> {
-
-        val news: ArrayList<News> = arrayListOf()
-
-        val result = response.getJSONArray("articles")
-
-        for (results_loop in 0 until result.length()) {
-            val results = result.getJSONObject(results_loop)
-
-            val source = results.getJSONObject("source")
-            news.add(
-                News(
-                    source.getString("name"),
-                    results.getString("author"),
-                    results.getString("title"),
-                    results.getString("description"),
-                    results.getString("url"),
-                    results.getString("urlToImage"),
-                    results.getString("publishedAt"),
-                    results.getString("content"),
-                )
-            )
-        }
-
-        return news
+    fun setUpNewsClient(activity: ComponentActivity): NewsApiClientWithObserver {
+        NewsApi.init(activity)
+        return NewsApiClientWithObserver("84d090d0537548ee8ac77620217b1b52",
+            NetworkInterceptorModel(), OfflineCacheInterceptorModel())
     }
-
 
     @JvmOverloads
     @JvmStatic
@@ -126,7 +109,7 @@ object Helper {
         frag: Fragment,
         binding: FragmentGeneralBinding,
         q: String? = "",
-        isEverything: Boolean = false
+        isEverything: Boolean = false,
     ): View {
         if (isEverything) {
             binding.swipeRefresh.setOnRefreshListener {
@@ -148,15 +131,10 @@ object Helper {
         category: String,
         frag: Fragment,
         binding: FragmentGeneralBinding,
-        q: String? = ""
+        q: String? = "",
     ) {
-        val newViewModel = ViewModelProvider(frag).get(NewViewModel::class.java)
-        val articleArrayList = arrayListOf<NewsArticle>()
-
         val activity = frag.requireActivity()
-
         val db = getCountryDatabase(frag.requireContext())
-
         var country = ""
         try {
             country = db.countryDao().getAll().country
@@ -166,46 +144,150 @@ object Helper {
             frag.requireActivity().finish()
         }
 
-        with(newViewModel) {
-            try {
-                country = db.countryDao().getAll().country
-            } catch (e: Exception) {
-                frag.requireContext()
-                    .startActivity(
-                        Intent(
-                            frag.requireContext(),
-                            AskLocation::class.java
-                        )
-                    )
-                frag.requireActivity().finish()
-            }
+        val newsResponseList = arrayListOf<Article>()
+        val newsApiClientWithObserver = setUpNewsClient(frag.requireActivity())
 
-            getHeadlineFromRepo(country = country, category = category, q = q, pageSize = 100)
-                .observe(frag.viewLifecycleOwner, { newsResponse ->
+        val topHeadlinesBuilder = TopHeadlinesBuilder.Builder()
+            .q(q.orEmpty())
+            .country(country)
+            .category(category)
+            .pageSize(100)
+            .build()
 
-                    if (newsResponse != null) {
+        newsApiClientWithObserver
+            .getTopHeadlines(topHeadlinesBuilder, object : ArticlesLiveDataResponseCallback {
+                override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
+                    response.observe(frag.viewLifecycleOwner, { newsResponse ->
+                        newsResponseList.addAll(newsResponse.articles)
+
+                        if (newsResponse != null) {
+                            if (newsResponse.totalResults == 0) {
+                                binding.progressBar.visibility = View.GONE
+                                binding.empty.visibility =
+                                    View.VISIBLE
+                                if (newsResponse.status == "400") {
+                                    binding.emptyText.text = "Internet Error"
+                                }
+                                binding.emptyText.visibility = View.VISIBLE
+                                binding.swipeText.visibility = View.VISIBLE
+
+                                binding.newsRecyclerView.visibility =
+                                    View.GONE
+                                binding.swipeRefresh.isRefreshing = false
+                            } else {
+                                binding.newsRecyclerView.visibility =
+                                    View.VISIBLE
+                                binding.empty.visibility =
+                                    View.GONE
+                                binding.emptyText.visibility = View.GONE
+                                binding.swipeText.visibility = View.GONE
+                                val desiredAssets = EnumSet.of(
+                                    RequestParameters.NativeAdAsset.TITLE,
+                                    RequestParameters.NativeAdAsset.TEXT,
+                                    RequestParameters.NativeAdAsset.ICON_IMAGE,
+                                    RequestParameters.NativeAdAsset.MAIN_IMAGE,
+                                    RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
+                                    RequestParameters.NativeAdAsset.SPONSORED
+                                )
+                                val requestParameters = RequestParameters.Builder()
+                                    .desiredAssets(desiredAssets)
+                                    .build()
+                                val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
+                                    ViewBinder.Builder(R.layout.native_ad_list_item)
+                                        .titleId(R.id.native_title)
+                                        .textId(R.id.native_text)
+                                        .mainImageId(R.id.native_main_image)
+                                        .iconImageId(R.id.native_icon_image)
+                                        .callToActionId(R.id.native_cta)
+                                        .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
+                                        .sponsoredTextId(R.id.native_sponsored_text_view)
+                                        .build()
+                                )
+
+                                MoPubRecyclerAdapter(
+                                    activity,
+                                    AdMobRecyclerView(newsResponseList,
+                                        activity,
+                                        frag.requireContext())
+                                ).apply {
+                                    registerAdRenderer(moPubStaticNativeAdRenderer)
+                                }.also {
+                                    binding.progressBar.visibility = View.GONE
+                                    binding.newsRecyclerView
+                                        .apply {
+                                            it.loadAds(
+                                                frag.getString(R.string.mopub_adunit_native),
+                                                requestParameters
+                                            )
+                                            adapter = it
+                                            layoutManager = LinearLayoutManager(context)
+                                            scrollToPosition(0)
+                                        }
+                                }
+                                binding.swipeRefresh.isRefreshing = false
+                            }
+                        }
+                    })
+                }
+
+                override fun onFailure(throwable: Throwable) {
+                    binding.empty.visibility = View.VISIBLE
+                    binding.emptyText.visibility = View.VISIBLE
+                    binding.swipeText.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.GONE
+                    binding.newsRecyclerView.visibility = View.GONE
+                    binding.swipeRefresh.isRefreshing = false
+
+                    if (throwable.toString() == ErrorMessage.unknownHostException) {
+                        binding.emptyText.text = "Internet Error"
+                    }
+                }
+
+            })
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setUpObserverEveryTime(
+        q: String?,
+        binding: FragmentGeneralBinding,
+        frag: Fragment,
+    ) {
+        val db = getCountryDatabase(frag.requireContext())
+        var language = ""
+        try {
+            language = db.countryDao().getAll().iso
+        } catch (e: Exception) {
+            frag.requireContext()
+                .startActivity(Intent(frag.requireContext(), AskLocation::class.java))
+            frag.requireActivity().finish()
+        }
+        val newsResponseList = arrayListOf<Article>()
+        val newsApiClientWithObserver = setUpNewsClient(frag.requireActivity())
+
+        val everythingBuilder = EverythingBuilder.Builder()
+            .q(q.orEmpty())
+            .sortBy("newest")
+            .language(language)
+            .pageSize(100)
+
+            .build()
+        newsApiClientWithObserver.getEverything(everythingBuilder,
+            object : ArticlesLiveDataResponseCallback {
+                override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
+                    response.observe(frag.viewLifecycleOwner, { newsResponse ->
                         if (newsResponse.totalResults == 0) {
+                            binding.empty.visibility = View.VISIBLE
+                            binding.emptyText.visibility = View.VISIBLE
+                            binding.swipeText.visibility = View.VISIBLE
                             binding.progressBar.visibility = View.GONE
-                            binding.empty.visibility =
-                                View.VISIBLE
+
                             if (newsResponse.status == "400") {
                                 binding.emptyText.text = "Internet Error"
                             }
-                            binding.emptyText.visibility = View.VISIBLE
-                            binding.swipeText.visibility = View.VISIBLE
-
-                            binding.newsRecyclerView.visibility =
-                                View.GONE
+                            binding.newsRecyclerView.visibility = View.GONE
                             binding.swipeRefresh.isRefreshing = false
                         } else {
-                            binding.newsRecyclerView.visibility =
-                                View.VISIBLE
-                            binding.empty.visibility =
-                                View.GONE
-                            binding.emptyText.visibility = View.GONE
-                            binding.swipeText.visibility = View.GONE
-
-                            articleArrayList.addAll(newsResponse.articles)
+                            newsResponseList.addAll(newsResponse.articles)
                             val desiredAssets = EnumSet.of(
                                 RequestParameters.NativeAdAsset.TITLE,
                                 RequestParameters.NativeAdAsset.TEXT,
@@ -230,113 +312,38 @@ object Helper {
                             )
 
                             MoPubRecyclerAdapter(
-                                activity,
-                                AdMobRecyclerView(articleArrayList, activity, frag.requireContext())
+                                frag.requireActivity(), AdMobRecyclerView(
+                                    newsResponseList, frag, frag.requireContext())
                             ).apply {
                                 registerAdRenderer(moPubStaticNativeAdRenderer)
                             }.also {
                                 binding.progressBar.visibility = View.GONE
-                                binding.newsRecyclerView
-                                    .apply {
-                                        it.loadAds(
-                                            frag.getString(R.string.mopub_adunit_native),
-                                            requestParameters
-                                        )
-                                        adapter = it
-                                        layoutManager = LinearLayoutManager(context)
-                                        scrollToPosition(0)
-                                    }
+                                binding.newsRecyclerView.apply {
+                                    adapter = it
+                                    layoutManager = LinearLayoutManager(frag.context)
+                                    it.loadAds(
+                                        frag.getString(R.string.mopub_adunit_native),
+                                        requestParameters
+                                    )
+                                }
                             }
                             binding.swipeRefresh.isRefreshing = false
                         }
-                    }
+                    })
 
-                })
-        }
-    }
+                }
 
-    @SuppressLint("SetTextI18n")
-    private fun setUpObserverEveryTime(
-        q: String?,
-        binding: FragmentGeneralBinding,
-        frag: Fragment,
-    ) {
-
-        val articleArrayList = arrayListOf<NewsArticle>()
-        val newViewModel = ViewModelProvider(frag).get(NewViewModel::class.java)
-
-        val db = getCountryDatabase(frag.requireContext())
-        var language = ""
-        try {
-            language = db.countryDao().getAll().iso
-        } catch (e: Exception) {
-            frag.requireContext()
-                .startActivity(Intent(frag.requireContext(), AskLocation::class.java))
-            frag.requireActivity().finish()
-        }
-        newViewModel.getEveryThingFromRepo(
-            q = q,
-            sort_by = "newest",
-            language = language,
-            pageSize = 100
-        )
-            .observe(frag.viewLifecycleOwner, { newsResponse ->
-                if (newsResponse.totalResults == 0) {
+                override fun onFailure(throwable: Throwable) {
                     binding.empty.visibility = View.VISIBLE
                     binding.emptyText.visibility = View.VISIBLE
                     binding.swipeText.visibility = View.VISIBLE
                     binding.progressBar.visibility = View.GONE
-
-                    if (newsResponse.status == "400") {
-                        binding.emptyText.text = "Internet Error"
-                    }
                     binding.newsRecyclerView.visibility = View.GONE
                     binding.swipeRefresh.isRefreshing = false
-                } else {
-                    articleArrayList.addAll(newsResponse.articles)
-                    val desiredAssets = EnumSet.of(
-                        RequestParameters.NativeAdAsset.TITLE,
-                        RequestParameters.NativeAdAsset.TEXT,
-                        RequestParameters.NativeAdAsset.ICON_IMAGE,
-                        RequestParameters.NativeAdAsset.MAIN_IMAGE,
-                        RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
-                        RequestParameters.NativeAdAsset.SPONSORED
-                    )
-                    val requestParameters = RequestParameters.Builder()
-                        .desiredAssets(desiredAssets)
-                        .build()
-                    val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
-                        ViewBinder.Builder(R.layout.native_ad_list_item)
-                            .titleId(R.id.native_title)
-                            .textId(R.id.native_text)
-                            .mainImageId(R.id.native_main_image)
-                            .iconImageId(R.id.native_icon_image)
-                            .callToActionId(R.id.native_cta)
-                            .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
-                            .sponsoredTextId(R.id.native_sponsored_text_view)
-                            .build()
-                    )
 
-                    MoPubRecyclerAdapter(
-                        frag.requireActivity(), AdMobRecyclerView(
-                            articleArrayList,
-                            frag,
-                            frag.requireContext()
-                        )
-                    ).apply {
-                        registerAdRenderer(moPubStaticNativeAdRenderer)
-                    }.also {
-                        binding.progressBar.visibility = View.GONE
-                        binding.newsRecyclerView.apply {
-                            adapter = it
-                            layoutManager = LinearLayoutManager(frag.context)
-                            it.loadAds(
-                                frag.getString(R.string.mopub_adunit_native),
-                                requestParameters
-                            )
-                        }
+                    if (throwable.toString() == ErrorMessage.unknownHostException) {
+                        binding.emptyText.text = "Internet Error"
                     }
-                    binding.swipeRefresh.isRefreshing = false
                 }
 
             })

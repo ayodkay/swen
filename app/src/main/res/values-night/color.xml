@@ -14,4 +14,5 @@
 
     <color name="iconColor">#ffffff</color>
 
+    <color name="ads_background">#000000</color>
 </resources>

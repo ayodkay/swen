@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="380dp"
     android:layout_margin="12dp"
-    android:background="@color/background"
+    app:cardBackgroundColor="@color/background"
     app:cardCornerRadius="14dp"
     app:cardElevation="16dp">
 
@@ -13,7 +13,6 @@
         android:id="@+id/native_outer_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
         android:textDirection="locale">
 
         <ImageView

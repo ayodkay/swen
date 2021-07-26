@@ -15,6 +15,7 @@
 
 
     <color name="background">#ffffff</color>
+    <color name="ads_background">#ffffff</color>
 
     <color name="iconColor">#AB3838</color>
 

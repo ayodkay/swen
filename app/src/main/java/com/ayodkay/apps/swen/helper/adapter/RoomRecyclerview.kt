@@ -80,7 +80,7 @@ class RoomRecyclerview internal constructor(
                         holder.itemView.findViewById(R.id.error)
                     MobileAds.initialize(context)
                     val background =
-                        ColorDrawable(ContextCompat.getColor(context, R.color.background))
+                        ColorDrawable(ContextCompat.getColor(context, R.color.ads_background))
 
                     AdLoader.Builder(context, context.resources.getString(R.string.custom_ads_unit))
                         .forNativeAd { nativeAd ->
