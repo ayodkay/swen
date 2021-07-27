@@ -65,6 +65,6 @@
     <string name="search_language_summary">changer la langue utilisée lors de la recherche d\'actualités</string>
     <string name="supporting_text">Notre application est 100\% sûre, vous n\'avez donc pas à vous soucier de vos informations ou de certains fichiers qui endommageront votre appareil. Nous prenons soin de votre vie privée. Veuillez noter que cette application n\'est ni affiliée ni liée à aucun des journaux cités ici.Le contenu affiché par l\'application est disponible en privé sur https://newsapi.org/ qui conserve tous les droits d\'auteur et l\'application ne peut donc être tenue responsable. pour tout contenu affiché.Pour en savoir plus sur les sources et les éditeurs, visitez https://newsapi.org/ ou contactez support@newsapi.org</string>
     <string name="refresh">Glisser pour rafraîchir</string>
-    <string name="links">liens</string>
+    <string name="links">relier</string>
     <string name="system_theme">Défaut du système.</string>
 </resources>

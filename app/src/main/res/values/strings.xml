@@ -82,14 +82,7 @@
     <string name="ad">Ads</string>
     <string name="search_language">Search Language</string>
     <string name="search_language_summary">change the language used during news search</string>
-    <string name="supporting_text">
-        Our app is 100\% Safe, so you don\'t need to worry about your information or some files that
-        will harm your device. We take care of your privacy. Please Note that,this App is not
-        affiliated nor related with any of the newspapers cited here.The content the app shows is
-        privately available on https://newsapi.org/ which retains all copyrights and thus the app is
-        not to be held responsible for any of the content displayed.for more about the sources and
-        publishers visit https://newsapi.org/ or contact support@newsapi.org
-    </string>
+    <string name="supporting_text">Our app is 100\% Safe, so you don\'t need to worry about your information or some files that will harm your device. We take care of your privacy. Please Note that,this App is not affiliated nor related with any of the newspapers cited here.The content the app shows is privately available on https://newsapi.org/ which retains all copyrights and thus the app is not to be held responsible for any of the content displayed.for more about the sources and publishers visit https://newsapi.org/ or contact support@newsapi.org</string>
     <string name="refresh">Swipe to Refresh</string>
     <string name="links">Links</string>
     <string name="system_theme">System Default</string>
