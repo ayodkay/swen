@@ -13,6 +13,11 @@ import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.links.Links
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.ayodkay.apps.swen.view.webview.WebViewSuite
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.mopub.common.MoPub
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubInterstitial
@@ -21,16 +26,13 @@ import com.mopub.mobileads.MoPubInterstitial
 class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
     private lateinit var binding: ActivityWebViewBinding
     private lateinit var moPubInterstitial: MoPubInterstitial
+
+    private var mInterstitialAd: InterstitialAd? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWebViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        moPubInterstitial = MoPubInterstitial(this, "7255cbc578d1408a913044bfc5759fa9")
-        moPubInterstitial.interstitialAdListener = this
-        moPubInterstitial.load()
-
-
+        loadMopub()
         val link = intent.extras?.get("url") as String
 
         binding.webViewSuite.startLoading(link)
@@ -126,12 +128,12 @@ class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
         super.onBackPressed()
         if (moPubInterstitial.isReady) {
             moPubInterstitial.show()
+        } else {
+            if (mInterstitialAd != null) {
+                mInterstitialAd?.show(this)
+            }
         }
-        val toMain = intent.extras?.get("toMain") as Boolean
-        if (toMain) {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
+        changeView()
     }
 
     override fun onPause() {
@@ -151,10 +153,42 @@ class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
 
     override fun onInterstitialLoaded(p0: MoPubInterstitial?) {}
     override fun onInterstitialFailed(p0: MoPubInterstitial?, p1: MoPubErrorCode?) {
-        moPubInterstitial.load()
+        loadAdmob()
     }
 
     override fun onInterstitialShown(p0: MoPubInterstitial?) {}
     override fun onInterstitialClicked(p0: MoPubInterstitial?) {}
-    override fun onInterstitialDismissed(p0: MoPubInterstitial?) {}
+    override fun onInterstitialDismissed(p0: MoPubInterstitial?) {
+        mInterstitialAd = null
+    }
+
+
+    private fun loadMopub() {
+        moPubInterstitial = MoPubInterstitial(this, "7255cbc578d1408a913044bfc5759fa9")
+        moPubInterstitial.interstitialAdListener = this
+        moPubInterstitial.load()
+    }
+
+    private fun loadAdmob() {
+        MobileAds.initialize(this) {}
+        val adRequest = AdRequest.Builder().build()
+        InterstitialAd.load(this, "ca-app-pub-7312232171503509/8595637711",
+            adRequest, object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    mInterstitialAd = null
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    mInterstitialAd = interstitialAd
+                }
+            })
+    }
+
+    private fun changeView() {
+        val toMain = intent.extras?.get("toMain") as Boolean
+        if (toMain) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+    }
 }
