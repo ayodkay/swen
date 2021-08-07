@@ -156,10 +156,10 @@ class MainActivity : AppCompatActivity() {
         fun scheduleNotification(data: Data, context: Context) {
             val nWorkerParameters =
                 PeriodicWorkRequest.Builder(
-                    NotifyWork::class.java, 4, TimeUnit.HOURS,
+                    NotifyWork::class.java, 3, TimeUnit.HOURS,
                     30, TimeUnit.MINUTES
                 )
-                    .setInitialDelay(3, TimeUnit.HOURS).setInputData(data).build()
+                    .setInitialDelay(2, TimeUnit.HOURS).setInputData(data).build()
 
             WorkManager.getInstance(context).apply {
                 enqueueUniquePeriodicWork(

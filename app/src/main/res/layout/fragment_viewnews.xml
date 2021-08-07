@@ -79,6 +79,7 @@
                         android:id="@+id/playView"
                         android:layout_width="0dp"
                         android:layout_weight="0.5"
+                        android:visibility="gone"
                         android:layout_height="48dp"
                         android:layout_gravity="start">
 
@@ -87,36 +88,42 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:visibility="gone"
-                            android:contentDescription="@string/share"
+                            android:contentDescription="@string/play_button_content_description"
                             android:src="@drawable/ic_baseline_play_arrow_24" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/stopView"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="start"
+                        android:layout_weight="0.5"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/stop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_baseline_stop_24" />
                     </RelativeLayout>
                 </LinearLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:layout_height="wrap_content">
 
-                    <com.mopub.mobileads.MoPubView
-                        android:id="@+id/banner_mopubview"
-                        android:layout_width="wrap_content"
+                    <com.google.android.gms.ads.AdView
+                        android:id="@+id/adView"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        ads:layout_constraintEnd_toEndOf="parent"
-                        ads:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:moPubAdSize="height_250" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <!--                <com.google.android.gms.ads.AdView-->
-                <!--                    android:id="@+id/adView"-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_gravity="center"-->
-                <!--                    android:layout_marginTop="20dp"-->
-                <!--                    ads:adSize="BANNER"-->
-                <!--                    ads:adUnitId="ca-app-pub-7312232171503509/8638142033" />-->
-
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="10dp"
+                        ads:adSize="BANNER"
+                        ads:adUnitId="ca-app-pub-7312232171503509/8638142033"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </RelativeLayout>
             </LinearLayout>
 
         </ScrollView>

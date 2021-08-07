@@ -53,8 +53,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.21"
-    implementation 'androidx.appcompat:appcompat:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'com.google.android.material:material:1.4.0'
@@ -82,9 +82,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.firebase:firebase-perf:20.0.2'
     implementation 'com.google.firebase:firebase-messaging:22.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.1.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.0'
     implementation 'com.google.firebase:firebase-analytics-ktx:19.0.0'
-    implementation 'com.google.firebase:firebase-dynamic-links-ktx:20.1.0'
+    implementation 'com.google.firebase:firebase-dynamic-links-ktx:20.1.1'
 
     //picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
@@ -104,7 +104,7 @@ dependencies {
     implementation 'com.google.android.play:core:1.10.0'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
 
-    def work_version = "2.6.0-beta01"
+    def work_version = "2.6.0-beta02"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     implementation 'com.facebook.android:facebook-android-sdk:9.1.0'
@@ -121,6 +121,7 @@ dependencies {
 
 
     implementation 'com.github.ayodkay:NewsApiClient-Kotlin:1.0.5'
+    implementation 'com.google.mlkit:language-id:16.1.1'
 
 }
 

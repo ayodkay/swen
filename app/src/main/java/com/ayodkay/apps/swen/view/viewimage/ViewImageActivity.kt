@@ -50,7 +50,7 @@ class ViewImageActivity : AppCompatActivity() {
         val adRequest = AdRequest.Builder().build()
         binding.adView.loadAd(adRequest)
 
-        val image = intent?.extras?.get("image") as String
+        val image = intent.getStringExtra("image")
         imageView = binding.newsImage
 
         try {

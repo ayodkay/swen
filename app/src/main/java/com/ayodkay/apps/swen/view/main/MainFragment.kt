@@ -11,17 +11,11 @@ import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.FragmentMainBinding
+import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.helper.adapter.ViewStateAdapter
-import com.ayodkay.apps.swen.view.category.beauty.BeautyFragment
-import com.ayodkay.apps.swen.view.category.business.BusinessFragment
-import com.ayodkay.apps.swen.view.category.coronavirus.CoronaFragment
-import com.ayodkay.apps.swen.view.category.entertainment.EntertainmentFragment
-import com.ayodkay.apps.swen.view.category.general.GeneralFragment
-import com.ayodkay.apps.swen.view.category.health.HealthFragment
-import com.ayodkay.apps.swen.view.category.politics.PoliticsFragment
-import com.ayodkay.apps.swen.view.category.science.ScienceFragment
-import com.ayodkay.apps.swen.view.category.sport.SportFragment
-import com.ayodkay.apps.swen.view.category.technology.TechnologyFragment
+import com.ayodkay.apps.swen.helper.transitions.PopTransformer
+import com.ayodkay.apps.swen.view.category.EveryThingFragment
+import com.ayodkay.apps.swen.view.category.TopHeadlinesFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 
@@ -41,16 +35,16 @@ private val TAB_TITLES = arrayOf(
 
 fun getFragment(position: Int): Fragment {
     return when (position) {
-        0 -> GeneralFragment()
-        1 -> EntertainmentFragment()
-        2 -> SportFragment()
-        3 -> BusinessFragment()
-        4 -> HealthFragment()
-        5 -> ScienceFragment()
-        6 -> TechnologyFragment()
-        7 -> CoronaFragment()
-        8 -> BeautyFragment()
-        else -> PoliticsFragment()
+        0 -> TopHeadlinesFragment().newInstance("general")
+        1 -> TopHeadlinesFragment().newInstance("entertainment")
+        2 -> TopHeadlinesFragment().newInstance("sports")
+        3 -> TopHeadlinesFragment().newInstance("business")
+        4 -> TopHeadlinesFragment().newInstance("health")
+        5 -> TopHeadlinesFragment().newInstance("science")
+        6 -> TopHeadlinesFragment().newInstance("technology")
+        7 -> TopHeadlinesFragment().newInstance("health", "covid")
+        8 -> EveryThingFragment().newInstance(context.getString(R.string.menu_beauty))
+        else -> EveryThingFragment().newInstance(context.getString(R.string.politics))
     }
 }
 
@@ -96,6 +90,7 @@ class MainFragment : Fragment() {
             isSaveEnabled = false
             adapter = sa
             offscreenPageLimit = 1
+            setPageTransformer(PopTransformer())
         }
         val tabLayout: TabLayout = binding.tabs
         for (i in 0..9) {

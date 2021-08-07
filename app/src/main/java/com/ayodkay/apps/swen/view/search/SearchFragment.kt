@@ -2,12 +2,14 @@ package com.ayodkay.apps.swen.view.search
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface.*
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -95,7 +97,22 @@ class SearchFragment : Fragment() {
                     sort = sortOptions[which]
                     checkedSort = which
                 }
-                .show()
+                .show().apply {
+                    getButton(BUTTON_NEGATIVE)
+                        .setTextColor(ResourcesCompat.getColor(resources,
+                            R.color.textPrimary,
+                            null))
+
+                    getButton(BUTTON_POSITIVE)
+                        .setTextColor(ResourcesCompat.getColor(resources,
+                            R.color.textPrimary,
+                            null))
+
+                    getButton(BUTTON_NEUTRAL)
+                        .setTextColor(ResourcesCompat.getColor(resources,
+                            R.color.textPrimary,
+                            null))
+                }
         }
 
     }

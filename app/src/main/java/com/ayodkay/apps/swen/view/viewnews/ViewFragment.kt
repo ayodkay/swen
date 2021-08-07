@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,12 +19,16 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.FragmentViewnewsBinding
+import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.view.WebView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.firebase.dynamiclinks.ktx.androidParameters
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.dynamiclinks.ktx.shortLinkAsync
 import com.google.firebase.ktx.Firebase
+import com.google.mlkit.nl.languageid.LanguageIdentification
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import java.io.ByteArrayOutputStream
@@ -31,6 +36,7 @@ import java.util.*
 
 class ViewFragment : Fragment() {
     private lateinit var shareNews: Intent
+    lateinit var talky: TextToSpeech
 
     private var _binding: FragmentViewnewsBinding? = null
     private val binding get() = _binding!!
@@ -48,10 +54,9 @@ class ViewFragment : Fragment() {
     ): View {
         _binding = FragmentViewnewsBinding.inflate(inflater, container, false)
 
-        binding.bannerMopubview.apply {
-            setAdUnitId(getString(R.string.mopub_adunit_banner))
-            loadAd()
-        }
+        MobileAds.initialize(requireContext())
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
 
         var dynamicLink = ""
 
@@ -71,19 +76,62 @@ class ViewFragment : Fragment() {
         val shareView = binding.shareView
         val article = binding.fullArticle
         val playView = binding.playView
+        val stopView = binding.stopView
 
-        val talky = TextToSpeech(context) {}
+        val languageIdentifier = LanguageIdentification.getClient()
+        languageIdentifier.identifyLanguage(title)
+            .addOnSuccessListener { languageCode ->
+                if (languageCode != "und") {
+                    talky = TextToSpeech(requireContext()) { status ->
+                        if (status == TextToSpeech.SUCCESS) {
+                            val result: Int = talky.setLanguage(Locale.GERMAN)
+                            if (result == TextToSpeech.LANG_MISSING_DATA
+                                || result == TextToSpeech.LANG_NOT_SUPPORTED
+                            ) {
+                                AppLog.l("TTS--> Language not supported")
+                            } else {
+                                talky.language = Locale(languageCode)
+                                playView.visibility = View.VISIBLE
+                                playView.setOnClickListener {
+                                    talky.speak(title + content,
+                                        TextToSpeech.QUEUE_FLUSH,
+                                        null,
+                                        TextToSpeech.ACTION_TTS_QUEUE_PROCESSING_COMPLETED)
 
+                                }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            talky.language = Locale.CANADA
-            playView.setOnClickListener {
-                talky.speak(title + content, TextToSpeech.QUEUE_FLUSH, null, null)
+                                stopView.setOnClickListener {
+                                    talky.stop()
+                                    stopView.visibility = View.GONE
+                                    playView.visibility = View.VISIBLE
+                                }
 
-            }
-        } else {
-            playView.visibility = View.GONE
-        }
+                                talky.setOnUtteranceProgressListener(object :
+                                    UtteranceProgressListener() {
+                                    override fun onStart(utteranceId: String?) {
+                                        requireActivity().runOnUiThread {
+                                            playView.visibility = View.GONE
+                                            stopView.visibility = View.VISIBLE
+                                        }
+                                    }
+
+                                    override fun onDone(utteranceId: String?) {
+                                        requireActivity().runOnUiThread {
+                                            playView.visibility = View.VISIBLE
+                                            stopView.visibility = View.GONE
+                                        }
+                                    }
+
+                                    override fun onError(utteranceId: String?) {}
+
+                                })
+                            }
+                        } else {
+                            AppLog.l("TTS--> Initialization failed $status")
+                        }
+                    }
+                }
+            }.addOnFailureListener {}
 
 
         shareView.setOnClickListener {
@@ -122,11 +170,11 @@ class ViewFragment : Fragment() {
                     override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
                     override fun onBitmapFailed(
                         e: java.lang.Exception?,
-                        errorDrawable: Drawable?
+                        errorDrawable: Drawable?,
                     ) {
                     }
                 })
-            }else{
+            } else {
                 shareNews = Intent(Intent.ACTION_SEND)
                 shareNews.type = "text/plain"
                 shareNews.putExtra(
@@ -216,6 +264,12 @@ class ViewFragment : Fragment() {
 
     companion object {
         private const val REQUEST_CODE = 101
+    }
+
+    override fun onDestroy() {
+        talky.stop()
+        talky.shutdown()
+        super.onDestroy()
     }
 
 }

@@ -63,9 +63,7 @@ class ViewNewActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.detailToolbar)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            initWindow()
-        }
+        initWindow()
 
         // Show the Up button in the action bar.
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

@@ -32,7 +32,7 @@ class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
         super.onCreate(savedInstanceState)
         binding = ActivityWebViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        loadMopub()
+        loadAdmob()
         val link = intent.extras?.get("url") as String
 
         binding.webViewSuite.startLoading(link)
@@ -126,11 +126,11 @@ class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        if (moPubInterstitial.isReady) {
-            moPubInterstitial.show()
+        if (mInterstitialAd != null) {
+            mInterstitialAd?.show(this)
         } else {
-            if (mInterstitialAd != null) {
-                mInterstitialAd?.show(this)
+            if (moPubInterstitial.isReady) {
+                moPubInterstitial.show()
             }
         }
         changeView()
@@ -176,6 +176,7 @@ class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
             adRequest, object : InterstitialAdLoadCallback() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     mInterstitialAd = null
+                    loadMopub()
                 }
 
                 override fun onAdLoaded(interstitialAd: InterstitialAd) {

@@ -98,7 +98,7 @@ object Helper {
 
     fun setUpNewsClient(activity: ComponentActivity): NewsApiClientWithObserver {
         NewsApi.init(activity)
-        return NewsApiClientWithObserver("84d090d0537548ee8ac77620217b1b52",
+        return NewsApiClientWithObserver("dc0576cde63048f090c121ca1615e03f",
             NetworkInterceptorModel(), OfflineCacheInterceptorModel())
     }
 
@@ -143,6 +143,28 @@ object Helper {
                 .startActivity(Intent(frag.requireContext(), AskLocation::class.java))
             frag.requireActivity().finish()
         }
+        val desiredAssets = EnumSet.of(
+            RequestParameters.NativeAdAsset.TITLE,
+            RequestParameters.NativeAdAsset.TEXT,
+            RequestParameters.NativeAdAsset.ICON_IMAGE,
+            RequestParameters.NativeAdAsset.MAIN_IMAGE,
+            RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
+            RequestParameters.NativeAdAsset.SPONSORED
+        )
+        val requestParameters = RequestParameters.Builder()
+            .desiredAssets(desiredAssets)
+            .build()
+        val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
+            ViewBinder.Builder(R.layout.native_ad_list_item)
+                .titleId(R.id.native_title)
+                .textId(R.id.native_text)
+                .mainImageId(R.id.native_main_image)
+                .iconImageId(R.id.native_icon_image)
+                .callToActionId(R.id.native_cta)
+                .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
+                .sponsoredTextId(R.id.native_sponsored_text_view)
+                .build()
+        )
 
         val newsResponseList = arrayListOf<Article>()
         val newsApiClientWithObserver = setUpNewsClient(frag.requireActivity())
@@ -181,28 +203,6 @@ object Helper {
                                     View.GONE
                                 binding.emptyText.visibility = View.GONE
                                 binding.swipeText.visibility = View.GONE
-                                val desiredAssets = EnumSet.of(
-                                    RequestParameters.NativeAdAsset.TITLE,
-                                    RequestParameters.NativeAdAsset.TEXT,
-                                    RequestParameters.NativeAdAsset.ICON_IMAGE,
-                                    RequestParameters.NativeAdAsset.MAIN_IMAGE,
-                                    RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
-                                    RequestParameters.NativeAdAsset.SPONSORED
-                                )
-                                val requestParameters = RequestParameters.Builder()
-                                    .desiredAssets(desiredAssets)
-                                    .build()
-                                val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
-                                    ViewBinder.Builder(R.layout.native_ad_list_item)
-                                        .titleId(R.id.native_title)
-                                        .textId(R.id.native_text)
-                                        .mainImageId(R.id.native_main_image)
-                                        .iconImageId(R.id.native_icon_image)
-                                        .callToActionId(R.id.native_cta)
-                                        .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
-                                        .sponsoredTextId(R.id.native_sponsored_text_view)
-                                        .build()
-                                )
 
                                 MoPubRecyclerAdapter(
                                     activity,
@@ -261,6 +261,28 @@ object Helper {
                 .startActivity(Intent(frag.requireContext(), AskLocation::class.java))
             frag.requireActivity().finish()
         }
+        val desiredAssets = EnumSet.of(
+            RequestParameters.NativeAdAsset.TITLE,
+            RequestParameters.NativeAdAsset.TEXT,
+            RequestParameters.NativeAdAsset.ICON_IMAGE,
+            RequestParameters.NativeAdAsset.MAIN_IMAGE,
+            RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
+            RequestParameters.NativeAdAsset.SPONSORED
+        )
+        val requestParameters = RequestParameters.Builder()
+            .desiredAssets(desiredAssets)
+            .build()
+        val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
+            ViewBinder.Builder(R.layout.native_ad_list_item)
+                .titleId(R.id.native_title)
+                .textId(R.id.native_text)
+                .mainImageId(R.id.native_main_image)
+                .iconImageId(R.id.native_icon_image)
+                .callToActionId(R.id.native_cta)
+                .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
+                .sponsoredTextId(R.id.native_sponsored_text_view)
+                .build()
+        )
         val newsResponseList = arrayListOf<Article>()
         val newsApiClientWithObserver = setUpNewsClient(frag.requireActivity())
 
@@ -269,7 +291,6 @@ object Helper {
             .sortBy("newest")
             .language(language)
             .pageSize(100)
-
             .build()
         newsApiClientWithObserver.getEverything(everythingBuilder,
             object : ArticlesLiveDataResponseCallback {
@@ -288,29 +309,6 @@ object Helper {
                             binding.swipeRefresh.isRefreshing = false
                         } else {
                             newsResponseList.addAll(newsResponse.articles)
-                            val desiredAssets = EnumSet.of(
-                                RequestParameters.NativeAdAsset.TITLE,
-                                RequestParameters.NativeAdAsset.TEXT,
-                                RequestParameters.NativeAdAsset.ICON_IMAGE,
-                                RequestParameters.NativeAdAsset.MAIN_IMAGE,
-                                RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
-                                RequestParameters.NativeAdAsset.SPONSORED
-                            )
-                            val requestParameters = RequestParameters.Builder()
-                                .desiredAssets(desiredAssets)
-                                .build()
-                            val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
-                                ViewBinder.Builder(R.layout.native_ad_list_item)
-                                    .titleId(R.id.native_title)
-                                    .textId(R.id.native_text)
-                                    .mainImageId(R.id.native_main_image)
-                                    .iconImageId(R.id.native_icon_image)
-                                    .callToActionId(R.id.native_cta)
-                                    .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
-                                    .sponsoredTextId(R.id.native_sponsored_text_view)
-                                    .build()
-                            )
-
                             MoPubRecyclerAdapter(
                                 frag.requireActivity(), AdMobRecyclerView(
                                     newsResponseList, frag, frag.requireContext())
