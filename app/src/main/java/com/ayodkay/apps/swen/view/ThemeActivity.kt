@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivityThemeBinding
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 
 
 const val PREFS_NAME = "theme_prefs"
@@ -42,10 +44,9 @@ class ThemeActivity : AppCompatActivity() {
         binding = ActivityThemeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.bannerMopubview.apply {
-            setAdUnitId(getString(R.string.mopub_adunit_banner))
-            loadAd()
-        }
+        MobileAds.initialize(this)
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
 
         binding.themeGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {

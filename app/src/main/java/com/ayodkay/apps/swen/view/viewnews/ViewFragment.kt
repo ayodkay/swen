@@ -36,7 +36,7 @@ import java.util.*
 
 class ViewFragment : Fragment() {
     private lateinit var shareNews: Intent
-    lateinit var talky: TextToSpeech
+    var talky: TextToSpeech? = null
 
     private var _binding: FragmentViewnewsBinding? = null
     private val binding get() = _binding!!
@@ -84,16 +84,16 @@ class ViewFragment : Fragment() {
                 if (languageCode != "und") {
                     talky = TextToSpeech(requireContext()) { status ->
                         if (status == TextToSpeech.SUCCESS) {
-                            val result: Int = talky.setLanguage(Locale.GERMAN)
+                            val result: Int = talky!!.setLanguage(Locale.GERMAN)
                             if (result == TextToSpeech.LANG_MISSING_DATA
                                 || result == TextToSpeech.LANG_NOT_SUPPORTED
                             ) {
                                 AppLog.l("TTS--> Language not supported")
                             } else {
-                                talky.language = Locale(languageCode)
+                                talky!!.language = Locale(languageCode)
                                 playView.visibility = View.VISIBLE
                                 playView.setOnClickListener {
-                                    talky.speak(title + content,
+                                    talky!!.speak(title + content,
                                         TextToSpeech.QUEUE_FLUSH,
                                         null,
                                         TextToSpeech.ACTION_TTS_QUEUE_PROCESSING_COMPLETED)
@@ -101,12 +101,12 @@ class ViewFragment : Fragment() {
                                 }
 
                                 stopView.setOnClickListener {
-                                    talky.stop()
+                                    talky!!.stop()
                                     stopView.visibility = View.GONE
                                     playView.visibility = View.VISIBLE
                                 }
 
-                                talky.setOnUtteranceProgressListener(object :
+                                talky!!.setOnUtteranceProgressListener(object :
                                     UtteranceProgressListener() {
                                     override fun onStart(utteranceId: String?) {
                                         requireActivity().runOnUiThread {
@@ -267,8 +267,10 @@ class ViewFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        talky.stop()
-        talky.shutdown()
+        if (talky != null) {
+            talky?.stop()
+            talky?.shutdown()
+        }
         super.onDestroy()
     }
 
