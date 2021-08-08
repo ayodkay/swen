@@ -91,9 +91,10 @@ class ViewFragment : Fragment() {
                                 AppLog.l("TTS--> Language not supported")
                             } else {
                                 talky!!.language = Locale(languageCode)
+                                talky!!.setSpeechRate(0.8f)
                                 playView.visibility = View.VISIBLE
                                 playView.setOnClickListener {
-                                    talky!!.speak(title + content,
+                                    talky!!.speak("$title. $content",
                                         TextToSpeech.QUEUE_FLUSH,
                                         null,
                                         TextToSpeech.ACTION_TTS_QUEUE_PROCESSING_COMPLETED)
