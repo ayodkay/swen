@@ -70,11 +70,76 @@ class ViewFragment : Fragment() {
         val description = (activity?.intent?.extras?.get("description") as String)
             .replace(regex = Regex("<.*?>"), "").trim()
 
+        binding.dTitle.apply { text = title }
+        binding.content.apply {
+            text = if (content.isBlank()) {
+                description
+            } else {
+                content
+            }
+        }
+        binding.shareView.apply {
+            setOnClickListener {
+                Firebase.dynamicLinks.shortLinkAsync {
+                    link = Uri.parse(url)
+                    domainUriPrefix = getString(R.string.domainUriPrefix)
+                    androidParameters {}
+                }.addOnSuccessListener { result ->
+                    dynamicLink = result.shortLink.toString()
+                }.addOnFailureListener {}
+                if (image.isNotBlank()) {
+                    Picasso.get().load(image).into(object : Target {
+                        override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
+                            shareNews = Intent(Intent.ACTION_SEND)
+                            shareNews.type = "image/jpeg"
+                            shareNews.putExtra(
+                                Intent.EXTRA_TEXT,
+                                "${title}\n${dynamicLink}"
+                            )
+                            try {
+                                val uri = getImageUri(bitmap)
+                                shareNews.putExtra(
+                                    Intent.EXTRA_STREAM, uri
+                                )
+                                startActivity(
+                                    Intent.createChooser(
+                                        shareNews,
+                                        getString(R.string.share_news)
+                                    )
+                                )
+                            } catch (e: Exception) {
+                                checkPermission()
+                            }
+                        }
 
-        val contentTextView = binding.content
-        val titleTextView = binding.dTitle
-        val shareView = binding.shareView
-        val article = binding.fullArticle
+                        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+                        override fun onBitmapFailed(
+                            e: java.lang.Exception?,
+                            errorDrawable: Drawable?,
+                        ) {
+                        }
+                    })
+                } else {
+                    shareNews = Intent(Intent.ACTION_SEND)
+                    shareNews.type = "text/plain"
+                    shareNews.putExtra(
+                        Intent.EXTRA_TEXT,
+                        "\n\n${title}\n${dynamicLink}"
+                    )
+
+                    startActivity(Intent.createChooser(shareNews, getString(R.string.share_news)))
+                }
+            }
+        }
+        binding.fullArticle.apply {
+            setOnClickListener {
+                startActivity(
+                    Intent(context, WebView::class.java)
+                        .putExtra("url", url)
+                        .putExtra("toMain", false)
+                )
+            }
+        }
         val playView = binding.playView
         val stopView = binding.stopView
 
@@ -94,7 +159,7 @@ class ViewFragment : Fragment() {
                                 talky!!.setSpeechRate(0.8f)
                                 playView.visibility = View.VISIBLE
                                 playView.setOnClickListener {
-                                    talky!!.speak("$title. $content",
+                                    talky!!.speak("$title. ${binding.content.text}.",
                                         TextToSpeech.QUEUE_FLUSH,
                                         null,
                                         TextToSpeech.ACTION_TTS_QUEUE_PROCESSING_COMPLETED)
@@ -133,75 +198,6 @@ class ViewFragment : Fragment() {
                     }
                 }
             }.addOnFailureListener {}
-
-
-        shareView.setOnClickListener {
-            Firebase.dynamicLinks.shortLinkAsync {
-                link = Uri.parse(url)
-                domainUriPrefix = getString(R.string.domainUriPrefix)
-                androidParameters {}
-            }.addOnSuccessListener { result ->
-                dynamicLink = result.shortLink.toString()
-            }.addOnFailureListener {}
-            if (image.isNotBlank()) {
-                Picasso.get().load(image).into(object : Target {
-                    override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
-                        shareNews = Intent(Intent.ACTION_SEND)
-                        shareNews.type = "image/jpeg"
-                        shareNews.putExtra(
-                            Intent.EXTRA_TEXT,
-                            "${title}\n${dynamicLink}"
-                        )
-                        try {
-                            val uri = getImageUri(bitmap)
-                            shareNews.putExtra(
-                                Intent.EXTRA_STREAM, uri
-                            )
-                            startActivity(
-                                Intent.createChooser(
-                                    shareNews,
-                                    getString(R.string.share_news)
-                                )
-                            )
-                        } catch (e: Exception) {
-                            checkPermission()
-                        }
-                    }
-
-                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
-                    override fun onBitmapFailed(
-                        e: java.lang.Exception?,
-                        errorDrawable: Drawable?,
-                    ) {
-                    }
-                })
-            } else {
-                shareNews = Intent(Intent.ACTION_SEND)
-                shareNews.type = "text/plain"
-                shareNews.putExtra(
-                    Intent.EXTRA_TEXT,
-                    "\n\n${title}\n${dynamicLink}"
-                )
-
-                startActivity(Intent.createChooser(shareNews, getString(R.string.share_news)))
-            }
-        }
-
-        article.setOnClickListener {
-            startActivity(
-                Intent(context, WebView::class.java)
-                    .putExtra("url", url)
-                    .putExtra("toMain", false)
-            )
-        }
-
-        if (content.isBlank()) {
-            contentTextView.text = description
-        } else {
-            contentTextView.text = content
-
-        }
-        titleTextView.text = title
         return binding.root
     }
 

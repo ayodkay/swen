@@ -17,6 +17,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivityViewnewsBinding
+import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.Helper.setUpNewsClient
 import com.ayodkay.apps.swen.helper.adapter.AdMobRecyclerView
 import com.ayodkay.apps.swen.view.main.MainActivity
@@ -175,50 +176,57 @@ class ViewNewActivity : AppCompatActivity() {
 
                 override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
                     response.observe(this@ViewNewActivity, { newsResponse ->
-                        moreBy.apply {
-                            layoutManager = LinearLayoutManager(this@ViewNewActivity)
-                            hasFixedSize()
-                            newsResponseList.addAll(newsResponse.articles)
-                            val desiredAssets = EnumSet.of(
-                                NativeAdAsset.TITLE,
-                                NativeAdAsset.TEXT,
-                                NativeAdAsset.ICON_IMAGE,
-                                NativeAdAsset.MAIN_IMAGE,
-                                NativeAdAsset.CALL_TO_ACTION_TEXT,
-                                NativeAdAsset.SPONSORED
-                            )
-                            val requestParameters = RequestParameters.Builder()
-                                .desiredAssets(desiredAssets)
-                                .build()
-                            val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
-                                ViewBinder.Builder(R.layout.native_ad_list_item)
-                                    .titleId(R.id.native_title)
-                                    .textId(R.id.native_text)
-                                    .mainImageId(R.id.native_main_image)
-                                    .iconImageId(R.id.native_icon_image)
-                                    .callToActionId(R.id.native_cta)
-                                    .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
-                                    .sponsoredTextId(R.id.native_sponsored_text_view)
-                                    .build()
-                            )
-
-                            MoPubRecyclerAdapter(
-                                this@ViewNewActivity, AdMobRecyclerView(
-                                    newsResponseList,
-                                    this@ViewNewActivity,
-                                    this@ViewNewActivity
+                        AppLog.l(newsResponse)
+                        if (newsResponse.totalResults == 0) {
+                            binding.bottomSheet.visibility = View.GONE
+                        } else {
+                            binding.bottomSheet.visibility = View.VISIBLE
+                            moreBy.apply {
+                                layoutManager = LinearLayoutManager(this@ViewNewActivity)
+                                hasFixedSize()
+                                newsResponseList.addAll(newsResponse.articles)
+                                val desiredAssets = EnumSet.of(
+                                    NativeAdAsset.TITLE,
+                                    NativeAdAsset.TEXT,
+                                    NativeAdAsset.ICON_IMAGE,
+                                    NativeAdAsset.MAIN_IMAGE,
+                                    NativeAdAsset.CALL_TO_ACTION_TEXT,
+                                    NativeAdAsset.SPONSORED
                                 )
-                            ).apply {
-                                registerAdRenderer(moPubStaticNativeAdRenderer)
-                            }.also {
-                                moreBy.apply {
-                                    it.loadAds(getString(R.string.mopub_adunit_native),
-                                        requestParameters)
-                                    adapter = it
-                                    layoutManager = LinearLayoutManager(this@ViewNewActivity)
+                                val requestParameters = RequestParameters.Builder()
+                                    .desiredAssets(desiredAssets)
+                                    .build()
+                                val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
+                                    ViewBinder.Builder(R.layout.native_ad_list_item)
+                                        .titleId(R.id.native_title)
+                                        .textId(R.id.native_text)
+                                        .mainImageId(R.id.native_main_image)
+                                        .iconImageId(R.id.native_icon_image)
+                                        .callToActionId(R.id.native_cta)
+                                        .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
+                                        .sponsoredTextId(R.id.native_sponsored_text_view)
+                                        .build()
+                                )
+
+                                MoPubRecyclerAdapter(
+                                    this@ViewNewActivity, AdMobRecyclerView(
+                                        newsResponseList,
+                                        this@ViewNewActivity,
+                                        this@ViewNewActivity
+                                    )
+                                ).apply {
+                                    registerAdRenderer(moPubStaticNativeAdRenderer)
+                                }.also {
+                                    moreBy.apply {
+                                        it.loadAds(getString(R.string.mopub_adunit_native),
+                                            requestParameters)
+                                        adapter = it
+                                        layoutManager = LinearLayoutManager(this@ViewNewActivity)
+                                    }
                                 }
                             }
                         }
+
                     })
                 }
 
