@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_undraw_empty_xct9.xml" value="0.3299284984678243" />
+        <entry key="app/src/main/res/layout/fragment_general.xml" value="0.15312815338042382" />
         <entry key="app/src/main/res/layout/fragment_viewnews.xml" value="0.15312815338042382" />
       </map>
     </option>
