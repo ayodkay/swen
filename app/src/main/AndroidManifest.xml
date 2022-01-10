@@ -35,7 +35,7 @@
 
         <receiver
             android:name=".helper.backend.BootReceiver"
-            android:enabled="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -43,7 +43,7 @@
 
         <receiver
             android:name=".helper.backend.PowerButtonBroadcastReceiver"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SCREEN_OFF" />
                 <action android:name="android.intent.action.SCREEN_ON" />
@@ -108,7 +108,8 @@
         </activity>
         <activity
             android:name=".view.WebView"
-            android:configChanges="keyboardHidden|orientation|screenSize">
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -130,7 +131,8 @@
             android:hardwareAccelerated="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".view.SplashScreen">
+        <activity android:name=".view.SplashScreen"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -9,6 +9,7 @@ import android.view.View.VISIBLE
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import com.ayodkay.apps.swen.databinding.ActivityWebViewBinding
+import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.links.Links
 import com.ayodkay.apps.swen.view.main.MainActivity
@@ -25,7 +26,7 @@ import com.mopub.mobileads.MoPubInterstitial
 
 class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
     private lateinit var binding: ActivityWebViewBinding
-    private lateinit var moPubInterstitial: MoPubInterstitial
+    private var moPubInterstitial: MoPubInterstitial? = null
 
     private var mInterstitialAd: InterstitialAd? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,9 +130,12 @@ class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
         if (mInterstitialAd != null) {
             mInterstitialAd?.show(this)
         } else {
-            if (moPubInterstitial.isReady) {
-                moPubInterstitial.show()
+            if (moPubInterstitial != null) {
+                if (moPubInterstitial!!.isReady) {
+                    moPubInterstitial!!.show()
+                }
             }
+
         }
         changeView()
     }
@@ -165,8 +169,8 @@ class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
 
     private fun loadMopub() {
         moPubInterstitial = MoPubInterstitial(this, "7255cbc578d1408a913044bfc5759fa9")
-        moPubInterstitial.interstitialAdListener = this
-        moPubInterstitial.load()
+        moPubInterstitial!!.interstitialAdListener = this
+        moPubInterstitial!!.load()
     }
 
     private fun loadAdmob() {

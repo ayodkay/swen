@@ -9,6 +9,7 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/compiler.xml
 .DS_Store
 /build
 /captures
@@ -18,3 +19,4 @@
 /app/release
 /app/google-services.json
 /app/src/androidTest
+/.idea/sonarlint/issuestore/

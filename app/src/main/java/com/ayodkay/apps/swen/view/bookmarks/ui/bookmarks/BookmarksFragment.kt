@@ -30,7 +30,7 @@ class BookmarksFragment : Fragment() {
 
         val news: ArrayList<News> = arrayListOf()
 
-        val bookmarkModel = ViewModelProvider(this).get(BookmarkRoomVM::class.java)
+        val bookmarkModel = ViewModelProvider(this)[BookmarkRoomVM::class.java]
         var add = true
         bookmarkModel.allBookMarkRoom.observe(viewLifecycleOwner, {
             if (it.isEmpty()) {

@@ -17,20 +17,20 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessaging
 
 
-class App : Application(){
+class App : Application() {
 
-    private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
+    private val sharedPrefs by lazy { getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
     override fun onCreate() {
         super.onCreate()
         application = this
         if (BuildConfig.DEBUG) {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
         }
-        when(sharedPrefs.getInt(KEY_THEME, THEME_UNDEFINED)){
-            1->{
+        when (sharedPrefs.getInt(KEY_THEME, THEME_UNDEFINED)) {
+            1 -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
-            0->{
+            0 -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
         }
@@ -49,6 +49,7 @@ class App : Application(){
         val mReceiver = PowerButtonBroadcastReceiver()
         registerReceiver(mReceiver, filter)
     }
+
     companion object {
         var application: Application? = null
             private set

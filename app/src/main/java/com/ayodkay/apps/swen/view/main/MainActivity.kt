@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.work.*
 import com.ayodkay.apps.swen.databinding.ActivityMainBinding
+import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.location.CoGeocoder
 import com.ayodkay.apps.swen.helper.location.CoLocation
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels {
         object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return MainViewModel(
                     CoLocation.from(this@MainActivity),
                     CoGeocoder.from(this@MainActivity)
@@ -50,7 +51,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val data = Data.Builder().putInt(NOTIFICATION_ID, 0).build()
+        AppLog.l("hahahah")
         scheduleNotification(data, this)
+        AppLog.l("hahahah")
         permissionCheck()
     }
 

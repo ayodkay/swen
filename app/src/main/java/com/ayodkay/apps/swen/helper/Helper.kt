@@ -43,9 +43,7 @@ object Helper {
 
     fun goDark(activity: Activity) {
         when (activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-            Configuration.UI_MODE_NIGHT_NO -> {
-
-            } // Night mode is not active, we're using the light theme
+            Configuration.UI_MODE_NIGHT_NO -> {} // Night mode is not active, we're using the light theme
             Configuration.UI_MODE_NIGHT_YES -> {
                 activity.setTheme(R.style.AppThemeNight)
             } // Night mode is active, we're using dark theme

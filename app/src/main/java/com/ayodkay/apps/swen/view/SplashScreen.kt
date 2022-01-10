@@ -56,6 +56,9 @@ class SplashScreen : AppCompatActivity() {
                     nextActivity()
                 }
             }
+            .addOnFailureListener {
+                nextActivity()
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
