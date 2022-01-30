@@ -7,21 +7,25 @@ import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Location
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
+import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivityMainBinding
-import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.Helper
+import com.ayodkay.apps.swen.helper.backend.MyReachability
 import com.ayodkay.apps.swen.helper.location.CoGeocoder
 import com.ayodkay.apps.swen.helper.location.CoLocation
 import com.ayodkay.apps.swen.helper.work.NotifyWork
 import com.ayodkay.apps.swen.helper.work.NotifyWork.Companion.NOTIFICATION_ID
 import com.ayodkay.apps.swen.helper.work.NotifyWork.Companion.NOTIFICATION_WORK
-import com.google.android.gms.location.*
 import com.google.firebase.messaging.FirebaseMessaging
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -51,9 +55,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val data = Data.Builder().putInt(NOTIFICATION_ID, 0).build()
-        AppLog.l("hahahah")
         scheduleNotification(data, this)
-        AppLog.l("hahahah")
         permissionCheck()
     }
 
@@ -114,10 +116,24 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         } else {
-            lifecycle.addObserver(viewModel)
-            viewModel.addressUpdates.observe(this, this::onAddressUpdate)
-            viewModel.locationUpdates.observe(this, this::onLocationUpdate)
-            viewModel.resolveSettingsEvent.observe(this) { it.resolve(this, REQUEST_SHOW_SETTINGS) }
+            Thread {
+                when {
+                    MyReachability.hasInternetConnected(this) -> runOnUiThread {
+                        lifecycle.addObserver(viewModel)
+                        viewModel.addressUpdates.observe(this, this::onAddressUpdate)
+                        viewModel.locationUpdates.observe(this, this::onLocationUpdate)
+                        viewModel.resolveSettingsEvent.observe(this) {
+                            it.resolve(this,
+                                REQUEST_SHOW_SETTINGS)
+                        }
+                    }
+                    else -> runOnUiThread {
+                        Toast.makeText(this, getString(R.string.internet_lost), Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }.start()
+
         }
     }
 
@@ -153,7 +169,6 @@ class MainActivity : AppCompatActivity() {
         }
         viewModel.stopJob()
     }
-
     companion object {
         private const val REQUEST_SHOW_SETTINGS = 123
         fun scheduleNotification(data: Data, context: Context) {

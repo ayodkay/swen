@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -132,7 +131,7 @@ class SettingsActivity : AppCompatActivity() {
             }
             rate?.setOnPreferenceClickListener {
                 AppEventsLogger.newLogger(context).logEvent("appRate")
-                inAppRate(requireContext(), requireActivity())
+                goToPlayStore(requireContext())
                 true
             }
             color?.setOnPreferenceClickListener {
@@ -181,26 +180,23 @@ class SettingsActivity : AppCompatActivity() {
 
         override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
+            savedInstanceState: Bundle?,
+        ): View {
             container?.setPadding(0, 0, 0, 150)
             val view = super.onCreateView(inflater, container, savedInstanceState)
-            view?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background))
+            view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background))
             return view
         }
 
-        @Deprecated("deprecated", ReplaceWith("inAppRate", "inAppRate()"))
         private fun goToPlayStore(context: Context?) {
             val uri: Uri = Uri.parse("market://details?id=" + context?.packageName)
             val goToMarket = Intent(Intent.ACTION_VIEW, uri)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                goToMarket.addFlags(
-                    Intent.FLAG_ACTIVITY_NO_HISTORY or
-                            Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
-                            Intent.FLAG_ACTIVITY_MULTIPLE_TASK
-                )
-            }
+            goToMarket.addFlags(
+                Intent.FLAG_ACTIVITY_NO_HISTORY or
+                        Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+            )
             try {
                 context?.startActivity(goToMarket)
             } catch (e: ActivityNotFoundException) {
@@ -216,12 +212,12 @@ class SettingsActivity : AppCompatActivity() {
         private fun inAppRate(context: Context, activity: Activity) {
             val manager = ReviewManagerFactory.create(context)
             manager.requestReviewFlow()
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        manager.launchReviewFlow(activity, it.result)
-                            .addOnCompleteListener { }
+                .addOnCompleteListener { requestReviewFlow ->
+                    if (requestReviewFlow.isSuccessful) {
+                        manager.launchReviewFlow(activity, requestReviewFlow.result)
+                            .addOnCompleteListener {}
                     }
-                }
+                }.addOnFailureListener {}
         }
 
         private fun isAvailable(list: ArrayList<String>, keyword: String): Int {

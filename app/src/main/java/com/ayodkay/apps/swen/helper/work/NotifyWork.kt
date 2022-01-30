@@ -89,7 +89,8 @@ class NotifyWork(private val context: Context, params: WorkerParameters) : Worke
         val notificationManager =
             applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
-        val pendingIntent = getActivity(applicationContext, 0, intent, 0)
+        val pendingIntent =
+            getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL)
             .setSmallIcon(R.drawable.ic_logo)
             .setContentTitle(message)
@@ -140,7 +141,7 @@ class NotifyWork(private val context: Context, params: WorkerParameters) : Worke
         )
         val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL)
             .setSmallIcon(R.drawable.ic_logo)
-            .setLargeIcon(bigIcon)
+            .setLargeIcon(bitmap)
             .setContentTitle(news.title)
             .setContentText(news.description)
             .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
