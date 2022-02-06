@@ -3,6 +3,7 @@ package com.ayodkay.apps.swen.notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -14,8 +15,10 @@ import android.graphics.Color.RED
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.work.Data
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.App.Companion.context
@@ -99,12 +102,16 @@ class Notification internal constructor(private val context: Context) {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val pendingIntent: PendingIntent =
+            getActivity(
+                context,
+                0,
+                intent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                } else {
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                }
+            )
         val builder = NotificationCompat.Builder(
             context,
             CHANNEL_ID
@@ -145,7 +152,7 @@ class Notification internal constructor(private val context: Context) {
 
     internal fun sendCountryNotification(
         title: String, descriptions: String, url: String,
-        image: String
+        image: String,
     ) {
         AppEventsLogger.newLogger(context).logEvent("sentCountryNotification")
         val intent = Intent(context, WebView::class.java).apply {
@@ -153,17 +160,21 @@ class Notification internal constructor(private val context: Context) {
 
         }.putExtra("url", url).putExtra("toMain", true)
 
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val pendingIntent: PendingIntent =
+            getActivity(
+                context,
+                0,
+                intent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                } else {
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                }
+            )
         val builder = NotificationCompat.Builder(
             context,
             CHANNEL_ID
         )
-        val bigIcon = BitmapFactory.decodeResource(context.resources, R.drawable.ic_logo)
+        val bigIcon = AppCompatResources.getDrawable(context, R.drawable.ic_logo)?.toBitmap()
 
         builder
             .setLargeIcon(bigIcon)

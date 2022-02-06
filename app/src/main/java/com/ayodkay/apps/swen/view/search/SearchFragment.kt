@@ -144,7 +144,7 @@ class SearchFragment : Fragment() {
                     }
 
                     override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
-                        response.observe(viewLifecycleOwner, { newsResponse ->
+                        response.observe(viewLifecycleOwner) { newsResponse ->
                             requireActivity().currentFocus?.let { view ->
                                 val imm =
                                     requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -203,7 +203,7 @@ class SearchFragment : Fragment() {
                                     }
                                 }
                             }
-                        })
+                        }
                     }
 
                 })

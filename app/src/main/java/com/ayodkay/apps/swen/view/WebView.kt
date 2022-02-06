@@ -9,7 +9,6 @@ import android.view.View.VISIBLE
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import com.ayodkay.apps.swen.databinding.ActivityWebViewBinding
-import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.links.Links
 import com.ayodkay.apps.swen.view.main.MainActivity
@@ -68,7 +67,9 @@ class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
                 }
             }
 
-            override fun onPageFinished(view: WebView?, url: String?) {
+            override fun onPageFinished(view: WebView?, url: String?) {}
+
+            override fun onPageCommitVisible(view: WebView?, url: String?) {
                 if (link.contains("news.google.com")) {
                     if (reload) {
                         binding.webViewSuite.startLoading(url)

@@ -108,7 +108,7 @@ object Helper {
         binding: FragmentGeneralBinding,
         q: String? = "",
         isEverything: Boolean = false,
-    ): View {
+    ) {
         if (isEverything) {
             binding.swipeRefresh.setOnRefreshListener {
                 setUpObserverEveryTime(q, binding, frag)
@@ -120,7 +120,6 @@ object Helper {
             }
             setUpObserver(category.orEmpty(), frag, binding, q)
         }
-        return binding.root
     }
 
     @SuppressLint("SetTextI18n")
@@ -177,7 +176,7 @@ object Helper {
         newsApiClientWithObserver
             .getTopHeadlines(topHeadlinesBuilder, object : ArticlesLiveDataResponseCallback {
                 override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
-                    response.observe(frag.viewLifecycleOwner, { newsResponse ->
+                    response.observe(frag.viewLifecycleOwner) { newsResponse ->
                         newsResponseList.addAll(newsResponse.articles)
 
                         if (newsResponse != null) {
@@ -225,7 +224,7 @@ object Helper {
                                 binding.swipeRefresh.isRefreshing = false
                             }
                         }
-                    })
+                    }
                 }
 
                 override fun onFailure(throwable: Throwable) {
@@ -293,7 +292,7 @@ object Helper {
         newsApiClientWithObserver.getEverything(everythingBuilder,
             object : ArticlesLiveDataResponseCallback {
                 override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
-                    response.observe(frag.viewLifecycleOwner, { newsResponse ->
+                    response.observe(frag.viewLifecycleOwner) { newsResponse ->
                         if (newsResponse.totalResults == 0) {
                             binding.empty.visibility = View.VISIBLE
                             binding.emptyText.visibility = View.VISIBLE
@@ -325,7 +324,7 @@ object Helper {
                             }
                             binding.swipeRefresh.isRefreshing = false
                         }
-                    })
+                    }
 
                 }
 

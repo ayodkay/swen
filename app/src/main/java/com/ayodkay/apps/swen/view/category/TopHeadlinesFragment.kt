@@ -16,13 +16,10 @@ class TopHeadlinesFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentGeneralBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val category = arguments?.getString("category")
         val q = arguments?.getString("q")
         Helper.setupFragment(category, this.requireParentFragment(), binding, q)
+        return binding.root
     }
 
     fun newInstance(category: String, q: String? = ""): TopHeadlinesFragment {

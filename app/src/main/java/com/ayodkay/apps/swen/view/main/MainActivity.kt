@@ -169,6 +169,7 @@ class MainActivity : AppCompatActivity() {
         }
         viewModel.stopJob()
     }
+
     companion object {
         private const val REQUEST_SHOW_SETTINGS = 123
         fun scheduleNotification(data: Data, context: Context) {

@@ -11,17 +11,21 @@ import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.graphics.BitmapFactory
+import android.graphics.Bitmap
 import android.graphics.Color.RED
+import android.graphics.drawable.Drawable
 import android.media.AudioAttributes
 import android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION
 import android.media.AudioAttributes.USAGE_NOTIFICATION_RINGTONE
 import android.media.RingtoneManager.TYPE_NOTIFICATION
 import android.media.RingtoneManager.getDefaultUri
+import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.O
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.PRIORITY_MAX
+import androidx.core.graphics.drawable.toBitmap
 import androidx.work.ListenableWorker.Result.success
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -35,6 +39,7 @@ import com.github.ayodkay.interfaces.ArticlesResponseCallback
 import com.github.ayodkay.models.Article
 import com.github.ayodkay.models.ArticleResponse
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 
 
 class NotifyWork(private val context: Context, params: WorkerParameters) : Worker(context, params) {
@@ -89,8 +94,16 @@ class NotifyWork(private val context: Context, params: WorkerParameters) : Worke
         val notificationManager =
             applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
-        val pendingIntent =
-            getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent: PendingIntent = getActivity(
+            context,
+            0,
+            intent, if (SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+        )
+
         val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL)
             .setSmallIcon(R.drawable.ic_logo)
             .setContentTitle(message)
@@ -127,24 +140,48 @@ class NotifyWork(private val context: Context, params: WorkerParameters) : Worke
 
         val notificationManager =
             applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val bigIcon = BitmapFactory.decodeResource(context.resources, R.drawable.ic_logo)
-        val bitmap = try {
-            Picasso.get().load(news.urlToImage).get()
-        } catch (e: Exception) {
-            bigIcon
-        }
-        val pendingIntent: PendingIntent = getActivity(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+
         val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL)
+
+        Picasso.get().load(news.urlToImage).into(object : Target {
+            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+
+            override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                val bitmap = AppCompatResources.getDrawable(context, R.drawable.ic_logo)?.toBitmap()
+                notify(notification, intent, bitmap!!, news, notificationManager, id)
+            }
+
+            override fun onBitmapLoaded(bitmapImage: Bitmap, from: Picasso.LoadedFrom?) {
+                notify(notification, intent, bitmapImage, news, notificationManager, id)
+            }
+        })
+
+    }
+
+    private fun notify(
+        notification: NotificationCompat.Builder,
+        intent: Intent,
+        bitmapImage: Bitmap,
+        news: Article,
+        notificationManager: NotificationManager,
+        id: Int,
+    ) {
+        val pendingIntent: PendingIntent =
+            getActivity(
+                context,
+                0,
+                intent, if (SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                } else {
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                }
+            )
+        notification
+            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmapImage))
+            .setLargeIcon(bitmapImage)
             .setSmallIcon(R.drawable.ic_logo)
-            .setLargeIcon(bitmap)
             .setContentTitle(news.title)
             .setContentText(news.description)
-            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
             .setDefaults(DEFAULT_ALL).setContentIntent(pendingIntent).setAutoCancel(true)
 
         notification.priority = PRIORITY_MAX

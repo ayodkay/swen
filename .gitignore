@@ -20,3 +20,4 @@
 /app/google-services.json
 /app/src/androidTest
 /.idea/sonarlint/issuestore/
+/keystore.jks

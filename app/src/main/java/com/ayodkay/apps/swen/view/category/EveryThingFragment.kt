@@ -17,12 +17,9 @@ class EveryThingFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentGeneralBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val q = arguments?.getString("q")
         Helper.setupFragment(frag = this, binding = binding, q = q, isEverything = true)
+        return binding.root
     }
 
     fun newInstance(q: String): EveryThingFragment {
