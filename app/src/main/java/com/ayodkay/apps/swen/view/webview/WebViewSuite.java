@@ -241,12 +241,6 @@ public class WebViewSuite extends RelativeLayout {
             }
 
             @Override
-            public void onPageCommitVisible(WebView view, String url) {
-                super.onPageCommitVisible(view, url);
-                if (callback != null) callback.onPageCommitVisible(view, url);
-            }
-
-            @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 toggleProgressbar(false);
@@ -309,8 +303,6 @@ public class WebViewSuite extends RelativeLayout {
         void onPageStarted(WebView view, String url, Bitmap favicon);
 
         void onPageFinished(WebView view, String url);
-
-        void onPageCommitVisible(WebView view, String url);
 
         boolean shouldOverrideUrlLoading(WebView view, String url);
     }

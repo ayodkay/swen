@@ -50,52 +50,24 @@ class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
         }
 
         binding.webViewSuite.customizeClient(object : WebViewSuite.WebViewSuiteCallback {
-            var reload = true
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                val slash = url!!.indexOf("//") + 2
-                val domain = url.substring(slash, url.indexOf('/', slash))
-                binding.urlLink.text = domain
-
+            override fun onPageStarted(view: WebView?, url: String, favicon: Bitmap?) {
                 binding.shareLink.setOnClickListener {
-                    val sendIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, url)
-                        type = "text/plain"
-                    }
-                    val shareIntent = Intent.createChooser(sendIntent, null)
-                    startActivity(shareIntent)
+                    share(url)
                 }
             }
 
-            override fun onPageFinished(view: WebView?, url: String?) {}
-
-            override fun onPageCommitVisible(view: WebView?, url: String?) {
-                if (link.contains("news.google.com")) {
-                    if (reload) {
-                        binding.webViewSuite.startLoading(url)
-                        reload = false
-                    }
-                }
-
+            override fun onPageFinished(view: WebView?, url: String?) {
                 val slash = url!!.indexOf("//") + 2
                 val domain = url.substring(slash, url.indexOf('/', slash))
                 binding.urlLink.text = domain
 
                 binding.shareLink.setOnClickListener {
-                    val sendIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, url)
-                        type = "text/plain"
-                    }
-                    val shareIntent = Intent.createChooser(sendIntent, null)
-                    startActivity(shareIntent)
+                    share(url)
                 }
             }
 
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                if (url.orEmpty().contains("youtube.com")) {
-                    view?.loadUrl(url!!)
-                }
+                view?.loadUrl(url!!)
                 return true
             }
         })
@@ -188,6 +160,16 @@ class WebView : AppCompatActivity(), MoPubInterstitial.InterstitialAdListener {
                     mInterstitialAd = interstitialAd
                 }
             })
+    }
+
+    private fun share(url: String) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, url)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 
     private fun changeView() {
