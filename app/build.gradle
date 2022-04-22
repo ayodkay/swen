@@ -3,6 +3,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'applovin-quality-service'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.firebase-perf'
+
 applovin {
     apiKey "Jb-ZRRo3hbSqdMX5Kt0pOtqLTS_GkHfhTTyU-9OOJXiPe06Mw8RVziyCsSiZwGs51WN0a2xThKBWRVakIgwORa"
 }
@@ -85,7 +90,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.google.firebase:firebase-perf:20.0.6'
-    implementation 'com.google.firebase:firebase-messaging:23.0.2'
+    implementation 'com.google.firebase:firebase-messaging:23.0.3'
     implementation 'com.google.firebase:firebase-crashlytics:18.2.9'
     implementation 'com.google.firebase:firebase-analytics-ktx:20.1.2'
     implementation 'com.google.firebase:firebase-dynamic-links-ktx:21.0.1'
@@ -130,7 +135,3 @@ dependencies {
     implementation 'com.google.mlkit:language-id:17.0.3'
 
 }
-
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.google.firebase.firebase-perf'

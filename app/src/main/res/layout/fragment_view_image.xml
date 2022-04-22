@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:maxads="http://schemas.applovin.com/android/1.0">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.ayodkay.apps.swen.view.viewimage.ViewImageViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <com.ayodkay.apps.swen.zoom.ZoomClass
+            android:id="@+id/newsImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="@{()->viewModel.pinchIsVisible.booleanValue() == false}"
+            app:imageUrl="@{viewModel.imageUrl}" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/pinch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:isVisible="@{viewModel.pinchIsVisible}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/pinch" />
+
+        <com.applovin.mediation.ads.MaxAdView
+            android:id="@+id/maxAdviewBanner"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/banner_height"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:loadBannerAd="@{viewModel.loadAd}"
+            maxads:adUnitId="6d2eada63140e252" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
