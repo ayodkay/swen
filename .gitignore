@@ -22,3 +22,5 @@
 /.idea/sonarlint/issuestore/
 /keystore.jks
 /.safedk
+/.safedk/plugin.properties
+/.safedk/hashes.safedk
