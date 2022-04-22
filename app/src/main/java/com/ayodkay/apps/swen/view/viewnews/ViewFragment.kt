@@ -56,7 +56,7 @@ class ViewFragment : Fragment() {
 
         MobileAds.initialize(requireContext())
         val adRequest = AdRequest.Builder().build()
-        binding.adView.loadAd(adRequest)
+        //binding.adView.loadAd(adRequest)
 
         var dynamicLink = ""
 

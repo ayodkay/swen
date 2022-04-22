@@ -175,7 +175,7 @@ class ViewNewActivity : AppCompatActivity() {
                 }
 
                 override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
-                    response.observe(this@ViewNewActivity, { newsResponse ->
+                    response.observe(this@ViewNewActivity) { newsResponse ->
                         AppLog.l(newsResponse)
                         if (newsResponse.totalResults == 0) {
                             binding.bottomSheet.visibility = View.GONE
@@ -227,7 +227,7 @@ class ViewNewActivity : AppCompatActivity() {
                             }
                         }
 
-                    })
+                    }
                 }
 
             })

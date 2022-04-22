@@ -20,4 +20,6 @@
         <attr name="enableHorizontalScrollBar" format="boolean" />
         <attr name="url" format="string|reference" />
     </declare-styleable>
+
+    <dimen name="banner_height">50dp</dimen>
 </resources>

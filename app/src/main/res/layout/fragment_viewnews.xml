@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:maxads="http://schemas.applovin.com/android/1.0"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -114,15 +114,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.google.android.gms.ads.AdView
-                        android:id="@+id/adView"
+                    <com.applovin.mediation.ads.MaxAdView
+                        android:id="@+id/maxAdviewBanner"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/banner_height"
                         android:layout_alignParentBottom="true"
                         android:layout_margin="10dp"
-                        ads:adSize="BANNER"
-                        ads:adUnitId="ca-app-pub-7312232171503509/8638142033"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        maxads:adUnitId="6d2eada63140e252" />
                 </RelativeLayout>
             </LinearLayout>
 

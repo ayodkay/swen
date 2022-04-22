@@ -10,14 +10,13 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/inner_host_nav"
         android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@id/cardview"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="60dp"
         app:navGraph="@navigation/main_control" />
 
     <androidx.cardview.widget.CardView
@@ -25,10 +24,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/background"
+        app:layout_constraintEnd_toEndOf="parent"
         app:cardCornerRadius="8dp"
         app:cardElevation="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.5">
 
         <io.ak1.BubbleTabBar
             android:id="@+id/bubbleTabBar"

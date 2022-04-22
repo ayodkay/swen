@@ -30,23 +30,14 @@ class AskLocation : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.bannerMopubview.destroy()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAskLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        MobileAds.initialize(this)
-//        val adRequest = AdRequest.Builder().build()
-//        adView.loadAd(adRequest)
-
-        binding.bannerMopubview.apply {
-            setAdUnitId(getString(R.string.mopub_adunit_banner))
+        binding.maxAdviewBanner.apply {
             loadAd()
+            startAutoRefresh()
         }
 
         binding.selectCountry.setOnClickListener {

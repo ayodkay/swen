@@ -111,7 +111,7 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             share?.setOnPreferenceClickListener {
-                AppEventsLogger.newLogger(context).logEvent("appShare")
+                AppEventsLogger.newLogger(requireContext()).logEvent("appShare")
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(
@@ -130,7 +130,7 @@ class SettingsActivity : AppCompatActivity() {
                 true
             }
             rate?.setOnPreferenceClickListener {
-                AppEventsLogger.newLogger(context).logEvent("appRate")
+                AppEventsLogger.newLogger(requireContext()).logEvent("appRate")
                 goToPlayStore(requireContext())
                 true
             }

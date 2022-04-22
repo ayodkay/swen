@@ -13,24 +13,28 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.applovin.mediation.MaxAd
+import com.applovin.mediation.MaxAdViewAdListener
+import com.applovin.mediation.MaxError
+import com.applovin.mediation.nativeAds.MaxNativeAdLoader
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivitySearchBinding
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.Helper.setUpNewsClient
-import com.ayodkay.apps.swen.helper.adapter.AdMobRecyclerView
+import com.ayodkay.apps.swen.helper.adapter.MaxAdsRecyclerView
 import com.ayodkay.apps.swen.helper.constant.ErrorMessage
 import com.github.ayodkay.builder.EverythingBuilder
 import com.github.ayodkay.models.Article
 import com.github.ayodkay.models.ArticleResponse
 import com.github.ayodkay.mvvm.interfaces.ArticlesLiveDataResponseCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mopub.nativeads.MoPubRecyclerAdapter
-import com.mopub.nativeads.MoPubStaticNativeAdRenderer
-import com.mopub.nativeads.RequestParameters
-import com.mopub.nativeads.ViewBinder
-import java.util.*
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), MaxAdViewAdListener {
+
+    private lateinit var nativeAdLoader: MaxNativeAdLoader
+
+
+    private var nativeAd: MaxAd? = null
 
     var queryValue: String = "null"
     lateinit var sort: String
@@ -43,6 +47,8 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        nativeAdLoader =
+            MaxNativeAdLoader("08f93b640def0007", context)
         _binding = ActivitySearchBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -57,13 +63,10 @@ class SearchFragment : Fragment() {
         var checkedSort = 1
         sort = sortOptions[checkedSort]
 
-//        MobileAds.initialize(requireContext())
-//        val adRequest = AdRequest.Builder().build()
-//        binding.adView.loadAd(adRequest)
 
-        binding.bannerMopubview.apply {
-            setAdUnitId(getString(R.string.mopub_adunit_banner))
+        binding.maxAdviewBanner.apply {
             loadAd()
+            startAutoRefresh()
         }
 
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -74,7 +77,7 @@ class SearchFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                binding.bannerMopubview.visibility = View.VISIBLE
+                binding.maxAdviewBanner.visibility = View.VISIBLE
                 return false
             }
 
@@ -160,46 +163,12 @@ class SearchFragment : Fragment() {
                                     binding.emptyText.visibility = View.GONE
 
                                     newsResponseList.addAll(newsResponse.articles)
-                                    val desiredAssets = EnumSet.of(
-                                        RequestParameters.NativeAdAsset.TITLE,
-                                        RequestParameters.NativeAdAsset.TEXT,
-                                        RequestParameters.NativeAdAsset.ICON_IMAGE,
-                                        RequestParameters.NativeAdAsset.MAIN_IMAGE,
-                                        RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
-                                        RequestParameters.NativeAdAsset.SPONSORED
-                                    )
-                                    val requestParameters = RequestParameters.Builder()
-                                        .desiredAssets(desiredAssets)
-                                        .build()
-
-                                    val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
-                                        ViewBinder.Builder(R.layout.native_ad_list_item)
-                                            .titleId(R.id.native_title)
-                                            .textId(R.id.native_text)
-                                            .mainImageId(R.id.native_main_image)
-                                            .iconImageId(R.id.native_icon_image)
-                                            .callToActionId(R.id.native_cta)
-                                            .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
-                                            .sponsoredTextId(R.id.native_sponsored_text_view)
-                                            .build()
-                                    )
-
-                                    MoPubRecyclerAdapter(
-                                        requireActivity(), AdMobRecyclerView(
-                                            newsResponseList,
-                                            requireActivity(),
-                                            requireActivity()
-                                        )
-                                    ).apply {
-                                        registerAdRenderer(moPubStaticNativeAdRenderer)
-                                    }.also {
-                                        binding.bannerMopubview.visibility = View.GONE
-                                        binding.searchRecycle.apply {
-                                            it.loadAds(getString(R.string.mopub_adunit_native),
-                                                requestParameters)
-                                            adapter = it
-                                            layoutManager = LinearLayoutManager(requireActivity())
-                                        }
+                                    binding.maxAdviewBanner.visibility = View.GONE
+                                    binding.searchRecycle.apply {
+                                        adapter = MaxAdsRecyclerView(newsResponseList,
+                                            this@SearchFragment,
+                                            requireContext(), nativeAdLoader, nativeAd)
+                                        layoutManager = LinearLayoutManager(requireActivity())
                                     }
                                 }
                             }
@@ -209,4 +178,26 @@ class SearchFragment : Fragment() {
                 })
         }
     }
+
+    override fun onDestroy() {
+        // Must destroy native ad or else there will be memory leaks.
+        if (nativeAd != null) {
+            // Call destroy on the native ad from any native ad loader.
+            nativeAdLoader.destroy(nativeAd)
+        }
+
+        // Destroy the actual loader itself
+        nativeAdLoader.destroy()
+
+        super.onDestroy()
+    }
+
+    override fun onAdLoaded(maxAd: MaxAd) {}
+    override fun onAdDisplayed(ad: MaxAd?) {}
+    override fun onAdHidden(ad: MaxAd?) {}
+    override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {}
+    override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {}
+    override fun onAdClicked(maxAd: MaxAd) {}
+    override fun onAdExpanded(maxAd: MaxAd) {}
+    override fun onAdCollapsed(maxAd: MaxAd) {}
 }

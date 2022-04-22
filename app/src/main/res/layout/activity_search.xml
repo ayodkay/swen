@@ -90,21 +90,12 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
-
-        <com.mopub.mobileads.MoPubView
-            android:id="@+id/banner_mopubview"
+        <com.applovin.mediation.ads.MaxAdView xmlns:maxads="http://schemas.applovin.com/android/1.0"
+            android:id="@+id/maxAdviewBanner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/banner_height"
             android:layout_alignParentBottom="true"
-            app:moPubAdSize="height_250" />
-        <!--        <com.google.android.gms.ads.AdView-->
-        <!--            android:id="@+id/adView"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_alignParentBottom="true"-->
-        <!--            android:layout_centerInParent="true"-->
-        <!--            ads:adSize="BANNER"-->
-        <!--            ads:adUnitId="ca-app-pub-7312232171503509/5964904907" />-->
+            maxads:adUnitId="6d2eada63140e252" />
     </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
