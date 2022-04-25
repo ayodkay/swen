@@ -259,6 +259,4 @@ class ViewNewActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-
-
 }

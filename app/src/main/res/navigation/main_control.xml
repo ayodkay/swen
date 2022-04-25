@@ -42,11 +42,42 @@
     <fragment
         android:id="@+id/nav_view_image"
         android:name="com.ayodkay.apps.swen.view.viewimage.ViewImageFragment"
-        android:label="View News"
+        android:label="View Image"
         tools:layout="@layout/activity_view_image">
 
         <argument
             android:name="image"
+            android:defaultValue=""
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_view_news"
+        android:name="com.ayodkay.apps.swen.view.viewnews.ViewNewsFragment"
+        android:label="View News"
+        tools:layout="@layout/activity_viewnews">
+        <argument
+            android:name="source"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="url"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="image"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="title"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="content"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="description"
             android:defaultValue=""
             app:argType="string" />
     </fragment>

@@ -1,14 +1,11 @@
 package com.ayodkay.apps.swen.helper.adapter
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -24,6 +21,8 @@ import com.applovin.mediation.nativeAds.MaxNativeAdLoader
 import com.applovin.mediation.nativeAds.MaxNativeAdView
 import com.applovin.mediation.nativeAds.MaxNativeAdViewBinder
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.databinding.NativeCustomAdViewBinding
+import com.ayodkay.apps.swen.databinding.NewsListCardBinding
 import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookMarkRoom
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
@@ -42,29 +41,22 @@ private val ITEM_TYPE_MAX_AD by lazy { 1 }
 
 class MaxAdsRecyclerView internal constructor(
     private val newsList: ArrayList<Article>, private val owner: ViewModelStoreOwner,
-    private val context: Context,
     private var nativeAdLoader: MaxNativeAdLoader, private var nativeAd: MaxAd? = null,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private lateinit var nativeAdLayout: FrameLayout
-    private lateinit var nativeAdView: MaxNativeAdView
-
-    val activity = context as Activity
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
             ITEM_TYPE_MAX_AD -> {
-                val bannerLayoutView: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.native_custom_ad_view, parent, false)
-
-                return MyAdViewHolder(bannerLayoutView)
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = NativeCustomAdViewBinding.inflate(layoutInflater, parent, false)
+                return MyAdViewHolder(binding)
             }
 
             else -> {
-                val view: View =
-                    LayoutInflater.from(context)
-                        .inflate(R.layout.news_list_card, parent, false)
-                return NewsViewHolder(view)
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = NewsListCardBinding.inflate(layoutInflater, parent, false)
+                return NewsViewHolder(binding)
             }
 
 
@@ -78,60 +70,9 @@ class MaxAdsRecyclerView internal constructor(
     @SuppressLint("SimpleDateFormat")
     @Suppress("SENSELESS_COMPARISON")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (getItemViewType(position)) {
-            ITEM_TYPE_MAX_AD -> {
-                val progressBar: LottieAnimationView =
-                    holder.itemView.findViewById(R.id.adsProgress)
-
-                val error: LottieAnimationView =
-                    holder.itemView.findViewById(R.id.error)
-
-                val binder: MaxNativeAdViewBinder =
-                    MaxNativeAdViewBinder.Builder(R.layout.native_custom_ad_view)
-                        .setTitleTextViewId(R.id.title_text_view)
-                        .setBodyTextViewId(R.id.body_text_view)
-                        .setAdvertiserTextViewId(R.id.advertiser_textView)
-                        .setIconImageViewId(R.id.icon_image_view)
-                        .setMediaContentViewGroupId(R.id.media_view_container)
-                        .setOptionsContentViewGroupId(R.id.options_view)
-                        .setCallToActionButtonId(R.id.cta_button)
-                        .build()
-                nativeAdView = MaxNativeAdView(binder, context)
-                nativeAdLoader.loadAd(nativeAdView)
-                nativeAdLoader.setNativeAdListener(object :
-                    MaxNativeAdListener() {
-                    override fun onNativeAdLoaded(
-                        nativeAdView: MaxNativeAdView?,
-                        ad: MaxAd,
-                    ) {
-
-                        // Cleanup any pre-existing native ad to prevent memory leaks.
-                        if (nativeAd != null) {
-                            nativeAdLoader.destroy(nativeAd)
-                        }
-
-                        // Save ad for cleanup.
-                        nativeAd = ad
-
-                        progressBar.visibility = View.GONE
-                        error.visibility = View.GONE
-
-                        // Add ad view to view.
-                        nativeAdLayout.removeAllViews()
-                        nativeAdLayout.addView(nativeAdView)
-                    }
-
-                    override fun onNativeAdLoadFailed(
-                        adUnitId: String,
-                        maxError: MaxError,
-                    ) {
-                        progressBar.visibility = View.GONE
-                        error.visibility = View.VISIBLE
-                        nativeAdLoader.loadAd()
-                    }
-
-                    override fun onNativeAdClicked(ad: MaxAd) {}
-                })
+        when (holder) {
+            is MyAdViewHolder -> {
+                holder.bind(nativeAdLoader, nativeAd)
             }
 
             else -> {
@@ -204,54 +145,52 @@ class MaxAdsRecyclerView internal constructor(
                 }
 
 
-                activity.runOnUiThread {
-                    try {
-                        Glide.with(context)
-                            .load(newsPosition.urlToImage)
-                            .listener(object : RequestListener<Drawable> {
-                                override fun onLoadFailed(
-                                    e: GlideException?,
-                                    model: Any?,
-                                    target: Target<Drawable>?,
-                                    isFirstResource: Boolean,
-                                ): Boolean {
-                                    newsViewHolder.progressBar.visibility = View.GONE
-                                    newsViewHolder.image.post {
-                                        newsViewHolder.image.setImageDrawable(
-                                            ResourcesCompat
-                                                .getDrawable(
-                                                    context.resources,
-                                                    R.drawable.ic_undraw_page_not_found_su7k, null
-                                                )
-                                        )
-                                    }
-                                    return true
+                try {
+                    Glide.with(context)
+                        .load(newsPosition.urlToImage)
+                        .listener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                isFirstResource: Boolean,
+                            ): Boolean {
+                                newsViewHolder.progressBar.visibility = View.GONE
+                                newsViewHolder.image.post {
+                                    newsViewHolder.image.setImageDrawable(
+                                        ResourcesCompat
+                                            .getDrawable(
+                                                context.resources,
+                                                R.drawable.ic_undraw_page_not_found_su7k, null
+                                            )
+                                    )
                                 }
+                                return true
+                            }
 
-                                override fun onResourceReady(
-                                    resource: Drawable?,
-                                    model: Any?,
-                                    target: Target<Drawable>?,
-                                    dataSource: DataSource?,
-                                    isFirstResource: Boolean,
-                                ): Boolean {
-                                    newsViewHolder.progressBar.visibility = View.GONE
-                                    return false
-                                }
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean,
+                            ): Boolean {
+                                newsViewHolder.progressBar.visibility = View.GONE
+                                return false
+                            }
 
-                            })
-                            .into(holder.image)
+                        })
+                        .into(holder.image)
 
-                    } catch (e: RuntimeException) {
-                        newsViewHolder.progressBar.visibility = View.GONE
-                        newsViewHolder.image.setImageDrawable(
-                            ResourcesCompat.getDrawable(
-                                context.resources,
-                                R.drawable.ic_undraw_page_not_found_su7k,
-                                null
-                            )
+                } catch (e: RuntimeException) {
+                    newsViewHolder.progressBar.visibility = View.GONE
+                    newsViewHolder.image.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            context.resources,
+                            R.drawable.ic_undraw_page_not_found_su7k,
+                            null
                         )
-                    }
+                    )
                 }
 
                 newsViewHolder.itemView.setOnClickListener {
@@ -284,11 +223,62 @@ class MaxAdsRecyclerView internal constructor(
     }
 
     //Banner Ad View Holder
-    internal class MyAdViewHolder(itemView: View?) :
-        RecyclerView.ViewHolder(itemView!!)
+    class MyAdViewHolder(val binding: NativeCustomAdViewBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        private val nativeAdLayout: ViewGroup? = null
+        private var nativeAd: MaxAd? = null
+
+        fun bind(nativeAdLoader: MaxNativeAdLoader) {
+            val binder: MaxNativeAdViewBinder =
+                MaxNativeAdViewBinder.Builder(R.layout.native_custom_ad_view)
+                    .setTitleTextViewId(R.id.title_text_view)
+                    .setBodyTextViewId(R.id.body_text_view)
+                    .setAdvertiserTextViewId(R.id.advertiser_textView)
+                    .setIconImageViewId(R.id.icon_image_view)
+                    .setMediaContentViewGroupId(R.id.media_view_container)
+                    .setOptionsContentViewGroupId(R.id.options_view)
+                    .setCallToActionButtonId(R.id.cta_button)
+                    .build()
+            val nativeAdView = MaxNativeAdView(binder, binding.root.context)
+            nativeAdLoader.loadAd(nativeAdView)
+            nativeAdLoader.setNativeAdListener(object :
+                MaxNativeAdListener() {
+                override fun onNativeAdLoaded(
+                    nativeAdView: MaxNativeAdView?,
+                    ad: MaxAd,
+                ) {
+
+                    // Cleanup any pre-existing native ad to prevent memory leaks.
+                    if (nativeAd != null) {
+                        nativeAdLoader.destroy(nativeAd)
+                    }
+
+                    // Save ad for cleanup.
+                    nativeAd = ad
+                    // Add ad view to view.
+                    nativeAdLayout?.removeAllViews()
+                    nativeAdLayout?.addView(nativeAdView)
+                }
+
+                override fun onNativeAdLoadFailed(
+                    adUnitId: String,
+                    maxError: MaxError,
+                ) {
+                }
+
+                override fun onNativeAdClicked(ad: MaxAd) {}
+            })
+        }
+    }
 
 
-    internal class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    internal class NewsViewHolder(itemView: NewsListCardBinding) :
+        RecyclerView.ViewHolder(itemView.root) {
+
+        fun bind() {
+
+        }
+
         var title: TextView = itemView.findViewById(R.id.title)
         var image: ImageView = itemView.findViewById(R.id.image)
         var bookmark: ImageView = itemView.findViewById(R.id.bookmark)
