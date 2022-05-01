@@ -5,93 +5,65 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.ayodkay.apps.swen.R
+import androidx.navigation.fragment.findNavController
+import com.applovin.mediation.nativeAds.MaxNativeAdLoader
+import com.ayodkay.apps.swen.MainControlDirections
 import com.ayodkay.apps.swen.databinding.FragmentBookmarksBinding
-import com.ayodkay.apps.swen.helper.adapter.RoomRecyclerview
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
-import com.ayodkay.apps.swen.model.News
-import com.mopub.nativeads.MoPubRecyclerAdapter
-import com.mopub.nativeads.MoPubStaticNativeAdRenderer
-import com.mopub.nativeads.RequestParameters
-import com.mopub.nativeads.ViewBinder
-import java.util.*
+import com.github.ayodkay.models.Article
+import com.github.ayodkay.models.Source
 
 class BookmarksFragment : Fragment() {
-    private var _binding: FragmentBookmarksBinding? = null
-    private val binding get() = _binding!!
+    private val bookmarksViewModel: BookmarksViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentBookmarksBinding.inflate(inflater, container, false)
-        return binding.root.apply {
-            val news: ArrayList<News> = arrayListOf()
-            val bookmarkModel = ViewModelProvider(requireActivity())[BookmarkRoomVM::class.java]
-            var add = true
-            bookmarkModel.allBookMarkRoom.observe(viewLifecycleOwner) {
-                if (it.isEmpty()) {
-                    binding.noSaved.visibility = View.VISIBLE
-                    binding.savedRecycle.visibility = View.GONE
-                } else {
-                    for (i in it.indices) {
-                        if (add) {
-                            news.add(
-                                News(
-                                    it[i].source,
-                                    it[i].author,
-                                    it[i].title,
-                                    it[i].description,
-                                    it[i].url,
-                                    it[i].urlToImage,
-                                    it[i].publishedAt,
-                                    it[i].content,
-                                )
-                            )
+    ): View = FragmentBookmarksBinding.inflate(inflater, container, false).apply {
+        viewModel = bookmarksViewModel
+        bookmarksViewModel.nativeAdLoader = MaxNativeAdLoader("08f93b640def0007", context)
+        bookmarksViewModel.bookMarkRoom.set(ViewModelProvider(requireActivity())[BookmarkRoomVM::class.java])
+    }.root
 
-                        }
-                    }
-                    add = false
-                }
 
-                val desiredAssets = EnumSet.of(
-                    RequestParameters.NativeAdAsset.TITLE,
-                    RequestParameters.NativeAdAsset.TEXT,
-                    RequestParameters.NativeAdAsset.ICON_IMAGE,
-                    RequestParameters.NativeAdAsset.MAIN_IMAGE,
-                    RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
-                    RequestParameters.NativeAdAsset.SPONSORED
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        bookmarksViewModel.bookMarkRoom.get()?.allBookMarkRoom?.observe(viewLifecycleOwner) {
+            for (i in it.indices) {
+                bookmarksViewModel.news.add(
+                    Article(
+                        Source("", it[i].source, "", "", "", "", ""),
+                        it[i].author,
+                        it[i].title,
+                        it[i].description,
+                        it[i].url,
+                        it[i].urlToImage,
+                        it[i].publishedAt,
+                        it[i].content,
+                    )
                 )
-                val requestParameters = RequestParameters.Builder()
-                    .desiredAssets(desiredAssets)
-                    .build()
-                val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
-                    ViewBinder.Builder(R.layout.native_ad_list_item)
-                        .titleId(R.id.native_title)
-                        .textId(R.id.native_text)
-                        .mainImageId(R.id.native_main_image)
-                        .iconImageId(R.id.native_icon_image)
-                        .callToActionId(R.id.native_cta)
-                        .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
-                        .sponsoredTextId(R.id.native_sponsored_text_view)
-                        .build()
-                )
-
-                MoPubRecyclerAdapter(
-                    requireActivity(),
-                    RoomRecyclerview(news, this@BookmarksFragment, requireContext())
-                ).apply {
-                    registerAdRenderer(moPubStaticNativeAdRenderer)
-                }.also {
-                    binding.savedRecycle.apply {
-                        adapter = it
-                        layoutManager = LinearLayoutManager(requireContext())
-                        it.loadAds(getString(R.string.mopub_adunit_native), requestParameters)
-                    }
-                }
             }
         }
+        bookmarksViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
+            findNavController().navigate(MainControlDirections.actionToViewNews(
+                source = it.source.name, url = it.url, image = it.urlToImage, title = it.title,
+                content = it.content, description = it.description
+            ))
+        }
+    }
+
+    override fun onDestroy() {
+        // Must destroy native ad or else there will be memory leaks.
+        if (bookmarksViewModel.nativeAd != null) {
+            // Call destroy on the native ad from any native ad loader.
+            bookmarksViewModel.nativeAdLoader.destroy(bookmarksViewModel.nativeAd)
+        }
+
+        // Destroy the actual loader itself
+        bookmarksViewModel.nativeAdLoader.destroy()
+
+        super.onDestroy()
     }
 }

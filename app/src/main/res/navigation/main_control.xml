@@ -43,7 +43,7 @@
         android:id="@+id/nav_view_image"
         android:name="com.ayodkay.apps.swen.view.viewimage.ViewImageFragment"
         android:label="View Image"
-        tools:layout="@layout/activity_view_image">
+        tools:layout="@layout/fragment_view_image">
 
         <argument
             android:name="image"
@@ -80,5 +80,43 @@
             android:name="description"
             android:defaultValue=""
             app:argType="string" />
+        <action
+            android:id="@+id/action_nav_view_news_to_nav_view_image"
+            app:destination="@id/nav_view_image">
+
+            <argument
+                android:name="image"
+                android:defaultValue=""
+                app:argType="string" />
+        </action>
     </fragment>
+
+    <action
+        android:id="@+id/action_to_view_news"
+        app:destination="@+id/nav_view_news">
+        <argument
+            android:name="source"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="url"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="image"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="title"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="content"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="description"
+            android:defaultValue=""
+            app:argType="string" />
+    </action>
 </navigation>

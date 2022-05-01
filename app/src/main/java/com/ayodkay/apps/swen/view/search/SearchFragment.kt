@@ -8,97 +8,64 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.applovin.mediation.MaxAd
-import com.applovin.mediation.MaxAdViewAdListener
-import com.applovin.mediation.MaxError
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.applovin.mediation.nativeAds.MaxNativeAdLoader
+import com.ayodkay.apps.swen.MainControlDirections
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivitySearchBinding
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.Helper.setUpNewsClient
-import com.ayodkay.apps.swen.helper.adapter.MaxAdsRecyclerView
 import com.ayodkay.apps.swen.helper.constant.ErrorMessage
+import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.github.ayodkay.builder.EverythingBuilder
-import com.github.ayodkay.models.Article
 import com.github.ayodkay.models.ArticleResponse
 import com.github.ayodkay.mvvm.interfaces.ArticlesLiveDataResponseCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class SearchFragment : Fragment(), MaxAdViewAdListener {
-
-    private lateinit var nativeAdLoader: MaxNativeAdLoader
-
-
-    private var nativeAd: MaxAd? = null
-
-    var queryValue: String = "null"
-    lateinit var sort: String
-    private var sortOptions = arrayListOf("popularity", "publishedAt", "relevancy")
-
-    private var _binding: ActivitySearchBinding? = null
-    private val binding get() = _binding!!
+class SearchFragment : Fragment() {
+    private val searchViewModel: SearchViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        nativeAdLoader =
-            MaxNativeAdLoader("08f93b640def0007", context)
-        _binding = ActivitySearchBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    ): View = ActivitySearchBinding.inflate(inflater, container, false).apply {
+        viewModel = searchViewModel
+        searchViewModel.nativeAdLoader = MaxNativeAdLoader("08f93b640def0007", context)
+        searchViewModel.bookMarkRoom.set(ViewModelProvider(this@SearchFragment)[BookmarkRoomVM::class.java])
+    }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        searchViewModel.loadAd.set(true)
+
         val singleSort = arrayOf(
             getString(R.string.popularity),
             getString(R.string.newest),
             getString(R.string.relevancy)
         )
-        var checkedSort = 1
-        sort = sortOptions[checkedSort]
+        searchViewModel.sort = searchViewModel.sortOptions[searchViewModel.checkedSort]
 
-
-        binding.maxAdviewBanner.apply {
-            loadAd()
-            startAutoRefresh()
-        }
-
-        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                queryValue = query.toString()
-                loadNews(queryValue)
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                binding.maxAdviewBanner.visibility = View.VISIBLE
-                return false
-            }
-
-        })
-
-        binding.sortBy.setOnClickListener {
+        searchViewModel.sortEvent.observe(viewLifecycleOwner) {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.sort_news))
                 .setNeutralButton(resources.getString(android.R.string.cancel)) { dialog, _ ->
                     dialog.dismiss()
                 }
                 .setPositiveButton(resources.getString(android.R.string.ok)) { _, _ ->
-                    if (queryValue != "null") {
-                        loadNews(queryValue)
+                    if (searchViewModel.query.get() != "") {
+                        loadNews(searchViewModel.query.get())
                     }
 
                 }
                 // Single-choice items (initialized with checked item)
-                .setSingleChoiceItems(singleSort, checkedSort) { _, which ->
-                    sort = sortOptions[which]
-                    checkedSort = which
+                .setSingleChoiceItems(singleSort, searchViewModel.checkedSort) { _, which ->
+                    searchViewModel.sort = searchViewModel.sortOptions[which]
+                    searchViewModel.checkedSort = which
                 }
                 .show().apply {
                     getButton(BUTTON_NEGATIVE)
@@ -118,28 +85,36 @@ class SearchFragment : Fragment(), MaxAdViewAdListener {
                 }
         }
 
+        searchViewModel.searchEvent.observe(viewLifecycleOwner) {
+            loadNews(it)
+        }
+
+        searchViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
+            findNavController().navigate(MainControlDirections.actionToViewNews(
+                source = it.source.name, url = it.url, image = it.urlToImage, title = it.title,
+                content = it.content, description = it.description
+            ))
+        }
     }
 
 
     @SuppressLint("SetTextI18n")
     fun loadNews(query: String?) {
         val db = Helper.getCountryDatabase(requireContext())
-        val newsResponseList = arrayListOf<Article>()
         val everythingBuilder = EverythingBuilder.Builder()
             .q(query.orEmpty())
-            .sortBy(sort)
+            .sortBy(searchViewModel.sort)
             .language(db.countryDao().getAll().iso)
             .pageSize(100)
             .build()
+
         with(setUpNewsClient(requireActivity())) {
             getEverything(everythingBuilder,
                 object : ArticlesLiveDataResponseCallback {
                     override fun onFailure(throwable: Throwable) {
                         if (throwable.toString() == ErrorMessage.unknownHostException) {
-                            binding.empty.visibility = View.VISIBLE
-                            binding.searchRecycle.visibility = View.GONE
-                            binding.emptyText.visibility = View.VISIBLE
-                            binding.emptyText.text = "Internet Error"
+                            searchViewModel.showEmpty.set(true)
+                            searchViewModel.emptyTextValue.set("Internet Error")
                             val imm =
                                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                             imm?.hideSoftInputFromWindow(view?.windowToken, 0)
@@ -154,22 +129,12 @@ class SearchFragment : Fragment(), MaxAdViewAdListener {
                                 imm?.hideSoftInputFromWindow(view.windowToken, 0)
 
                                 if (newsResponse.totalResults == 0) {
-                                    binding.empty.visibility = View.VISIBLE
-                                    binding.searchRecycle.visibility = View.GONE
-                                    binding.emptyText.visibility = View.VISIBLE
+                                    searchViewModel.showEmpty.set(true)
+                                    searchViewModel.emptyTextValue.set(getString(R.string.not_found))
                                 } else {
-                                    binding.empty.visibility = View.GONE
-                                    binding.searchRecycle.visibility = View.VISIBLE
-                                    binding.emptyText.visibility = View.GONE
-
-                                    newsResponseList.addAll(newsResponse.articles)
-                                    binding.maxAdviewBanner.visibility = View.GONE
-                                    binding.searchRecycle.apply {
-                                        adapter = MaxAdsRecyclerView(newsResponseList,
-                                            this@SearchFragment,
-                                            requireContext(), nativeAdLoader, nativeAd)
-                                        layoutManager = LinearLayoutManager(requireActivity())
-                                    }
+                                    searchViewModel.showEmpty.set(false)
+                                    searchViewModel.hideBannerAd.set(true)
+                                    searchViewModel.newsList.addAll(newsResponse.articles)
                                 }
                             }
                         }
@@ -181,23 +146,14 @@ class SearchFragment : Fragment(), MaxAdViewAdListener {
 
     override fun onDestroy() {
         // Must destroy native ad or else there will be memory leaks.
-        if (nativeAd != null) {
+        if (searchViewModel.nativeAd != null) {
             // Call destroy on the native ad from any native ad loader.
-            nativeAdLoader.destroy(nativeAd)
+            searchViewModel.nativeAdLoader.destroy(searchViewModel.nativeAd)
         }
 
         // Destroy the actual loader itself
-        nativeAdLoader.destroy()
+        searchViewModel.nativeAdLoader.destroy()
 
         super.onDestroy()
     }
-
-    override fun onAdLoaded(maxAd: MaxAd) {}
-    override fun onAdDisplayed(ad: MaxAd?) {}
-    override fun onAdHidden(ad: MaxAd?) {}
-    override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {}
-    override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {}
-    override fun onAdClicked(maxAd: MaxAd) {}
-    override fun onAdExpanded(maxAd: MaxAd) {}
-    override fun onAdCollapsed(maxAd: MaxAd) {}
 }

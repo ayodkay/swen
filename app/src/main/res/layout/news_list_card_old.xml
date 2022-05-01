@@ -4,33 +4,6 @@
 
     <data>
 
-        <variable
-            name="image"
-            type="String" />
-
-        <variable
-            name="date"
-            type="String" />
-
-        <variable
-            name="source"
-            type="String" />
-
-        <variable
-            name="title"
-            type="String" />
-
-        <variable
-            name="bookmarkID"
-            type="Integer" />
-
-        <variable
-            name="loading"
-            type="Boolean" />
-
-        <variable
-            name="loadingCallback"
-            type="com.ayodkay.apps.swen.helper.extentions.ImageViewCallBack" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -55,17 +28,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:lottie_autoPlay="true"
-                app:isVisible="@{loading}"
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/bouncy_loader" />
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
-                app:imageUrl="@{image}"
-                app:loadingCallBack="@{loadingCallback}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +72,6 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:contentDescription="@string/bookmarks"
-                        app:imageDrawableId="@{bookmarkID}"
                         android:src="@drawable/ic_bookmark" />
                 </RelativeLayout>
 
@@ -117,27 +87,27 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
+                    android:id="@+id/date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="@{date}"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="#FFFFFF" />
 
                 <TextView
+                    android:id="@+id/source"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:textColor="#FFFFFF"
-                    android:text="@{source}"
                     app:layout_constraintBottom_toTopOf="@+id/title" />
 
                 <TextView
+                    android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="@{title}"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="#FFFFFF" />
             </LinearLayout>

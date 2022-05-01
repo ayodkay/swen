@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
@@ -115,11 +114,6 @@ class LinksAdapter internal constructor(private val context: Context, private va
                                 .putExtra("toMain", false)
                         )
                     }
-
-                    link.apply {
-                        text = newsPosition.link
-
-                    }
                 }
 
             }
@@ -142,8 +136,8 @@ class LinksAdapter internal constructor(private val context: Context, private va
         RecyclerView.ViewHolder(itemView!!)
 
     internal class LinksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        var link: TextView = itemView.findViewById(R.id.link)
+        //var link: TextView = itemView.findViewById(R.id.link)
         var savedLinkView: RelativeLayout = itemView.findViewById(R.id.saved_link_view)
-        var unsavedLinkView: RelativeLayout = itemView.findViewById(R.id.unsaved_link_view)
+        var unsavedLinkView: RelativeLayout = itemView.findViewById(R.id.saved_link_view)
     }
 }

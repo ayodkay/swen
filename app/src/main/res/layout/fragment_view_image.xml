@@ -9,24 +9,31 @@
             name="viewModel"
             type="com.ayodkay.apps.swen.view.viewimage.ViewImageViewModel" />
     </data>
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background">
+        android:background="@color/iconColor">
 
         <com.ayodkay.apps.swen.zoom.ZoomClass
             android:id="@+id/newsImage"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:onClick="@{()->viewModel.pinchIsVisible.booleanValue() == false}"
-            app:imageUrl="@{viewModel.imageUrl}" />
+            android:layout_height="0dp"
+            android:onClickListener="@{()->viewModel.hidePInch()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:zoomUrl="@{viewModel.image}" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/pinch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
             app:isVisible="@{viewModel.pinchIsVisible}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:lottie_autoPlay="true"
@@ -44,4 +51,6 @@
             maxads:adUnitId="6d2eada63140e252" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
 </layout>

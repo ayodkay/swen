@@ -1,17 +1,22 @@
 package com.ayodkay.apps.swen.view.bookmarks.ui.links
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.databinding.ObservableArrayList
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.ayodkay.apps.swen.helper.Helper
+import com.ayodkay.apps.swen.helper.BaseViewModel
+import com.ayodkay.apps.swen.helper.LinkCardClick
 import com.ayodkay.apps.swen.helper.room.links.Links
+import com.ayodkay.apps.swen.helper.trigger
 
-class LinksViewModel internal constructor(application: Application) :
-    AndroidViewModel(application) {
-    private val getLinks = Helper.getLinksDatabase(getApplication()).linksDao().getAll()
-    private val _links = MutableLiveData<List<Links>>().apply {
-        value = getLinks
+class LinksViewModel : BaseViewModel(), LinkCardClick {
+    val links = ObservableArrayList<Links>()
+    val mutableLink = MutableLiveData<List<Links>>()
+    val observableLink: LiveData<List<Links>> = mutableLink
+    val emptyLink = ObservableField(false)
+    val listener = this
+
+    override fun onCardClick(link: Links) {
+        goToWebView.trigger(link.link)
     }
-    val links: LiveData<List<Links>> = _links
 }

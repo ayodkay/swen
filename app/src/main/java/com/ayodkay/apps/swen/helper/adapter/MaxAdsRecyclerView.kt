@@ -1,19 +1,10 @@
 package com.ayodkay.apps.swen.helper.adapter
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.graphics.drawable.Drawable
+import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
-import com.airbnb.lottie.LottieAnimationView
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxError
 import com.applovin.mediation.nativeAds.MaxNativeAdListener
@@ -21,17 +12,17 @@ import com.applovin.mediation.nativeAds.MaxNativeAdLoader
 import com.applovin.mediation.nativeAds.MaxNativeAdView
 import com.applovin.mediation.nativeAds.MaxNativeAdViewBinder
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.databinding.NativeCustomAdViewBinding
+import com.ayodkay.apps.swen.databinding.NativeCutomAdFrameBinding
+import com.ayodkay.apps.swen.databinding.NewsLinksSavedBinding
 import com.ayodkay.apps.swen.databinding.NewsListCardBinding
+import com.ayodkay.apps.swen.helper.CardClick
+import com.ayodkay.apps.swen.helper.Helper
+import com.ayodkay.apps.swen.helper.LinkCardClick
+import com.ayodkay.apps.swen.helper.extentions.ImageViewCallBack
 import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookMarkRoom
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
-import com.ayodkay.apps.swen.view.viewnews.ViewNewActivity
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
+import com.ayodkay.apps.swen.helper.room.links.Links
 import com.facebook.appevents.AppEventsLogger
 import com.github.ayodkay.models.Article
 import java.text.SimpleDateFormat
@@ -40,23 +31,34 @@ private val ITEM_TYPE_COUNTRY by lazy { 0 }
 private val ITEM_TYPE_MAX_AD by lazy { 1 }
 
 class MaxAdsRecyclerView internal constructor(
-    private val newsList: ArrayList<Article>, private val owner: ViewModelStoreOwner,
-    private var nativeAdLoader: MaxNativeAdLoader, private var nativeAd: MaxAd? = null,
+    var newsList: ArrayList<Article>,
+    var links: ArrayList<Links>,
+    private var bookmarkRoomVM: BookmarkRoomVM? = null,
+    private var nativeAdLoader: MaxNativeAdLoader,
+    var nativeAd: MaxAd? = null, val listener: CardClick? = null,
+    val linkCardClick: LinkCardClick? = null,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val isLinkView = links.isNotEmpty()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        when (viewType) {
+        return when (viewType) {
             ITEM_TYPE_MAX_AD -> {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = NativeCustomAdViewBinding.inflate(layoutInflater, parent, false)
-                return MyAdViewHolder(binding)
+                val binding = NativeCutomAdFrameBinding.inflate(layoutInflater, parent, false)
+                MyAdViewHolder(binding, nativeAd)
             }
 
             else -> {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = NewsListCardBinding.inflate(layoutInflater, parent, false)
-                return NewsViewHolder(binding)
+                if (isLinkView) {
+                    val binding = NewsLinksSavedBinding.inflate(layoutInflater, parent, false)
+                    LinkViewHolder(binding)
+                } else {
+                    val binding = NewsListCardBinding.inflate(layoutInflater, parent, false)
+                    NewsViewHolder(binding)
+                }
             }
 
 
@@ -64,7 +66,7 @@ class MaxAdsRecyclerView internal constructor(
     }
 
     override fun getItemCount(): Int {
-        return newsList.size
+        return if (isLinkView) links.size else newsList.size
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -72,145 +74,18 @@ class MaxAdsRecyclerView internal constructor(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is MyAdViewHolder -> {
-                holder.bind(nativeAdLoader, nativeAd)
+                holder.bind(nativeAdLoader)
             }
 
-            else -> {
-                val newsViewHolder: NewsViewHolder = holder as NewsViewHolder
-                val newsModel = ViewModelProvider(owner)[BookmarkRoomVM::class.java]
-                val newsPosition = newsList[position]
-
-                val author = newsPosition.author.ifNull { "" }
-                val title = newsPosition.title.ifNull { "" }
-                val description = newsPosition.description.ifNull { "" }
-                val urlToImage = newsPosition.urlToImage.ifNull { "" }
-                val content = newsPosition.content.ifNull { "" }
-
-                val date = newsPosition.publishedAt
-                    .replace("T", " ").replace("Z", "")
-                newsViewHolder.source.text = newsPosition.source.name
-                newsViewHolder.date.text = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                    .parse(date)?.toString()
-                newsViewHolder.title.text = newsPosition.title.ifNull { "" }
-
-                if (newsModel.exist(newsPosition.url)) {
-                    newsViewHolder.bookmark.setImageDrawable(
-                        ResourcesCompat
-                            .getDrawable(
-                                context.resources,
-                                R.drawable.ic_bookmarked, null
-                            )
-                    )
-                } else {
-                    newsViewHolder.bookmark.setImageDrawable(
-                        ResourcesCompat
-                            .getDrawable(
-                                context.resources,
-                                R.drawable.ic_bookmark, null
-                            )
-                    )
+            is NewsViewHolder -> {
+                bookmarkRoomVM?.let {
+                    holder.bind(newsList.getOrNull(position) ?: return,
+                        it, listener)
                 }
-                newsViewHolder.bookmarkView.setOnClickListener {
-                    if (newsModel.exist(newsPosition.url)) {
-                        newsModel.deleteOne(newsPosition.url)
-                        newsViewHolder.bookmark.setImageDrawable(
-                            ResourcesCompat
-                                .getDrawable(
-                                    context.resources,
-                                    R.drawable.ic_bookmark, null
-                                )
-                        )
-                    } else {
-                        newsBookMark()
-                        newsModel.insert(
-                            BookMarkRoom(
-                                url = newsPosition.url,
-                                source = newsPosition.source.name,
-                                author = author,
-                                title = title,
-                                description = description.replace(regex = Regex("<.*?>"), ""),
-                                urlToImage = urlToImage,
-                                publishedAt = newsPosition.publishedAt,
-                                content = content.replace(regex = Regex("<.*?>"), ""),
-                            )
-                        )
-                        newsViewHolder.bookmark.setImageDrawable(
-                            ResourcesCompat
-                                .getDrawable(
-                                    context.resources,
-                                    R.drawable.ic_bookmarked, null
-                                )
-                        )
-                    }
-                }
+            }
 
-
-                try {
-                    Glide.with(context)
-                        .load(newsPosition.urlToImage)
-                        .listener(object : RequestListener<Drawable> {
-                            override fun onLoadFailed(
-                                e: GlideException?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                isFirstResource: Boolean,
-                            ): Boolean {
-                                newsViewHolder.progressBar.visibility = View.GONE
-                                newsViewHolder.image.post {
-                                    newsViewHolder.image.setImageDrawable(
-                                        ResourcesCompat
-                                            .getDrawable(
-                                                context.resources,
-                                                R.drawable.ic_undraw_page_not_found_su7k, null
-                                            )
-                                    )
-                                }
-                                return true
-                            }
-
-                            override fun onResourceReady(
-                                resource: Drawable?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                dataSource: DataSource?,
-                                isFirstResource: Boolean,
-                            ): Boolean {
-                                newsViewHolder.progressBar.visibility = View.GONE
-                                return false
-                            }
-
-                        })
-                        .into(holder.image)
-
-                } catch (e: RuntimeException) {
-                    newsViewHolder.progressBar.visibility = View.GONE
-                    newsViewHolder.image.setImageDrawable(
-                        ResourcesCompat.getDrawable(
-                            context.resources,
-                            R.drawable.ic_undraw_page_not_found_su7k,
-                            null
-                        )
-                    )
-                }
-
-                newsViewHolder.itemView.setOnClickListener {
-                    cardClick()
-                    context.startActivity(
-                        Intent(context, ViewNewActivity::class.java)
-                            .putExtra("url", newsPosition.url)
-                            .putExtra("image", urlToImage)
-                            .putExtra("title", title)
-                            .putExtra(
-                                "content", content
-                                    .replace(regex = Regex("<.*?>"), "")
-                            )
-                            .putExtra(
-                                "description", description
-                                    .replace(regex = Regex("<.*?>"), "")
-                            )
-                            .putExtra("source", newsPosition.source.name)
-                    )
-                }
+            is LinkViewHolder -> {
+                holder.bind(links.getOrNull(position) ?: return, linkCardClick)
             }
         }
     }
@@ -223,12 +98,11 @@ class MaxAdsRecyclerView internal constructor(
     }
 
     //Banner Ad View Holder
-    class MyAdViewHolder(val binding: NativeCustomAdViewBinding) :
+    class MyAdViewHolder(val binding: NativeCutomAdFrameBinding, var nativeAd: MaxAd?) :
         RecyclerView.ViewHolder(binding.root) {
-        private val nativeAdLayout: ViewGroup? = null
-        private var nativeAd: MaxAd? = null
-
         fun bind(nativeAdLoader: MaxNativeAdLoader) {
+            binding.loading = true
+            binding.showError = false
             val binder: MaxNativeAdViewBinder =
                 MaxNativeAdViewBinder.Builder(R.layout.native_custom_ad_view)
                     .setTitleTextViewId(R.id.title_text_view)
@@ -247,7 +121,7 @@ class MaxAdsRecyclerView internal constructor(
                     nativeAdView: MaxNativeAdView?,
                     ad: MaxAd,
                 ) {
-
+                    binding.loading = false
                     // Cleanup any pre-existing native ad to prevent memory leaks.
                     if (nativeAd != null) {
                         nativeAdLoader.destroy(nativeAd)
@@ -256,14 +130,16 @@ class MaxAdsRecyclerView internal constructor(
                     // Save ad for cleanup.
                     nativeAd = ad
                     // Add ad view to view.
-                    nativeAdLayout?.removeAllViews()
-                    nativeAdLayout?.addView(nativeAdView)
+                    binding.nativeAdLayout.removeAllViews()
+                    binding.nativeAdLayout.addView(nativeAdView)
                 }
 
                 override fun onNativeAdLoadFailed(
                     adUnitId: String,
                     maxError: MaxError,
                 ) {
+                    binding.loading = false
+                    binding.showError = true
                 }
 
                 override fun onNativeAdClicked(ad: MaxAd) {}
@@ -271,29 +147,107 @@ class MaxAdsRecyclerView internal constructor(
         }
     }
 
+    class NewsViewHolder(val binding: NewsListCardBinding) :
+        RecyclerView.ViewHolder(binding.root), ImageViewCallBack {
+        @SuppressLint("SimpleDateFormat")
+        fun bind(newsPosition: Article, bookMarkRoom: BookmarkRoomVM, listener: CardClick?) {
+            binding.loading = true
+            binding.loadingCallback = this
+            val url = newsPosition.url.ifNull { "" }
+            val title = newsPosition.title.ifNull { "" }
+            val author = newsPosition.author.ifNull { "" }
+            val source = newsPosition.source.name.ifNull { "" }
+            val urlToImage = newsPosition.urlToImage.ifNull { "" }
+            val description =
+                newsPosition.description.ifNull { "" }.replace(regex = Regex("<.*?>"), "")
+            val content = newsPosition.content.ifNull { "" }.replace(regex = Regex("<.*?>"), "")
+            val date = newsPosition.publishedAt
+                .replace("T", " ").replace("Z", "")
 
-    internal class NewsViewHolder(itemView: NewsListCardBinding) :
-        RecyclerView.ViewHolder(itemView.root) {
+            binding.image = urlToImage
+            binding.source = source
+            binding.date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date)?.toString()
+            binding.title = title
 
-        fun bind() {
+            if (bookMarkRoom.exist(url)) {
+                binding.bookmarkID = R.drawable.ic_bookmarked
+            } else {
+                binding.bookmarkID = R.drawable.ic_bookmark
+            }
 
+            binding.bookmarkView.setOnClickListener {
+                if (bookMarkRoom.exist(url)) {
+                    bookMarkRoom.deleteOne(url)
+                    binding.bookmarkID = R.drawable.ic_bookmark
+                } else {
+                    newsBookMark(binding.root.context)
+                    bookMarkRoom.insert(
+                        BookMarkRoom(
+                            url = url, source = source, author = author, title = title,
+                            description = description, urlToImage = urlToImage, publishedAt = date,
+                            content = content,
+                        )
+                    )
+                    binding.bookmarkID = R.drawable.ic_bookmarked
+                }
+            }
+            binding.root.setOnClickListener {
+                cardClick(binding.root.context)
+                listener?.onCardClick(newsPosition)
+            }
+            binding.executePendingBindings()
         }
 
-        var title: TextView = itemView.findViewById(R.id.title)
-        var image: ImageView = itemView.findViewById(R.id.image)
-        var bookmark: ImageView = itemView.findViewById(R.id.bookmark)
-        var bookmarkView: RelativeLayout = itemView.findViewById(R.id.bookmarkView)
-        var source: TextView = itemView.findViewById(R.id.source)
-        var date: TextView = itemView.findViewById(R.id.date)
-        var progressBar: LottieAnimationView = itemView.findViewById(R.id.progressBar)
+        private fun cardClick(context: Context) {
+            AppEventsLogger.newLogger(context).logEvent("cardClick")
+        }
+
+        private fun newsBookMark(context: Context) {
+            AppEventsLogger.newLogger(context).logEvent("newsBookMark")
+        }
+
+        override fun onLoadingDone() {
+            binding.loading = false
+        }
     }
 
-    private fun cardClick() {
-        AppEventsLogger.newLogger(context).logEvent("cardClick")
-    }
 
-    private fun newsBookMark() {
-        AppEventsLogger.newLogger(context).logEvent("newsBookMark")
-    }
+    class LinkViewHolder(val binding: NewsLinksSavedBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SimpleDateFormat")
+        fun bind(link: Links, listener: LinkCardClick?) {
+            binding.link = link.link.ifNull { "" }
 
+            if (Helper.getLinksDatabase(binding.root.context).linksDao().exist(link.link)) {
+                binding.drawableId = R.drawable.ic_bookmarked
+            } else {
+                binding.drawableId = R.drawable.ic_bookmark
+            }
+
+            binding.bookmarkView.setOnClickListener {
+                if (Helper.getLinksDatabase(binding.root.context).linksDao().exist(link.link)) {
+                    Helper.getLinksDatabase(binding.root.context).linksDao().deleteOne(link.link)
+                    binding.drawableId = R.drawable.ic_bookmark
+                } else {
+                    newsBookMark(binding.root.context)
+                    Helper.getLinksDatabase(binding.root.context).linksDao()
+                        .insertAll(Links(link = link.link))
+                    binding.drawableId = R.drawable.ic_bookmarked
+                }
+            }
+            binding.root.setOnClickListener {
+                cardClick(binding.root.context)
+                listener?.onCardClick(link)
+            }
+            binding.executePendingBindings()
+        }
+
+        private fun cardClick(context: Context) {
+            AppEventsLogger.newLogger(context).logEvent("cardClick")
+        }
+
+        private fun newsBookMark(context: Context) {
+            AppEventsLogger.newLogger(context).logEvent("newsBookMark")
+        }
+    }
 }

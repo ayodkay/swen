@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -51,10 +52,15 @@
                 app:lottie_rawRes="@raw/arrows_down" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/moreBy"
+                android:id="@+id/searchRecycle"
+                bookmarkRoom="@{viewModel.bookMarkRoom}"
+                listener="@{viewModel.listener}"
+                nativeAd="@{viewModel.nativeAd}"
+                nativeAdLoader="@{viewModel.nativeAdLoader}"
+                newsList="@{viewModel.moreNews}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp">
+                tools:listitem="@layout/news_list_card">
 
             </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>

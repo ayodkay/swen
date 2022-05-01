@@ -13,68 +13,94 @@ import android.provider.MediaStore
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NavUtils.navigateUpTo
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.applovin.mediation.MaxAd
 import com.applovin.mediation.nativeAds.MaxNativeAdLoader
+import com.ayodkay.apps.swen.MainControlDirections
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivityViewnewsBinding
+import com.ayodkay.apps.swen.databinding.MoreBinding
 import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.Helper
-import com.ayodkay.apps.swen.helper.adapter.MaxAdsRecyclerView
+import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.view.WebView
+import com.ayodkay.apps.swen.view.main.MainActivity
 import com.github.ayodkay.builder.EverythingBuilder
 import com.github.ayodkay.models.ArticleResponse
 import com.github.ayodkay.mvvm.interfaces.ArticlesLiveDataResponseCallback
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-import kotlinx.android.synthetic.main.more.*
+import kotlinx.android.synthetic.main.activity_viewnews.*
 import java.io.ByteArrayOutputStream
 import java.util.*
 
+
 class ViewNewsFragment : Fragment() {
-    private lateinit var shareNews: Intent
-    private lateinit var nativeAdLoader: MaxNativeAdLoader
-    private var nativeAd: MaxAd? = null
     var talky: TextToSpeech? = null
 
     private val viewNewsViewModel: ViewNewsViewModel by viewModels()
     private val args: ViewNewsFragmentArgs by navArgs()
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        activity?.window?.apply {
-            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            statusBarColor = Color.TRANSPARENT
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            }
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View = ActivityViewnewsBinding.inflate(inflater, container, false).apply {
         viewModel = viewNewsViewModel
-        viewNewsViewModel.source = args.source
-        viewNewsViewModel.url = args.url
-        viewNewsViewModel.image = args.image
-        viewNewsViewModel.title = args.title
-        viewNewsViewModel.content = args.content
-        viewNewsViewModel.description = args.description
+        with(viewNewsViewModel) {
+            nativeAdLoader = MaxNativeAdLoader("08f93b640def0007", context)
+            source = args.source
+            url = args.url
+            image = args.image
+            title = args.title
+            content = args.content.replace(regex = Regex("<.*?>"), "")
+                .replace(regex = Regex("\\W+\\d+ chars\\W"), "...")
+                .trim()
+            description = args.description.replace(regex = Regex("<.*?>"), "").trim()
+            bookMarkRoom.set(ViewModelProvider(this@ViewNewsFragment)[BookmarkRoomVM::class.java])
+            setUpLanguageIdentify()
+        }
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity?.window?.apply {
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor = Color.BLACK
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            }
+        }
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object :
+            OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+                    findNavController().navigateUp()
+                } else {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                }
+            }
+
+        })
+
+        val bottomSheet = BottomSheetDialog(requireContext())
+        val bindingSheet = DataBindingUtil.inflate<MoreBinding>(layoutInflater, R.layout.more,
+            null, false)
+        bottomSheet.setContentView(bindingSheet.root)
 
         viewNewsViewModel.loadAd.set(true)
 
@@ -123,10 +149,12 @@ class ViewNewsFragment : Fragment() {
         }
 
         viewNewsViewModel.shareEvent.observe(viewLifecycleOwner) {
+            val shareNews = Intent(Intent.ACTION_SEND)
+
             if (viewNewsViewModel.image.isNotBlank()) {
                 Picasso.get().load(viewNewsViewModel.image).into(object : Target {
                     override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
-                        shareNews = Intent(Intent.ACTION_SEND)
+
                         shareNews.type = "image/jpeg"
                         shareNews.putExtra(
                             Intent.EXTRA_TEXT,
@@ -152,7 +180,6 @@ class ViewNewsFragment : Fragment() {
                     override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
                 })
             } else {
-                shareNews = Intent(Intent.ACTION_SEND)
                 shareNews.type = "text/plain"
                 shareNews.putExtra(
                     Intent.EXTRA_TEXT,
@@ -176,7 +203,37 @@ class ViewNewsFragment : Fragment() {
             loadMore(viewNewsViewModel.source)
         }
 
+        viewNewsViewModel.viewImageEvent.observe(viewLifecycleOwner) {
+            findNavController().navigate(ViewNewsFragmentDirections.actionNavViewNewsToNavViewImage(
+                image = viewNewsViewModel.image
+            ))
+        }
+
+        viewNewsViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
+            findNavController().navigate(MainControlDirections.actionToViewNews(
+                source = it.source.name, url = it.url, image = it.urlToImage, title = it.title,
+                content = it.content, description = it.description
+            ))
+        }
+
     }
+
+    override fun onOptionsItemSelected(item: MenuItem) =
+        when (item.itemId) {
+            android.R.id.home -> {
+
+                // This ID represents the Home or Up button. In the case of this
+                // activity, the Up button is shown. For
+                // more details, see the Navigation pattern on Android Design:
+                //
+                // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+
+                navigateUpTo(requireActivity(), Intent(requireContext(), MainActivity::class.java))
+
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
 
     companion object {
         private const val REQUEST_CODE = 101
@@ -221,13 +278,13 @@ class ViewNewsFragment : Fragment() {
             talky?.shutdown()
         }
         // Must destroy native ad or else there will be memory leaks.
-        if (nativeAd != null) {
+        if (viewNewsViewModel.nativeAd != null) {
             // Call destroy on the native ad from any native ad loader.
-            nativeAdLoader.destroy(nativeAd)
+            viewNewsViewModel.nativeAdLoader.destroy(viewNewsViewModel.nativeAd)
         }
 
         // Destroy the actual loader itself
-        nativeAdLoader.destroy()
+        viewNewsViewModel.nativeAdLoader.destroy()
         super.onDestroy()
     }
 
@@ -259,13 +316,12 @@ class ViewNewsFragment : Fragment() {
                             viewNewsViewModel.showBottomSheet.set(true)
                             viewNewsViewModel.moreNews.addAll(newsResponse.articles)
 
-                            moreBy.apply {
-                                layoutManager = LinearLayoutManager(requireContext())
-                                hasFixedSize()
-                                MaxAdsRecyclerView(viewNewsViewModel.moreNews,
-                                    this@ViewNewsFragment,
-                                    requireContext(), nativeAdLoader, nativeAd)
-                            }
+//                            moreBy.apply {
+//                                layoutManager = LinearLayoutManager(requireContext())
+//                                hasFixedSize()
+//                                MaxAdsRecyclerView(viewNewsViewModel.moreNews,
+//                                    this@ViewNewsFragment, nativeAdLoader, nativeAd)
+//                            }
                         }
 
                     }

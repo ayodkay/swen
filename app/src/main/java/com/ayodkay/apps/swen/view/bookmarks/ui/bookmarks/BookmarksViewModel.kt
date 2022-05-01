@@ -1,14 +1,16 @@
 package com.ayodkay.apps.swen.view.bookmarks.ui.bookmarks
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.databinding.ObservableArrayList
+import com.ayodkay.apps.swen.helper.BaseViewModel
+import com.ayodkay.apps.swen.helper.CardClick
+import com.ayodkay.apps.swen.helper.trigger
+import com.github.ayodkay.models.Article
 
-class BookmarksViewModel : ViewModel() {
+class BookmarksViewModel : BaseViewModel(), CardClick {
+    val news = ObservableArrayList<Article>()
+    val listener = this
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+    override fun onCardClick(article: Article) {
+        goToViewNewsFragment.trigger(article)
     }
-    val text: LiveData<String> = _text
-
 }

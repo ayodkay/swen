@@ -18,7 +18,7 @@ class NavControllerFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentNavControllerBinding.inflate(inflater, container, false)
         return binding.root
@@ -33,10 +33,13 @@ class NavControllerFragment : Fragment() {
             onNavDestinationSelected(id, navController)
         }
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.nav_view_news || destination.id == R.id.nav_view_image) {
+                binding.cardview.visibility = View.GONE
+            } else {
+                binding.cardview.visibility = View.VISIBLE
+            }
             binding.bubbleTabBar.setSelectedWithId(destination.id, false)
         }
-
-        binding.cardview.setPadding(0, 150, 0, 0)
     }
 
     override fun onDestroyView() {
@@ -46,7 +49,7 @@ class NavControllerFragment : Fragment() {
 
     fun onNavDestinationSelected(
         itemId: Int,
-        navController: NavController
+        navController: NavController,
     ): Boolean {
         val builder = NavOptions.Builder()
             .setLaunchSingleTop(true)

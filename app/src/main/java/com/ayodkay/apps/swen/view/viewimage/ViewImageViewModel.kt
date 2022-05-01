@@ -1,10 +1,11 @@
 package com.ayodkay.apps.swen.view.viewimage
 
 import androidx.databinding.ObservableField
-import androidx.lifecycle.ViewModel
+import com.ayodkay.apps.swen.helper.BaseViewModel
 
-class ViewImageViewModel : ViewModel() {
+class ViewImageViewModel : BaseViewModel() {
     val pinchIsVisible = ObservableField(true)
-    val imageUrl = ObservableField("")
-    val loadAd = ObservableField(true)
+    fun hidePInch() {
+        pinchIsVisible.set(false)
+    }
 }

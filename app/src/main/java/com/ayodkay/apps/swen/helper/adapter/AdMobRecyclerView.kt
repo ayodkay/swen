@@ -59,7 +59,7 @@ class AdMobRecyclerView internal constructor(
             else -> {
                 val view: View =
                     LayoutInflater.from(context)
-                        .inflate(R.layout.news_list_card, parent, false)
+                        .inflate(R.layout.news_list_card_old, parent, false)
                 return NewsViewHolder(view)
             }
 
