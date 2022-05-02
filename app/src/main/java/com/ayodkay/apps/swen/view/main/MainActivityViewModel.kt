@@ -1,5 +1,6 @@
 package com.ayodkay.apps.swen.view.main
 
+import android.annotation.SuppressLint
 import android.location.Address
 import android.location.Location
 import android.util.Log
@@ -9,14 +10,12 @@ import com.ayodkay.apps.swen.helper.location.CoLocation
 import com.google.android.gms.location.LocationRequest
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
-class MainViewModel(
-    private val coLocation: CoLocation,
-    private val coGeocoder: CoGeocoder
-) : ViewModel(), LifecycleObserver {
+class MainActivityViewModel(
+    private val coLocation: CoLocation, private val coGeocoder: CoGeocoder,
+) : ViewModel(), DefaultLifecycleObserver {
 
     private val locationRequest: LocationRequest = LocationRequest.create()
         .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -39,21 +38,20 @@ class MainViewModel(
 
     private var locationUpdatesJob: Job? = null
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onStart() {
+    override fun onStart(owner: LifecycleOwner) {
         startLocationUpdatesAfterCheck()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onStop() {
+    override fun onStop(owner: LifecycleOwner) {
         locationUpdatesJob?.cancel()
         locationUpdatesJob = null
     }
 
+
+    @SuppressLint("MissingPermission")
     private fun startLocationUpdatesAfterCheck() {
         viewModelScope.launch {
-            val settingsResult = coLocation.checkLocationSettings(locationRequest)
-            when (settingsResult) {
+            when (val settingsResult = coLocation.checkLocationSettings(locationRequest)) {
                 CoLocation.SettingsResult.Satisfied -> {
                     coLocation.getLastLocation()?.run(mutableLocationUpdates::postValue)
                     startLocationUpdates()
@@ -66,6 +64,7 @@ class MainViewModel(
         }
     }
 
+    @SuppressLint("MissingPermission")
     fun startLocationUpdates() {
         locationUpdatesJob?.cancel()
         locationUpdatesJob = viewModelScope.launch {

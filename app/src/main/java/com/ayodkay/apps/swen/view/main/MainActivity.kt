@@ -39,10 +39,10 @@ class MainActivity : AppCompatActivity() {
         Helper.goDark(this)
     }
 
-    private val viewModel: MainViewModel by viewModels {
+    private val activityViewModel: MainActivityViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MainViewModel(
+                return MainActivityViewModel(
                     CoLocation.from(this@MainActivity),
                     CoGeocoder.from(this@MainActivity)
                 ) as T
@@ -79,10 +79,10 @@ class MainActivity : AppCompatActivity() {
                 if ((grantResults.isNotEmpty() &&
                             grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 ) {
-                    lifecycle.addObserver(viewModel)
-                    viewModel.addressUpdates.observe(this, this::onAddressUpdate)
-                    viewModel.locationUpdates.observe(this, this::onLocationUpdate)
-                    viewModel.resolveSettingsEvent.observe(this) {
+                    lifecycle.addObserver(activityViewModel)
+                    activityViewModel.addressUpdates.observe(this, this::onAddressUpdate)
+                    activityViewModel.locationUpdates.observe(this, this::onLocationUpdate)
+                    activityViewModel.resolveSettingsEvent.observe(this) {
                         it.resolve(this,
                             REQUEST_SHOW_SETTINGS)
                     }
@@ -119,10 +119,10 @@ class MainActivity : AppCompatActivity() {
             Thread {
                 when {
                     MyReachability.hasInternetConnected(this) -> runOnUiThread {
-                        lifecycle.addObserver(viewModel)
-                        viewModel.addressUpdates.observe(this, this::onAddressUpdate)
-                        viewModel.locationUpdates.observe(this, this::onLocationUpdate)
-                        viewModel.resolveSettingsEvent.observe(this) {
+                        lifecycle.addObserver(activityViewModel)
+                        activityViewModel.addressUpdates.observe(this, this::onAddressUpdate)
+                        activityViewModel.locationUpdates.observe(this, this::onLocationUpdate)
+                        activityViewModel.resolveSettingsEvent.observe(this) {
                             it.resolve(this,
                                 REQUEST_SHOW_SETTINGS)
                         }
@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity() {
                 .subscribeToTopic("engage")
                 .addOnCompleteListener { }
         }
-        viewModel.stopJob()
+        activityViewModel.stopJob()
     }
 
     companion object {

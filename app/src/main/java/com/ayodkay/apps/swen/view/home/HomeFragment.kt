@@ -1,4 +1,4 @@
-package com.ayodkay.apps.swen.view.main
+package com.ayodkay.apps.swen.view.home
 
 import android.os.Bundle
 import android.view.KeyEvent
@@ -10,12 +10,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.databinding.FragmentMainBinding
-import com.ayodkay.apps.swen.helper.App.Companion.context
+import com.ayodkay.apps.swen.databinding.FragmentHomeBinding
 import com.ayodkay.apps.swen.helper.adapter.ViewStateAdapter
 import com.ayodkay.apps.swen.helper.transitions.PopTransformer
-import com.ayodkay.apps.swen.view.category.EveryThingFragment
-import com.ayodkay.apps.swen.view.category.TopHeadlinesFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 
@@ -33,30 +30,17 @@ private val TAB_TITLES = arrayOf(
     R.string.politics
 )
 
-fun getFragment(position: Int): Fragment {
-    return when (position) {
-        0 -> TopHeadlinesFragment().newInstance("general")
-        1 -> TopHeadlinesFragment().newInstance("entertainment")
-        2 -> TopHeadlinesFragment().newInstance("sports")
-        3 -> TopHeadlinesFragment().newInstance("business")
-        4 -> TopHeadlinesFragment().newInstance("health")
-        5 -> TopHeadlinesFragment().newInstance("science")
-        6 -> TopHeadlinesFragment().newInstance("technology")
-        7 -> TopHeadlinesFragment().newInstance("health", "covid")
-        8 -> EveryThingFragment().newInstance(context.getString(R.string.menu_beauty))
-        else -> EveryThingFragment().newInstance(context.getString(R.string.politics))
-    }
-}
 
-class MainFragment : Fragment() {
-    private var _binding: FragmentMainBinding? = null
+class HomeFragment : Fragment() {
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewPager: ViewPager2
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentMainBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root.apply {
             setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {

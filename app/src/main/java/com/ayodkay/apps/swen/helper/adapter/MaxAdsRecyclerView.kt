@@ -100,7 +100,7 @@ class MaxAdsRecyclerView internal constructor(
     //Banner Ad View Holder
     class MyAdViewHolder(val binding: NativeCutomAdFrameBinding, var nativeAd: MaxAd?) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(nativeAdLoader: MaxNativeAdLoader) {
+        fun bind(nativeAdLoader: MaxNativeAdLoader?) {
             binding.loading = true
             binding.showError = false
             val binder: MaxNativeAdViewBinder =
@@ -114,8 +114,8 @@ class MaxAdsRecyclerView internal constructor(
                     .setCallToActionButtonId(R.id.cta_button)
                     .build()
             val nativeAdView = MaxNativeAdView(binder, binding.root.context)
-            nativeAdLoader.loadAd(nativeAdView)
-            nativeAdLoader.setNativeAdListener(object :
+            nativeAdLoader?.loadAd(nativeAdView)
+            nativeAdLoader?.setNativeAdListener(object :
                 MaxNativeAdListener() {
                 override fun onNativeAdLoaded(
                     nativeAdView: MaxNativeAdView?,

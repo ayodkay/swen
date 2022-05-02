@@ -24,12 +24,15 @@
         <entry key="app/src/main/res/layout/fragment_links.xml" value="0.23489583333333333" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.23489583333333333" />
         <entry key="app/src/main/res/layout/fragment_nav_controller.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_view_image.xml" value="0.22871376811594202" />
+        <entry key="app/src/main/res/layout/fragment_view_image.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_viewnews.xml" value="0.15312815338042382" />
         <entry key="app/src/main/res/layout/more.xml" value="0.2375" />
         <entry key="app/src/main/res/layout/native_ad_list_item.xml" value="0.2375" />
         <entry key="app/src/main/res/layout/native_custom_ad_view.xml" value="0.22871376811594202" />
+        <entry key="app/src/main/res/layout/native_cutom_ad_frame.xml" value="0.22871376811594202" />
+        <entry key="app/src/main/res/layout/news_links_saved.xml" value="0.22871376811594202" />
         <entry key="app/src/main/res/layout/news_list_card.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/news_list_card_old.xml" value="0.22871376811594202" />
         <entry key="app/src/main/res/layout/row.xml" value="0.1" />
         <entry key="app/src/main/res/layout/settings_activity.xml" value="0.1" />
         <entry key="app/src/main/res/layout/web_view_suite.xml" value="0.2375" />

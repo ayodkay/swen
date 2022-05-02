@@ -182,8 +182,7 @@ object Helper {
                         if (newsResponse != null) {
                             if (newsResponse.totalResults == 0) {
                                 binding.progressBar.visibility = View.GONE
-                                binding.empty.visibility =
-                                    View.VISIBLE
+                                binding.empty.visibility = View.VISIBLE
                                 if (newsResponse.status == "400") {
                                     binding.emptyText.text = "Internet Error"
                                 }
