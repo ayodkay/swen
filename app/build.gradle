@@ -1,12 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'applovin-quality-service'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+
 
 applovin {
     apiKey "Jb-ZRRo3hbSqdMX5Kt0pOtqLTS_GkHfhTTyU-9OOJXiPe06Mw8RVziyCsSiZwGs51WN0a2xThKBWRVakIgwORa"
@@ -30,6 +32,9 @@ android {
     }
 
     buildTypes {
+        customDebugType {
+            debuggable true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -56,17 +61,18 @@ android {
         viewBinding true
         dataBinding true
     }
+    namespace 'com.ayodkay.apps.swen'
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.20'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.21'
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
@@ -75,6 +81,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
@@ -90,9 +97,9 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.google.firebase:firebase-perf:20.0.6'
-    implementation 'com.google.firebase:firebase-messaging:23.0.3'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.9'
-    implementation 'com.google.firebase:firebase-analytics-ktx:20.1.2'
+    implementation 'com.google.firebase:firebase-messaging:23.0.5'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.10'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.0.0'
     implementation 'com.google.firebase:firebase-dynamic-links-ktx:21.0.1'
 
     //picasso
@@ -113,15 +120,9 @@ dependencies {
     implementation 'com.google.android.play:core:1.10.3'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
 
-    def work_version = "2.7.1"
-    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 
     implementation 'com.facebook.android:facebook-android-sdk:13.1.0'
-
-
-    implementation('com.mopub:mopub-sdk:5.18.0@aar') {
-        transitive = true
-    }
 
     implementation 'com.applovin:applovin-sdk:11.3.3'
 
@@ -133,5 +134,9 @@ dependencies {
 
     implementation 'com.github.ayodkay:NewsApiClient-Kotlin:1.0.5'
     implementation 'com.google.mlkit:language-id:17.0.3'
+
+    implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
+
+    implementation 'org.jsoup:jsoup:1.15.1'
 
 }

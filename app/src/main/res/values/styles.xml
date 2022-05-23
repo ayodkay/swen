@@ -26,7 +26,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="bottomSheetStyle">@style/Theme.NoWiredStrapInNavigationBar</item>
-
     </style>
 
     <style name="Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">

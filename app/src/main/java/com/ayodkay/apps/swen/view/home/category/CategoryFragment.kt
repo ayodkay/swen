@@ -1,44 +1,43 @@
 package com.ayodkay.apps.swen.view.home.category
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.applovin.mediation.nativeAds.MaxNativeAdLoader
 import com.ayodkay.apps.swen.MainControlDirections
-import com.ayodkay.apps.swen.databinding.FragmentGeneralBinding
+import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.databinding.FragmentCategoryBinding
+import com.ayodkay.apps.swen.helper.BaseFragment
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.constant.ErrorMessage
+import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
-import com.ayodkay.apps.swen.view.AskLocation
 import com.github.ayodkay.builder.EverythingBuilder
 import com.github.ayodkay.builder.TopHeadlinesBuilder
 import com.github.ayodkay.models.ArticleResponse
 import com.github.ayodkay.mvvm.interfaces.ArticlesLiveDataResponseCallback
 
-class CategoryFragment : Fragment() {
+class CategoryFragment : BaseFragment() {
     private val args: CategoryFragmentArgs by navArgs()
     private val categoryViewModel: CategoryViewModel by viewModels()
+    private lateinit var binding: FragmentCategoryBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = FragmentGeneralBinding.inflate(inflater, container, false).apply {
+    ): View = FragmentCategoryBinding.inflate(inflater, container, false).apply {
         viewModel = categoryViewModel
         with(categoryViewModel) {
             category = args.category
             q = args.q
-            isEveryThing = args.isEveryThing
-            nativeAdLoader = MaxNativeAdLoader("08f93b640def0007", context)
             bookMarkRoom.set(ViewModelProvider(this@CategoryFragment)[BookmarkRoomVM::class.java])
         }
+        binding = this
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,42 +49,54 @@ class CategoryFragment : Fragment() {
             categoryViewModel.language =
                 Helper.getCountryDatabase(requireContext()).countryDao().getAll().iso
         } catch (e: Exception) {
-            startActivity(Intent(requireContext(), AskLocation::class.java))
-            requireActivity().finish()
+            navigateTo(R.id.nav_location)
         }
+        loadNews()
+        categoryViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
+            navigateTo(
+                MainControlDirections.actionToViewNews(
+                    source = it.source.name.ifNull { "" }, url = it.url.ifNull { "" },
+                    image = it.urlToImage.ifNull { "" }, title = it.title.ifNull { "" },
+                    content = it.content.ifNull { it.description },
+                    description = it.description.ifNull { "" }
+                )
+            )
+        }
+    }
 
+    private fun loadNews() {
         with(Helper.setUpNewsClient(requireActivity())) {
-            if (categoryViewModel.isEveryThing) {
+            if (categoryViewModel.category.isEmpty()) {
                 val everythingBuilder = EverythingBuilder.Builder()
                     .q(categoryViewModel.q)
                     .sortBy("newest")
                     .language(categoryViewModel.language)
                     .pageSize(100)
                     .build()
-                getEverything(everythingBuilder, object : ArticlesLiveDataResponseCallback {
+                getEverything(
+                    everythingBuilder,
+                    object : ArticlesLiveDataResponseCallback {
 
-                    override fun onFailure(throwable: Throwable) {
-                        categoryViewModel.loading.set(false)
-                        categoryViewModel.refreshing.set(false)
-                        categoryViewModel.emptyNews.set(true)
-                        if (throwable.toString() == ErrorMessage.unknownHostException) {
-                            categoryViewModel.emptyText.set("Internet Error")
-                        }
-                    }
-
-                    override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
-                        categoryViewModel.loading.set(false)
-                        categoryViewModel.refreshing.set(false)
-                        response.observe(viewLifecycleOwner) { newsResponse ->
-                            categoryViewModel.emptyNews.set(newsResponse.totalResults == 0)
-                            if (newsResponse.status == "400") {
+                        override fun onFailure(throwable: Throwable) {
+                            categoryViewModel.loading.set(false)
+                            categoryViewModel.emptyNews.set(true)
+                            if (throwable.toString() == ErrorMessage.unknownHostException) {
                                 categoryViewModel.emptyText.set("Internet Error")
                             }
-                            categoryViewModel.newsResponseList.addAll(newsResponse.articles)
+                        }
+
+                        override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
+                            categoryViewModel.loading.set(false)
+                            response.observeForever { newsResponse ->
+                                categoryViewModel.emptyNews.set(newsResponse.totalResults == 0)
+                                if (newsResponse.status == "400") {
+                                    categoryViewModel.emptyText.set("Internet Error")
+                                }
+                                categoryViewModel.newsResponseList.addAll(newsResponse.articles)
+                            }
                         }
                     }
-
-                })
+                )
             } else {
                 val topHeadlinesBuilder = TopHeadlinesBuilder.Builder()
                     .q(categoryViewModel.q)
@@ -93,49 +104,41 @@ class CategoryFragment : Fragment() {
                     .category(categoryViewModel.category)
                     .pageSize(100)
                     .build()
-                getTopHeadlines(topHeadlinesBuilder, object : ArticlesLiveDataResponseCallback {
+                getTopHeadlines(
+                    topHeadlinesBuilder,
+                    object : ArticlesLiveDataResponseCallback {
 
-                    override fun onFailure(throwable: Throwable) {
-                        categoryViewModel.loading.set(false)
-                        categoryViewModel.refreshing.set(false)
-                        categoryViewModel.emptyNews.set(true)
-                        if (throwable.toString() == ErrorMessage.unknownHostException) {
-                            categoryViewModel.emptyText.set("Internet Error")
-                        }
-                    }
-
-                    override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
-                        categoryViewModel.loading.set(false)
-                        categoryViewModel.refreshing.set(false)
-                        response.observe(viewLifecycleOwner) { newsResponse ->
-                            categoryViewModel.emptyNews.set(newsResponse.totalResults == 0)
-                            if (newsResponse.status == "400") {
+                        override fun onFailure(throwable: Throwable) {
+                            categoryViewModel.loading.set(false)
+                            binding.swipeRefresh.isRefreshing = false
+                            categoryViewModel.emptyNews.set(true)
+                            if (throwable.toString() == ErrorMessage.unknownHostException) {
                                 categoryViewModel.emptyText.set("Internet Error")
                             }
-                            categoryViewModel.newsResponseList.addAll(newsResponse.articles)
+                        }
+
+                        override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
+                            categoryViewModel.loading.set(false)
+                            binding.swipeRefresh.isRefreshing = false
+
+                            response.observeForever { newsResponse ->
+                                categoryViewModel.emptyNews.set(newsResponse.totalResults == 0)
+                                if (newsResponse.status == "400") {
+                                    categoryViewModel.emptyText.set("Internet Error")
+                                }
+                                categoryViewModel.newsResponseList.addAll(newsResponse.articles)
+                            }
                         }
                     }
-
-                })
+                )
             }
-
-        }
-
-        categoryViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
-            findNavController().navigate(MainControlDirections.actionToViewNews(
-                source = it.source.name, url = it.url, image = it.urlToImage, title = it.title,
-                content = it.content, description = it.description
-            ))
         }
     }
 
-    fun newInstance(
-        category: String? = "", q: String? = "", isEverything: Boolean = false,
-    ): CategoryFragment {
+    fun newInstance(category: String? = "", q: String? = ""): CategoryFragment {
         val args = Bundle()
         args.putString("category", category)
         args.putString("q", q)
-        args.putBoolean("isEverything", isEverything)
         val fragment = CategoryFragment()
         fragment.arguments = args
         return fragment

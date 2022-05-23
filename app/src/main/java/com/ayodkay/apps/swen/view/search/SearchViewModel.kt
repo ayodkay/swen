@@ -1,17 +1,17 @@
 package com.ayodkay.apps.swen.view.search
 
+import android.app.Application
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import com.ayodkay.apps.swen.helper.*
 import com.github.ayodkay.models.Article
 
-class SearchViewModel : BaseViewModel(), CardClick {
+class SearchViewModel(application: Application) : BaseViewModel(application), CardClick {
     var checkedSort = 1
     lateinit var sort: String
     var sortOptions = arrayListOf("popularity", "publishedAt", "relevancy")
 
-
-    val hideBannerAd = ObservableField(false)
+    val showBannerAd = ObservableField(true)
     val showEmpty = ObservableField(false)
     val query = ObservableField("")
 
@@ -21,7 +21,6 @@ class SearchViewModel : BaseViewModel(), CardClick {
     val emptyTextValue = ObservableField("")
     val sortEvent = SimpleEvent()
     val searchEvent = Event<String>()
-
 
     fun sort() {
         sortEvent.trigger()
@@ -37,5 +36,4 @@ class SearchViewModel : BaseViewModel(), CardClick {
     override fun onCardClick(article: Article) {
         goToViewNewsFragment.trigger(article)
     }
-
 }

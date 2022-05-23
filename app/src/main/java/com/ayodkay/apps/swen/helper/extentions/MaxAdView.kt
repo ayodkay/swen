@@ -10,4 +10,3 @@ fun MaxAdView.loadBannerAd(load: Boolean) {
         this.startAutoRefresh()
     }
 }
-

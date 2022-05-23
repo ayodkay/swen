@@ -28,6 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                app:isVisible="@{viewModel.isCollapsed}"
                 android:text="@string/also_like"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 android:textColor="@color/textPrimary" />
@@ -37,6 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
+                app:isVisible="@{viewModel.isCollapsed}"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/arrows_up" />
@@ -46,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
-                android:visibility="gone"
+                app:isVisible="@{!viewModel.isCollapsed}"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/arrows_down" />
@@ -58,6 +60,8 @@
                 nativeAd="@{viewModel.nativeAd}"
                 nativeAdLoader="@{viewModel.nativeAdLoader}"
                 newsList="@{viewModel.moreNews}"
+                android:clipToPadding="false"
+                android:paddingBottom="50dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:listitem="@layout/news_list_card">

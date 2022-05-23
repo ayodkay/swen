@@ -14,6 +14,8 @@
     <string name="mopub_adunit_native" translatable="false">63951017645141f3a3ede48a53ab4942</string>
     <string name="mopub_adunit_banner" translatable="false">6f7de7b31dc2495e99f3643ce8ddda44</string>
     <string name="mopub_adunit_native_test" translatable="false">11a17b188668469fb0412708c3d16813</string>
+    <string name="notification_icon" translatable="false">https://firebasestorage.googleapis.com/v0/b/onesignaltest-e7802.appspot.com/o/NOTIFICATION_ICON%2Fnewspaper.png?alt=media&amp;token=053e419b-14f1-4f0d-a439-bb5b46d1b917</string>
+    <string name="ic_logo" translatable="false">https://firebasestorage.googleapis.com/v0/b/swenio.appspot.com/o/logo.png?alt=media&amp;token=441f82f9-0a28-4308-8c43-a87ee0608666</string>
 
 
     <string name="search">Search&#8230;</string>

@@ -11,12 +11,14 @@ import com.applovin.sdk.AppLovinSdk
 import com.ayodkay.apps.swen.BuildConfig
 import com.ayodkay.apps.swen.helper.backend.BootReceiver
 import com.ayodkay.apps.swen.helper.backend.PowerButtonBroadcastReceiver
-import com.ayodkay.apps.swen.view.KEY_THEME
-import com.ayodkay.apps.swen.view.PREFS_NAME
-import com.ayodkay.apps.swen.view.THEME_UNDEFINED
+import com.ayodkay.apps.swen.helper.extentions.ifNull
+import com.ayodkay.apps.swen.view.main.MainActivity
+import com.ayodkay.apps.swen.view.theme.KEY_THEME
+import com.ayodkay.apps.swen.view.theme.PREFS_NAME
+import com.ayodkay.apps.swen.view.theme.THEME_UNDEFINED
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessaging
-
+import com.onesignal.OneSignal
 
 class App : Application() {
 
@@ -47,6 +49,30 @@ class App : Application() {
         )
         FirebaseMessaging.getInstance().isAutoInitEnabled = true
 
+        // Enable verbose OneSignal logging to debug issues if needed.
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
+
+        // OneSignal Initialization
+        OneSignal.initWithContext(this)
+        OneSignal.setAppId("1b294a36-a306-4117-8d5e-393ee674419d")
+
+        OneSignal.setNotificationOpenedHandler { result ->
+            val notification = result.notification
+            val data = notification.additionalData
+            val intent = Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }.putExtra("url", data["url"].ifNull { "" } as String)
+                .putExtra("isPush", true)
+                .putExtra("toMain", true)
+            startActivity(intent)
+            AppLog.l(data)
+        }
+
+        OneSignal.setNotificationWillShowInForegroundHandler { notificationReceivedEvent ->
+            val notification = notificationReceivedEvent.notification
+            val data = notification.additionalData
+            notificationReceivedEvent.complete(notification)
+        }
         val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
         filter.addAction(Intent.ACTION_SCREEN_OFF)
         val mReceiver = PowerButtonBroadcastReceiver()

@@ -16,7 +16,6 @@ import com.ayodkay.apps.swen.helper.transitions.PopTransformer
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 
-
 private val TAB_TITLES = arrayOf(
     R.string.menu_general,
     R.string.menu_entertainment,
@@ -30,38 +29,41 @@ private val TAB_TITLES = arrayOf(
     R.string.politics
 )
 
-
 class HomeFragment : Fragment() {
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentHomeBinding
     private lateinit var viewPager: ViewPager2
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root.apply {
-            setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-                if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
-                    if (viewPager.currentItem == 0) {
-                        // If the user is currently looking at the first step, allow the system to handle the
-                        // Back button. This calls finish() on this activity and pops the back stack.
-                        requireActivity().onBackPressed()
-                    } else {
-                        // Otherwise, select the previous step.
-                        viewPager.currentItem = viewPager.currentItem - 1
+    ): View =
+        FragmentHomeBinding.inflate(inflater, container, false).apply {
+            binding = this
+        }.root.also {
+            it.setOnKeyListener(
+                View.OnKeyListener { _, keyCode, event ->
+                    if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                        if (viewPager.currentItem == 0) {
+                            // If the user is currently looking at the first step, allow the system to handle the
+                            // Back button. This calls finish() on this activity and pops the back stack.
+                            requireActivity().onBackPressed()
+                        } else {
+                            // Otherwise, select the previous step.
+                            viewPager.currentItem = viewPager.currentItem - 1
+                        }
+                        parentFragmentManager.popBackStack(
+                            null,
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE
+                        )
+                        return@OnKeyListener true
                     }
-                    parentFragmentManager.popBackStack(null,
-                        FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    return@OnKeyListener true
+                    false
                 }
-                false
-            })
-            isFocusableInTouchMode = true
-            requestFocus()
+            )
+            it.isFocusableInTouchMode = true
+            it.requestFocus()
         }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

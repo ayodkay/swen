@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:maxads="http://schemas.applovin.com/android/1.0"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.ayodkay.apps.swen.view.location.LocationViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_undraw_newspaper_k72w"
+            tools:ignore="ContentDescription" />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:onClick="@{()->viewModel.showDialog()}"
+            android:text="@string/select_country"
+            android:textColor="@color/gnt_white"
+            app:layout_constraintBottom_toTopOf="@+id/maxAdviewBanner" />
+
+        <com.applovin.mediation.ads.MaxAdView
+            android:id="@+id/maxAdviewBanner"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/banner_height"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:loadBannerAd="@{viewModel.loadAd}"
+            maxads:adUnitId="6d2eada63140e252" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

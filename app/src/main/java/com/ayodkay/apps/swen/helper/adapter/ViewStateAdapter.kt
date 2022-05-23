@@ -29,10 +29,8 @@ internal class ViewStateAdapter(fragmentManager: FragmentManager, lifecycle: Lif
             5 -> CategoryFragment().newInstance("science")
             6 -> CategoryFragment().newInstance("technology")
             7 -> CategoryFragment().newInstance("health", "covid")
-            8 -> CategoryFragment().newInstance(q = App.context.getString(R.string.menu_beauty),
-                isEverything = true)
-            else -> CategoryFragment().newInstance(q = App.context.getString(R.string.politics),
-                isEverything = true)
+            8 -> CategoryFragment().newInstance("", App.context.getString(R.string.menu_beauty))
+            else -> CategoryFragment().newInstance("", App.context.getString(R.string.politics))
         }
     }
 }

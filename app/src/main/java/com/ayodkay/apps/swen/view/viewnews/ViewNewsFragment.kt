@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
@@ -12,54 +11,51 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import android.view.*
-import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NavUtils.navigateUpTo
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.applovin.mediation.nativeAds.MaxNativeAdLoader
-import com.ayodkay.apps.swen.MainControlDirections
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.databinding.ActivityViewnewsBinding
-import com.ayodkay.apps.swen.databinding.MoreBinding
+import com.ayodkay.apps.swen.databinding.FragmentViewNewsBinding
 import com.ayodkay.apps.swen.helper.AppLog
+import com.ayodkay.apps.swen.helper.BaseFragment
 import com.ayodkay.apps.swen.helper.Helper
+import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
-import com.ayodkay.apps.swen.view.WebView
-import com.ayodkay.apps.swen.view.main.MainActivity
 import com.github.ayodkay.builder.EverythingBuilder
 import com.github.ayodkay.models.ArticleResponse
 import com.github.ayodkay.mvvm.interfaces.ArticlesLiveDataResponseCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-import kotlinx.android.synthetic.main.activity_viewnews.*
 import java.io.ByteArrayOutputStream
 import java.util.*
 
-
-class ViewNewsFragment : Fragment() {
+class ViewNewsFragment : BaseFragment() {
     var talky: TextToSpeech? = null
-
     private val viewNewsViewModel: ViewNewsViewModel by viewModels()
     private val args: ViewNewsFragmentArgs by navArgs()
+    lateinit var binding: FragmentViewNewsBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = ActivityViewnewsBinding.inflate(inflater, container, false).apply {
+    ): View = FragmentViewNewsBinding.inflate(inflater, container, false).apply {
         viewModel = viewNewsViewModel
         with(viewNewsViewModel) {
-            nativeAdLoader = MaxNativeAdLoader("08f93b640def0007", context)
             source = args.source
             url = args.url
             image = args.image
@@ -71,45 +67,44 @@ class ViewNewsFragment : Fragment() {
             bookMarkRoom.set(ViewModelProvider(this@ViewNewsFragment)[BookmarkRoomVM::class.java])
             setUpLanguageIdentify()
         }
+        binding = this
+        (activity as AppCompatActivity).apply {
+            setSupportActionBar(binding.detailToolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        }
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.window?.apply {
-            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            statusBarColor = Color.BLACK
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            }
-        }
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object :
-            OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-                if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
-                    findNavController().navigateUp()
-                } else {
+        viewNewsViewModel.loadAd.set(true)
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
+        onBackPressed {
+            when (bottomSheetBehavior.state) {
+                BottomSheetBehavior.STATE_COLLAPSED -> {
+                    navigateUp()
+                }
+                else -> {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
             }
+        }
 
-        })
+        bottomSheetBehavior.addBottomSheetCallback(object :
+                BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    viewNewsViewModel.isCollapsed
+                        .set(newState == BottomSheetBehavior.STATE_COLLAPSED)
+                }
 
-        val bottomSheet = BottomSheetDialog(requireContext())
-        val bindingSheet = DataBindingUtil.inflate<MoreBinding>(layoutInflater, R.layout.more,
-            null, false)
-        bottomSheet.setContentView(bindingSheet.root)
-
-        viewNewsViewModel.loadAd.set(true)
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            })
 
         if (viewNewsViewModel.languageCode.get() != "und") {
             talky = TextToSpeech(requireContext()) { status ->
                 if (status == TextToSpeech.SUCCESS) {
                     val result: Int = talky!!.setLanguage(Locale.ENGLISH)
-                    if (result == TextToSpeech.LANG_MISSING_DATA
-                        || result == TextToSpeech.LANG_NOT_SUPPORTED
+                    if (result == TextToSpeech.LANG_MISSING_DATA ||
+                        result == TextToSpeech.LANG_NOT_SUPPORTED
                     ) {
                         AppLog.l("TTS--> Language not supported")
                     } else {
@@ -117,19 +112,19 @@ class ViewNewsFragment : Fragment() {
                         talky!!.setSpeechRate(0.8f)
                         viewNewsViewModel.showPlayButton.set(true)
                         talky!!.setOnUtteranceProgressListener(object :
-                            UtteranceProgressListener() {
-                            override fun onStart(utteranceId: String?) {
-                                viewNewsViewModel.showPlayButton.set(false)
-                                viewNewsViewModel.showStopButton.set(true)
-                            }
+                                UtteranceProgressListener() {
+                                override fun onStart(utteranceId: String?) {
+                                    viewNewsViewModel.showPlayButton.set(false)
+                                    viewNewsViewModel.showStopButton.set(true)
+                                }
 
-                            override fun onDone(utteranceId: String?) {
-                                viewNewsViewModel.showPlayButton.set(true)
-                                viewNewsViewModel.showStopButton.set(false)
-                            }
+                                override fun onDone(utteranceId: String?) {
+                                    viewNewsViewModel.showPlayButton.set(true)
+                                    viewNewsViewModel.showStopButton.set(false)
+                                }
 
-                            override fun onError(utteranceId: String?) {}
-                        })
+                                override fun onError(utteranceId: String?) {}
+                            })
                     }
                 } else {
                     AppLog.l("TTS--> Initialization failed $status")
@@ -138,10 +133,14 @@ class ViewNewsFragment : Fragment() {
         }
 
         viewNewsViewModel.playEvent.observe(viewLifecycleOwner) {
-            talky!!.speak("${viewNewsViewModel.title}. ${viewNewsViewModel.content}.",
-                TextToSpeech.QUEUE_FLUSH,
-                null,
-                TextToSpeech.ACTION_TTS_QUEUE_PROCESSING_COMPLETED)
+            with(viewNewsViewModel) {
+                talky!!.speak(
+                    "$title. ${content.ifNull { description }}.",
+                    TextToSpeech.QUEUE_FLUSH,
+                    null,
+                    TextToSpeech.ACTION_TTS_QUEUE_PROCESSING_COMPLETED
+                )
+            }
         }
 
         viewNewsViewModel.stopEvent.observe(viewLifecycleOwner) {
@@ -191,11 +190,13 @@ class ViewNewsFragment : Fragment() {
         }
 
         viewNewsViewModel.fullArticleEvent.observe(viewLifecycleOwner) {
-            startActivity(Intent(context, WebView::class.java)
-                .putExtra("url", viewNewsViewModel.url)
-                .putExtra("toMain", false))
+            navigateTo(
+                ViewNewsFragmentDirections.actionNavViewNewsToNavWebView(
+                    link = viewNewsViewModel.url,
+                    navigateToMain = false
+                )
+            )
         }
-
 
         if (viewNewsViewModel.title.contains("- ")) {
             loadMore(viewNewsViewModel.title.substringAfter("- "))
@@ -204,32 +205,27 @@ class ViewNewsFragment : Fragment() {
         }
 
         viewNewsViewModel.viewImageEvent.observe(viewLifecycleOwner) {
-            findNavController().navigate(ViewNewsFragmentDirections.actionNavViewNewsToNavViewImage(
-                image = viewNewsViewModel.image
-            ))
+            navigateTo(
+                ViewNewsFragmentDirections.actionNavViewNewsToNavViewImage(
+                    image = viewNewsViewModel.image
+                )
+            )
         }
 
         viewNewsViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
-            findNavController().navigate(MainControlDirections.actionToViewNews(
-                source = it.source.name, url = it.url, image = it.urlToImage, title = it.title,
-                content = it.content, description = it.description
-            ))
+            navigateTo(
+                ViewNewsFragmentDirections.actionNavViewNewsSelf(
+                    source = it.source.name, url = it.url, image = it.urlToImage, title = it.title,
+                    content = it.content, description = it.description
+                )
+            )
         }
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
             android.R.id.home -> {
-
-                // This ID represents the Home or Up button. In the case of this
-                // activity, the Up button is shown. For
-                // more details, see the Navigation pattern on Android Design:
-                //
-                // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-
-                navigateUpTo(requireActivity(), Intent(requireContext(), MainActivity::class.java))
-
+                findNavController().popBackStack()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -258,7 +254,6 @@ class ViewNewsFragment : Fragment() {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ),
             -> {
-
             }
             else -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -271,27 +266,13 @@ class ViewNewsFragment : Fragment() {
         }
     }
 
-
-    override fun onDestroy() {
+    override fun onDestroyView() {
+        super.onDestroyView()
         if (talky != null) {
             talky?.stop()
             talky?.shutdown()
         }
-        // Must destroy native ad or else there will be memory leaks.
-        if (viewNewsViewModel.nativeAd != null) {
-            // Call destroy on the native ad from any native ad loader.
-            viewNewsViewModel.nativeAdLoader.destroy(viewNewsViewModel.nativeAd)
-        }
-
-        // Destroy the actual loader itself
-        viewNewsViewModel.nativeAdLoader.destroy()
-        super.onDestroy()
     }
-
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun initWindow() {
-    }
-
 
     private fun loadMore(query: String) {
 
@@ -302,32 +283,26 @@ class ViewNewsFragment : Fragment() {
             .build()
 
         with(Helper.setUpNewsClient(requireActivity())) {
-            getEverything(everythingBuilder, object : ArticlesLiveDataResponseCallback {
-                override fun onFailure(throwable: Throwable) {
-                    viewNewsViewModel.showBottomSheet.set(false)
-                }
+            getEverything(
+                everythingBuilder,
+                object : ArticlesLiveDataResponseCallback {
+                    override fun onFailure(throwable: Throwable) {
+                        viewNewsViewModel.showBottomSheet.set(false)
+                    }
 
-                override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
-                    response.observe(viewLifecycleOwner) { newsResponse ->
-                        AppLog.l(newsResponse)
-                        if (newsResponse.totalResults == 0) {
-                            viewNewsViewModel.showBottomSheet.set(false)
-                        } else {
-                            viewNewsViewModel.showBottomSheet.set(true)
-                            viewNewsViewModel.moreNews.addAll(newsResponse.articles)
-
-//                            moreBy.apply {
-//                                layoutManager = LinearLayoutManager(requireContext())
-//                                hasFixedSize()
-//                                MaxAdsRecyclerView(viewNewsViewModel.moreNews,
-//                                    this@ViewNewsFragment, nativeAdLoader, nativeAd)
-//                            }
+                    override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
+                        response.observeForever { newsResponse ->
+                            AppLog.l(newsResponse)
+                            if (newsResponse.totalResults == 0) {
+                                viewNewsViewModel.showBottomSheet.set(false)
+                            } else {
+                                viewNewsViewModel.showBottomSheet.set(true)
+                                viewNewsViewModel.moreNews.addAll(newsResponse.articles)
+                            }
                         }
-
                     }
                 }
-
-            })
+            )
         }
     }
 }

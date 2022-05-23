@@ -12,7 +12,7 @@ import com.applovin.mediation.nativeAds.MaxNativeAdLoader
 import com.applovin.mediation.nativeAds.MaxNativeAdView
 import com.applovin.mediation.nativeAds.MaxNativeAdViewBinder
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.databinding.NativeCutomAdFrameBinding
+import com.ayodkay.apps.swen.databinding.NativeCustomAdFrameBinding
 import com.ayodkay.apps.swen.databinding.NewsLinksSavedBinding
 import com.ayodkay.apps.swen.databinding.NewsListCardBinding
 import com.ayodkay.apps.swen.helper.CardClick
@@ -34,8 +34,9 @@ class MaxAdsRecyclerView internal constructor(
     var newsList: ArrayList<Article>,
     var links: ArrayList<Links>,
     private var bookmarkRoomVM: BookmarkRoomVM? = null,
-    private var nativeAdLoader: MaxNativeAdLoader,
-    var nativeAd: MaxAd? = null, val listener: CardClick? = null,
+    private var nativeAdLoader: MaxNativeAdLoader? = null,
+    var nativeAd: MaxAd? = null,
+    val listener: CardClick? = null,
     val linkCardClick: LinkCardClick? = null,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -46,7 +47,7 @@ class MaxAdsRecyclerView internal constructor(
         return when (viewType) {
             ITEM_TYPE_MAX_AD -> {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = NativeCutomAdFrameBinding.inflate(layoutInflater, parent, false)
+                val binding = NativeCustomAdFrameBinding.inflate(layoutInflater, parent, false)
                 MyAdViewHolder(binding, nativeAd)
             }
 
@@ -60,8 +61,6 @@ class MaxAdsRecyclerView internal constructor(
                     NewsViewHolder(binding)
                 }
             }
-
-
         }
     }
 
@@ -69,8 +68,10 @@ class MaxAdsRecyclerView internal constructor(
         return if (isLinkView) links.size else newsList.size
     }
 
-    @SuppressLint("SimpleDateFormat")
-    @Suppress("SENSELESS_COMPARISON")
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is MyAdViewHolder -> {
@@ -79,8 +80,10 @@ class MaxAdsRecyclerView internal constructor(
 
             is NewsViewHolder -> {
                 bookmarkRoomVM?.let {
-                    holder.bind(newsList.getOrNull(position) ?: return,
-                        it, listener)
+                    holder.bind(
+                        newsList.getOrNull(position) ?: return,
+                        it, listener
+                    )
                 }
             }
 
@@ -97,8 +100,8 @@ class MaxAdsRecyclerView internal constructor(
         return ITEM_TYPE_COUNTRY
     }
 
-    //Banner Ad View Holder
-    class MyAdViewHolder(val binding: NativeCutomAdFrameBinding, var nativeAd: MaxAd?) :
+    // Banner Ad View Holder
+    class MyAdViewHolder(val binding: NativeCustomAdFrameBinding, var nativeAd: MaxAd?) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(nativeAdLoader: MaxNativeAdLoader?) {
             binding.loading = true
@@ -116,34 +119,34 @@ class MaxAdsRecyclerView internal constructor(
             val nativeAdView = MaxNativeAdView(binder, binding.root.context)
             nativeAdLoader?.loadAd(nativeAdView)
             nativeAdLoader?.setNativeAdListener(object :
-                MaxNativeAdListener() {
-                override fun onNativeAdLoaded(
-                    nativeAdView: MaxNativeAdView?,
-                    ad: MaxAd,
-                ) {
-                    binding.loading = false
-                    // Cleanup any pre-existing native ad to prevent memory leaks.
-                    if (nativeAd != null) {
-                        nativeAdLoader.destroy(nativeAd)
+                    MaxNativeAdListener() {
+                    override fun onNativeAdLoaded(
+                        nativeAdView: MaxNativeAdView?,
+                        ad: MaxAd,
+                    ) {
+                        binding.loading = false
+                        // Cleanup any pre-existing native ad to prevent memory leaks.
+                        if (nativeAd != null) {
+                            nativeAdLoader.destroy(nativeAd)
+                        }
+
+                        // Save ad for cleanup.
+                        nativeAd = ad
+                        // Add ad view to view.
+                        binding.nativeAdLayout.removeAllViews()
+                        binding.nativeAdLayout.addView(nativeAdView)
                     }
 
-                    // Save ad for cleanup.
-                    nativeAd = ad
-                    // Add ad view to view.
-                    binding.nativeAdLayout.removeAllViews()
-                    binding.nativeAdLayout.addView(nativeAdView)
-                }
+                    override fun onNativeAdLoadFailed(
+                        adUnitId: String,
+                        maxError: MaxError,
+                    ) {
+                        binding.loading = false
+                        binding.showError = true
+                    }
 
-                override fun onNativeAdLoadFailed(
-                    adUnitId: String,
-                    maxError: MaxError,
-                ) {
-                    binding.loading = false
-                    binding.showError = true
-                }
-
-                override fun onNativeAdClicked(ad: MaxAd) {}
-            })
+                    override fun onNativeAdClicked(ad: MaxAd) {}
+                })
         }
     }
 
@@ -210,7 +213,6 @@ class MaxAdsRecyclerView internal constructor(
             binding.loading = false
         }
     }
-
 
     class LinkViewHolder(val binding: NewsLinksSavedBinding) :
         RecyclerView.ViewHolder(binding.root) {

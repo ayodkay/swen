@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.ayodkay.apps.swen.view.bookmarks.ui.links.LinksViewModel" />
+            type="com.ayodkay.apps.swen.view.link.LinksViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_undraw_empty_xct9"
-            app:isVisible="@{viewModel.links.size() == 0}"
+            app:isVisible="@{viewModel.emptyLink}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

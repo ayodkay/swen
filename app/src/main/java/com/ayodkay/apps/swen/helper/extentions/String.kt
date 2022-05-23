@@ -1,5 +1,9 @@
 package com.ayodkay.apps.swen.helper.extentions
 
-inline fun String?.ifNull(defaultValue: () -> String): String {
-    return if (isNullOrEmpty()) defaultValue() else this
+inline fun <T> T?.ifNull(defaultValue: () -> T): T {
+    return this ?: defaultValue()
 }
+
+fun <T> T?.isNull(): Boolean = this == null
+
+fun <T> T?.isNotNull(): Boolean = this != null

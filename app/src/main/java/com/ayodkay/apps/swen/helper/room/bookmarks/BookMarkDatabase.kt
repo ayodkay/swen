@@ -22,7 +22,6 @@ abstract class BookMarkDatabase : RoomDatabase() {
         ): BookMarkDatabase {
             return INSTANCE
 
-
                 ?: synchronized(this) {
                     val instance = Room.databaseBuilder(
                         context.applicationContext,

@@ -5,7 +5,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.zoom.ZoomClass
+import com.ayodkay.apps.swen.view.zoom.ZoomClass
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
@@ -13,16 +13,19 @@ import com.squareup.picasso.Picasso
 fun AppCompatImageView.loadUrl(url: String, callBack: ImageViewCallBack?) {
     val imageView = this
     try {
-        Picasso.get().load(url).into(imageView, object : Callback {
-            override fun onSuccess() {
-                callBack?.onLoadingDone()
-            }
+        Picasso.get().load(url).into(
+            imageView,
+            object : Callback {
+                override fun onSuccess() {
+                    callBack?.onLoadingDone()
+                }
 
-            override fun onError(e: Exception?) {
-                setEmptyImage(imageView)
-                callBack?.onLoadingDone()
+                override fun onError(e: Exception?) {
+                    setEmptyImage(imageView)
+                    callBack?.onLoadingDone()
+                }
             }
-        })
+        )
     } catch (e: Exception) {
         setEmptyImage(imageView)
         callBack?.onLoadingDone()
@@ -33,18 +36,20 @@ fun AppCompatImageView.loadUrl(url: String, callBack: ImageViewCallBack?) {
 fun ZoomClass.loadUrl(url: String) {
     val imageView = this
     try {
-        Picasso.get().load(url).into(imageView, object : Callback {
-            override fun onSuccess() {}
+        Picasso.get().load(url).into(
+            imageView,
+            object : Callback {
+                override fun onSuccess() {}
 
-            override fun onError(e: Exception?) {
-                setEmptyImage(imageView)
+                override fun onError(e: Exception?) {
+                    setEmptyImage(imageView)
+                }
             }
-        })
+        )
     } catch (e: Exception) {
         setEmptyImage(imageView)
     }
 }
-
 
 @BindingAdapter("app:imageDrawableId")
 fun ImageView.setImageDrawable(id: Int) {
@@ -55,11 +60,14 @@ fun ImageView.setImageDrawable(id: Int) {
 
 private fun setEmptyImage(imageView: ImageView) {
     imageView.apply {
-        setImageDrawable(ResourcesCompat.getDrawable(resources,
-            R.drawable.ic_undraw_page_not_found_su7k, null))
+        setImageDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_undraw_page_not_found_su7k, null
+            )
+        )
     }
 }
-
 
 interface ImageViewCallBack {
     fun onLoadingDone()

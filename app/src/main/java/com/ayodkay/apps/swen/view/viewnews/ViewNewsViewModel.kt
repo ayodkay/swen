@@ -1,5 +1,6 @@
 package com.ayodkay.apps.swen.view.viewnews
 
+import android.app.Application
 import android.net.Uri
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
@@ -16,7 +17,7 @@ import com.google.mlkit.nl.languageid.LanguageIdentification
 
 private const val DOMAIN_URI_PREFIX = "https://swenio.page.link"
 
-class ViewNewsViewModel : BaseViewModel(), CardClick {
+class ViewNewsViewModel(application: Application) : BaseViewModel(application), CardClick {
     var dynamicLink = ""
     val moreNews = ObservableArrayList<Article>()
     val listener = this
@@ -27,15 +28,13 @@ class ViewNewsViewModel : BaseViewModel(), CardClick {
     val showStopButton = ObservableField(false)
     val showLoading = ObservableField(true)
     val showBottomSheet = ObservableField(false)
-    val bottomSheetState = ObservableField(0)
-
+    val isCollapsed = ObservableField(true)
 
     val playEvent = SimpleEvent()
     val stopEvent = SimpleEvent()
     val fullArticleEvent = SimpleEvent()
     val shareEvent = SimpleEvent()
     val viewImageEvent = SimpleEvent()
-
 
     fun stopLoading() {
         showLoading.set(false)
@@ -61,7 +60,7 @@ class ViewNewsViewModel : BaseViewModel(), CardClick {
     }
 
     fun setUpLanguageIdentify() {
-        languageIdentifier.identifyLanguage(title)
+        languageIdentifier.identifyLanguage(title + content.ifEmpty { description })
             .addOnSuccessListener { code ->
                 languageCode.set(code)
             }.addOnFailureListener {}

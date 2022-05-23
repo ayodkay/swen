@@ -21,5 +21,7 @@
         <attr name="url" format="string|reference" />
     </declare-styleable>
 
+    <declare-styleable name="PreferencesAds"></declare-styleable>
+
     <dimen name="banner_height">50dp</dimen>
 </resources>

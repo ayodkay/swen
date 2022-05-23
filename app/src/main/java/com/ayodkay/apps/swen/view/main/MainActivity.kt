@@ -4,15 +4,22 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Address
 import android.location.Location
 import android.os.Bundle
+import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.ActivityNavigator
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
@@ -34,6 +41,8 @@ private const val REQUEST_CODE = 101
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val navController get() = findNavController(R.id.nav_host_fragment)
+
     override fun onStart() {
         super.onStart()
         Helper.goDark(this)
@@ -44,7 +53,8 @@ class MainActivity : AppCompatActivity() {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return MainActivityViewModel(
                     CoLocation.from(this@MainActivity),
-                    CoGeocoder.from(this@MainActivity)
+                    CoGeocoder.from(this@MainActivity),
+                    this@MainActivity.application
                 ) as T
             }
         }
@@ -57,6 +67,80 @@ class MainActivity : AppCompatActivity() {
         val data = Data.Builder().putInt(NOTIFICATION_ID, 0).build()
         scheduleNotification(data, this)
         permissionCheck()
+        binding.bubbleTabBar.addBubbleListener { id ->
+            onNavDestinationSelected(id, navController)
+        }
+        val defaultStatusBarColor = window.statusBarColor
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+
+            if (bottomBarIds().contains(destination.id)) {
+                binding.cardview.visibility = View.VISIBLE
+            } else {
+                binding.cardview.visibility = View.GONE
+            }
+
+            window.statusBarColor = when (destination.id) {
+                R.id.nav_view_news -> Color.TRANSPARENT
+                else -> defaultStatusBarColor
+            }
+
+            if (destination.id == R.id.nav_view_image) {
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                )
+            } else {
+                window.clearFlags(
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                )
+            }
+            if (destination.id == R.id.nav_view_news) {
+                window.apply {
+                    addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                }
+            } else {
+                window.apply {
+                    clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                }
+            }
+            binding.bubbleTabBar.setSelectedWithId(destination.id, false)
+        }
+    }
+
+    private fun bottomBarIds(): ArrayList<Int> {
+        return arrayListOf(
+            R.id.nav_main_swen, R.id.navigation_bookmarks, R.id.nav_main_search,
+            R.id.nav_main_links, R.id.nav_settings
+        )
+    }
+
+    private fun onNavDestinationSelected(
+        itemId: Int,
+        navController: NavController,
+    ): Boolean {
+        val builder = NavOptions.Builder().setLaunchSingleTop(true)
+        if (navController.currentDestination!!.parent!!.findNode(itemId) is
+            ActivityNavigator.Destination
+        ) {
+            builder.setEnterAnim(R.anim.nav_default_enter_anim)
+                .setExitAnim(R.anim.nav_default_exit_anim)
+                .setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
+                .setPopExitAnim(R.anim.nav_default_pop_exit_anim)
+        } else {
+            builder.setEnterAnim(R.animator.nav_default_enter_anim)
+                .setExitAnim(R.animator.nav_default_exit_anim)
+                .setPopEnterAnim(R.animator.nav_default_pop_enter_anim)
+                .setPopExitAnim(R.animator.nav_default_pop_exit_anim)
+        }
+        builder.setPopUpTo(itemId, true)
+        val options = builder.build()
+        return try {
+            navController.navigate(itemId, null, options)
+            true
+        } catch (e: IllegalArgumentException) {
+            false
+        }
     }
 
     private fun onAddressUpdate(address: Address?) {
@@ -76,15 +160,19 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_SHOW_SETTINGS -> {
-                if ((grantResults.isNotEmpty() &&
-                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                if ((
+                    grantResults.isNotEmpty() &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    )
                 ) {
                     lifecycle.addObserver(activityViewModel)
                     activityViewModel.addressUpdates.observe(this, this::onAddressUpdate)
                     activityViewModel.locationUpdates.observe(this, this::onLocationUpdate)
                     activityViewModel.resolveSettingsEvent.observe(this) {
-                        it.resolve(this,
-                            REQUEST_SHOW_SETTINGS)
+                        it.resolve(
+                            this,
+                            REQUEST_SHOW_SETTINGS
+                        )
                     }
                 }
             }
@@ -96,9 +184,9 @@ class MainActivity : AppCompatActivity() {
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
         ) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
@@ -123,8 +211,7 @@ class MainActivity : AppCompatActivity() {
                         activityViewModel.addressUpdates.observe(this, this::onAddressUpdate)
                         activityViewModel.locationUpdates.observe(this, this::onLocationUpdate)
                         activityViewModel.resolveSettingsEvent.observe(this) {
-                            it.resolve(this,
-                                REQUEST_SHOW_SETTINGS)
+                            it.resolve(this, REQUEST_SHOW_SETTINGS)
                         }
                     }
                     else -> runOnUiThread {
@@ -133,7 +220,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }.start()
-
         }
     }
 
@@ -161,7 +247,6 @@ class MainActivity : AppCompatActivity() {
             FirebaseMessaging.getInstance()
                 .subscribeToTopic(addressCode)
                 .addOnCompleteListener {}
-
         } else {
             FirebaseMessaging.getInstance()
                 .subscribeToTopic("engage")
@@ -175,10 +260,9 @@ class MainActivity : AppCompatActivity() {
         fun scheduleNotification(data: Data, context: Context) {
             val nWorkerParameters =
                 PeriodicWorkRequest.Builder(
-                    NotifyWork::class.java, 3, TimeUnit.HOURS,
-                    30, TimeUnit.MINUTES
-                )
-                    .setInitialDelay(2, TimeUnit.HOURS).setInputData(data).build()
+                    NotifyWork::class.java, 2, TimeUnit.HOURS, 20,
+                    TimeUnit.MINUTES
+                ).setInitialDelay(1, TimeUnit.HOURS).setInputData(data).build()
 
             WorkManager.getInstance(context).apply {
                 enqueueUniquePeriodicWork(

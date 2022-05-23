@@ -3,6 +3,7 @@
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#121212</color>
     <color name="colorAccent">#E29C9C</color>
+    <color name="adsButtons">#121212</color>
 
     <color name="textPrimary">#ffffff</color>
     <color name="textSecondary">#4CFAFAFA</color>

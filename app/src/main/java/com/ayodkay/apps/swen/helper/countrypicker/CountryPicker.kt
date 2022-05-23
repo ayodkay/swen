@@ -26,8 +26,9 @@ class CountryPicker : DialogFragment() {
      * Create view
      */
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(R.layout.country_picker, container, false)
 
@@ -139,7 +140,7 @@ class CountryPicker : DialogFragment() {
                 val countries: MutableList<Country> = ArrayList()
                 for (countryCode in Locale.getISOCountries()) {
                     val country = Country()
-                    if (Helper.available(Locale("", countryCode).isO3Country.substring(0, 2))){
+                    if (Helper.available(Locale("", countryCode).isO3Country.substring(0, 2))) {
                         country.code = countryCode
                         country.name = Locale("", countryCode).displayName
                         country.iso = Locale("", countryCode).isO3Country.substring(0, 2)
