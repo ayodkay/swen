@@ -1,5 +1,7 @@
 *.iml
 .gradle
+.safedk
+.idea
 /local.properties
 /.idea/caches
 /.idea/misc.xml
