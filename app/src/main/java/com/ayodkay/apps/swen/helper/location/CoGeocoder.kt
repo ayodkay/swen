@@ -91,7 +91,6 @@ interface CoGeocoder {
         maxResults: Int = 5
     ): List<Address>
 
-
     /**
      * Returns a list of Addresses that are known to describe the area immediately surrounding the given [latitude]
      * and [longitude]. The returned addresses will be localized for the [locale] and defaults to [Locale.getDefault].
@@ -140,5 +139,4 @@ interface CoGeocoder {
         locale: Locale = Locale.getDefault(),
         maxResults: Int = 5
     ): List<Address>
-
 }

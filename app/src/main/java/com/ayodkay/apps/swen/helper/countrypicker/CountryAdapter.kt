@@ -54,7 +54,6 @@ class CountryAdapter(private val mCountryPicker: CountryPicker, listener: Countr
         RecyclerView.ViewHolder(itemView) {
         var textView: TextView = itemView.findViewById<View>(R.id.row_title) as TextView
         var imageView: ImageView = itemView.findViewById<View>(R.id.row_icon) as ImageView
-
     }
 
     fun refill(countries: List<Country>?) {
@@ -101,7 +100,7 @@ class CountryAdapter(private val mCountryPicker: CountryPicker, listener: Countr
     }
 
     private fun removeAccents(string: String?): String? {
-       return ACCENTS_PATTERN.matcher(
+        return ACCENTS_PATTERN.matcher(
             Normalizer.normalize(
                 string,
                 Normalizer.Form.NFD

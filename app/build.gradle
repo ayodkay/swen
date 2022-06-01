@@ -1,7 +1,18 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'applovin-quality-service'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+
+applovin {
+    apiKey "Jb-ZRRo3hbSqdMX5Kt0pOtqLTS_GkHfhTTyU-9OOJXiPe06Mw8RVziyCsSiZwGs51WN0a2xThKBWRVakIgwORa"
+}
 
 android {
     compileSdkVersion 32
@@ -21,6 +32,9 @@ android {
     }
 
     buildTypes {
+        customDebugType {
+            debuggable true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -47,54 +61,56 @@ android {
         viewBinding true
         dataBinding true
     }
+    namespace 'com.ayodkay.apps.swen'
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.10"
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.21'
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.0'
-    implementation 'com.google.android.gms:play-services-ads:20.5.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
+    implementation 'com.google.android.gms:play-services-ads:21.0.0'
     implementation 'androidx.preference:preference-ktx:1.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    def lottieVersion = '3.6.1'
+    def lottieVersion = '5.0.3'
     implementation "com.airbnb.android:lottie:$lottieVersion"
 
-    def room_version = "2.4.1"
+    def room_version = "2.4.2"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    
+
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.google.firebase:firebase-perf:20.0.4'
-    implementation 'com.google.firebase:firebase-messaging:23.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.7'
-    implementation 'com.google.firebase:firebase-analytics-ktx:20.0.2'
-    implementation 'com.google.firebase:firebase-dynamic-links-ktx:21.0.0'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.firebase:firebase-perf:20.1.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.5'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.11'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.0.0'
+    implementation 'com.google.firebase:firebase-dynamic-links-ktx:21.0.1'
 
     //picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     //ok http
-    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.1'
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.6'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6'
 
     //glide
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.1'
 
     //retrofit2
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -104,27 +120,23 @@ dependencies {
     implementation 'com.google.android.play:core:1.10.3'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
 
-    def work_version = "2.7.1"
-    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 
-    implementation 'com.facebook.android:facebook-android-sdk:9.1.0'
+    implementation 'com.facebook.android:facebook-android-sdk:13.1.0'
 
+    implementation 'com.applovin:applovin-sdk:11.3.3'
 
-    implementation('com.mopub:mopub-sdk:5.17.0@aar') {
-        transitive = true
-    }
+    implementation 'io.ak1:bubbletabbar:1.0.8'
 
-    implementation  'io.ak1:bubbletabbar:1.0.8'
-
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1-native-mt'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.1-native-mt'
 
 
     implementation 'com.github.ayodkay:NewsApiClient-Kotlin:1.0.5'
     implementation 'com.google.mlkit:language-id:17.0.3'
 
-}
+    implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
 
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.google.firebase.firebase-perf'
+    implementation 'org.jsoup:jsoup:1.15.1'
+
+}

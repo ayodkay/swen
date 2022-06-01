@@ -1,6 +1,5 @@
 package com.ayodkay.apps.swen.helper.location
 
-
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
@@ -8,7 +7,6 @@ import android.location.Location
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.util.*
-
 
 internal class CoGeocoderImpl(
     context: Context,

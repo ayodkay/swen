@@ -33,5 +33,11 @@
         <Preference
             app:key="policy"
             app:title="@string/disclaimer" />
+
+        <com.ayodkay.apps.swen.view.settings.AdsPreference
+            app:key="@string/ad"
+            app:title="@string/ad"
+            app:widgetLayout="@layout/settings_ads" />
+
     </PreferenceCategory>
 </PreferenceScreen>

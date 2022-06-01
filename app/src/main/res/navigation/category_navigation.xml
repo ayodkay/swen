@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/nav_top"
+    android:id="@+id/category_navigation">
+
+    <fragment
+        android:id="@+id/nav_top"
+        android:name="com.ayodkay.apps.swen.view.home.category.CategoryFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_category">
+
+        <argument
+            android:name="category"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="q"
+            android:defaultValue=""
+            app:argType="string" />
+    </fragment>
+</navigation>

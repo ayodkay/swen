@@ -3,38 +3,217 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_control"
-    app:startDestination="@+id/nav_main_swen">
+    app:startDestination="@+id/nav_splash">
+
+    <include app:graph="@navigation/category_navigation" />
+
+    <fragment
+        android:id="@+id/nav_splash"
+        android:name="com.ayodkay.apps.swen.view.splash.SplashFragment"
+        android:label="Splash Screen"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_nav_splash_to_nav_location"
+            app:destination="@id/nav_location"
+            app:popUpTo="@+id/main_control"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_nav_splash_to_nav_main_swen"
+            app:destination="@id/nav_main_swen"
+            app:popUpTo="@+id/main_control"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_nav_splash_to_nav_web_view"
+            app:destination="@id/nav_web_view"
+            app:popUpTo="@+id/main_control"
+            app:popUpToInclusive="true">
+            <argument
+                android:name="link"
+                android:defaultValue=""
+                app:argType="string" />
+            <argument
+                android:name="navigateToMain"
+                android:defaultValue="false"
+                app:argType="boolean" />
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_main_swen"
-        android:name="com.ayodkay.apps.swen.view.main.MainFragment"
+        android:name="com.ayodkay.apps.swen.view.home.HomeFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_home" />
 
+    <fragment
+        android:id="@+id/nav_location"
+        android:name="com.ayodkay.apps.swen.view.location.LocationFragment"
+        android:label="@string/select_country"
+        tools:layout="@layout/fragment_location">
+        <action
+            android:id="@+id/action_nav_location_to_nav_main_swen"
+            app:destination="@id/nav_main_swen"
+            app:popUpTo="@+id/main_control"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_bookmarks"
-        android:name="com.ayodkay.apps.swen.view.bookmarks.ui.bookmarks.BookmarksFragment"
+        android:name="com.ayodkay.apps.swen.view.bookmarks.BookmarksFragment"
         android:label="@string/bookmarks"
-        tools:layout="@layout/fragment_bookmarks" />
+        tools:layout="@layout/fragment_bookmarks">
+        <action
+            android:id="@+id/action_navigation_bookmarks_to_nav_view_news"
+            app:destination="@id/nav_view_news" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_main_search"
         android:name="com.ayodkay.apps.swen.view.search.SearchFragment"
         android:label="@string/search"
-        tools:layout="@layout/activity_search" />
-
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_nav_main_search_to_nav_view_news"
+            app:destination="@id/nav_view_news" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_main_links"
-        android:name="com.ayodkay.apps.swen.view.bookmarks.ui.links.LinksFragment"
+        android:name="com.ayodkay.apps.swen.view.link.LinksFragment"
         android:label="@string/links"
-        tools:layout="@layout/fragment_links" />
-
+        tools:layout="@layout/fragment_links">
+        <action
+            android:id="@+id/action_nav_main_links_to_nav_web_view"
+            app:destination="@id/nav_web_view" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_settings"
-        android:name="com.ayodkay.apps.swen.view.settings.SettingsActivity$SettingsFragment"
-        android:label="@string/action_settings"
-        tools:layout="@layout/settings_activity" />
+        android:name="com.ayodkay.apps.swen.view.settings.SettingsFragment"
+        android:label="@string/action_settings">
+        <action
+            android:id="@+id/action_nav_settings_to_nav_location"
+            app:destination="@id/nav_location" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_theme_fragment"
+            app:destination="@id/nav_theme_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_view_image"
+        android:name="com.ayodkay.apps.swen.view.viewimage.ViewImageFragment"
+        android:label="View Image"
+        tools:layout="@layout/fragment_view_image">
+        <argument
+            android:name="image"
+            android:defaultValue=""
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_web_view"
+        android:name="com.ayodkay.apps.swen.view.webview.WebViewFragment"
+        android:label="Web View"
+        tools:layout="@layout/fragment_webview">
+        <argument
+            android:name="link"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="navigateToMain"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_nav_web_view_to_nav_main_swen"
+            app:destination="@id/nav_main_swen" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_theme_fragment"
+        android:name="com.ayodkay.apps.swen.view.theme.ThemeFragment"
+        android:label="Theme Fragment"
+        tools:layout="@layout/theme_fragment" />
+
+    <fragment
+        android:id="@+id/nav_view_news"
+        android:name="com.ayodkay.apps.swen.view.viewnews.ViewNewsFragment"
+        android:label="View News"
+        tools:layout="@layout/fragment_view_news">
+        <argument
+            android:name="source"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="url"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="image"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="title"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="content"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="description"
+            android:defaultValue=""
+            app:argType="string" />
+        <action
+            android:id="@+id/action_nav_view_news_to_nav_view_image"
+            app:destination="@id/nav_view_image">
+            <argument
+                android:name="image"
+                android:defaultValue=""
+                app:argType="string" />
+        </action>
+        <action
+            android:id="@+id/action_nav_view_news_self"
+            app:destination="@id/nav_view_news" />
+        <action
+            android:id="@+id/action_nav_view_news_to_nav_web_view"
+            app:destination="@id/nav_web_view">
+            <argument
+                android:name="link"
+                android:defaultValue=""
+                app:argType="string" />
+            <argument
+                android:name="navigateToMain"
+                android:defaultValue="false"
+                app:argType="boolean" />
+        </action>
+    </fragment>
+
+
+    <action
+        android:id="@+id/action_to_view_news"
+        app:destination="@+id/nav_view_news">
+        <argument
+            android:name="source"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="url"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="image"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="title"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="content"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="description"
+            android:defaultValue=""
+            app:argType="string" />
+    </action>
 </navigation>

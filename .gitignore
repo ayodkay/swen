@@ -1,5 +1,6 @@
 *.iml
 .gradle
+.safedk
 /local.properties
 /.idea/caches
 /.idea/misc.xml
@@ -21,3 +22,9 @@
 /app/src/androidTest
 /.idea/sonarlint/issuestore/
 /keystore.jks
+/.safedk
+/.safedk/plugin.properties
+/.safedk/hashes.safedk
+/app/debug/
+/.idea/
+/.idea/codeStyles/

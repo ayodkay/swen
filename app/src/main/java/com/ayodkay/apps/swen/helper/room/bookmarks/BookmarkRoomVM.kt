@@ -39,5 +39,4 @@ class BookmarkRoomVM(application: Application) : AndroidViewModel(application) {
     fun nuke() = viewModelScope.launch {
         repository.delete()
     }
-
 }

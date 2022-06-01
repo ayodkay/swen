@@ -1,6 +1,5 @@
 package com.ayodkay.apps.swen.helper.location
 
-
 import android.Manifest
 import android.app.Activity
 import android.content.Context
@@ -13,7 +12,6 @@ import com.google.android.gms.location.LocationSettingsRequest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-
 
 interface CoLocation {
 
@@ -160,5 +158,4 @@ interface CoLocation {
         /** Location settings are not satisfied and this can't be fixed by showing the user a dialog */
         class NotResolvable(val exception: Exception) : SettingsResult()
     }
-
 }

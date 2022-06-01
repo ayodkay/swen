@@ -1,61 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardElevation="16dp"
-    app:cardCornerRadius="14dp"
-    android:background="#FFFFFF"
-    android:layout_margin="6dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <data>
+
+        <variable
+            name="link"
+            type="String" />
+
+        <variable
+            name="drawableId"
+            type="Integer" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:weightSum="2"
-        android:orientation="horizontal">
+        android:layout_margin="6dp"
+        android:background="#FFFFFF"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="16dp">
 
-        <TextView
-            android:id="@+id/link"
-            android:layout_width="0dp"
-            android:layout_weight="1.7"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAllCaps="false"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:textColor="@color/textPrimary"
-            />
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:weightSum="2">
 
-        <RelativeLayout
-            android:id="@+id/saved_link_view"
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
-            android:layout_height="48dp">
-
-            <ImageView
-                android:id="@+id/saved_link_image"
-                android:contentDescription="@string/links"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_bookmark"/>
-        </RelativeLayout>
+                android:layout_weight="1.7"
+                android:text="@{link}"
+                android:textAllCaps="false"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="@color/textPrimary" />
 
-        <RelativeLayout
-            android:id="@+id/unsaved_link_view"
-            android:layout_width="0dp"
-            android:visibility="gone"
-            android:layout_weight="0.3"
-            android:layout_height="48dp">
+            <RelativeLayout
+                android:id="@+id/saved_link_view"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="0.3">
 
-            <ImageView
-                android:id="@+id/unsaved_link_image"
-                android:contentDescription="@string/links"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_bookmarked"/>
-        </RelativeLayout>
-    </LinearLayout>
-
-</com.google.android.material.card.MaterialCardView>
+                <ImageView
+                    android:id="@+id/bookmarkView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/links"
+                    android:src="@drawable/ic_bookmark"
+                    app:accessibleTouchTarget="@{true}"
+                    app:imageDrawableId="@{drawableId}" />
+            </RelativeLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

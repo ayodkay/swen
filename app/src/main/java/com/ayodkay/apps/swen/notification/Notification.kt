@@ -23,13 +23,11 @@ import androidx.work.Data
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.App.Companion.context
 import com.ayodkay.apps.swen.helper.work.NotifyWork
-import com.ayodkay.apps.swen.view.WebView
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.ayodkay.apps.swen.view.main.MainActivity.Companion.scheduleNotification
 import com.facebook.appevents.AppEventsLogger
 import com.squareup.picasso.Picasso
 import kotlin.random.Random
-
 
 class Notification internal constructor(private val context: Context) {
 
@@ -38,7 +36,6 @@ class Notification internal constructor(private val context: Context) {
         private val COUNTRY_NOTIFICATION = Random.nextInt(0, 1000000)
         private val CHANNEL_ID = context.getString(R.string.notification_id)
     }
-
 
     private val notificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -55,11 +52,15 @@ class Notification internal constructor(private val context: Context) {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(
+        val pendingIntent: PendingIntent = getActivity(
             context,
             0,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
         )
         val builder = NotificationCompat.Builder(
             context,
@@ -106,7 +107,8 @@ class Notification internal constructor(private val context: Context) {
             getActivity(
                 context,
                 0,
-                intent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                intent,
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 } else {
                     PendingIntent.FLAG_UPDATE_CURRENT
@@ -151,20 +153,22 @@ class Notification internal constructor(private val context: Context) {
     }
 
     internal fun sendCountryNotification(
-        title: String, descriptions: String, url: String,
+        title: String,
+        descriptions: String,
+        url: String,
         image: String,
     ) {
         AppEventsLogger.newLogger(context).logEvent("sentCountryNotification")
-        val intent = Intent(context, WebView::class.java).apply {
+        val intent = Intent(context, MainActivity::class.java).apply {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
-
         }.putExtra("url", url).putExtra("toMain", true)
 
         val pendingIntent: PendingIntent =
             getActivity(
                 context,
                 0,
-                intent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                intent,
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 } else {
                     PendingIntent.FLAG_UPDATE_CURRENT

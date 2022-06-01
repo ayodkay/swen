@@ -1,6 +1,5 @@
 package com.ayodkay.apps.swen.view.search
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface.*
 import android.os.Bundle
@@ -8,205 +7,147 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.ViewModelProvider
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.databinding.ActivitySearchBinding
+import com.ayodkay.apps.swen.databinding.FragmentSearchBinding
+import com.ayodkay.apps.swen.helper.BaseFragment
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.Helper.setUpNewsClient
-import com.ayodkay.apps.swen.helper.adapter.AdMobRecyclerView
 import com.ayodkay.apps.swen.helper.constant.ErrorMessage
+import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.github.ayodkay.builder.EverythingBuilder
-import com.github.ayodkay.models.Article
 import com.github.ayodkay.models.ArticleResponse
 import com.github.ayodkay.mvvm.interfaces.ArticlesLiveDataResponseCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mopub.nativeads.MoPubRecyclerAdapter
-import com.mopub.nativeads.MoPubStaticNativeAdRenderer
-import com.mopub.nativeads.RequestParameters
-import com.mopub.nativeads.ViewBinder
-import java.util.*
 
-class SearchFragment : Fragment() {
-
-    var queryValue: String = "null"
-    lateinit var sort: String
-    private var sortOptions = arrayListOf("popularity", "publishedAt", "relevancy")
-
-    private var _binding: ActivitySearchBinding? = null
-    private val binding get() = _binding!!
+class SearchFragment : BaseFragment() {
+    private val searchViewModel: SearchViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        _binding = ActivitySearchBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    ): View = FragmentSearchBinding.inflate(inflater, container, false).apply {
+        viewModel = searchViewModel
+        searchViewModel.bookMarkRoom
+            .set(ViewModelProvider(requireActivity())[BookmarkRoomVM::class.java])
+    }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        searchViewModel.loadAd.set(true)
+
         val singleSort = arrayOf(
             getString(R.string.popularity),
             getString(R.string.newest),
             getString(R.string.relevancy)
         )
-        var checkedSort = 1
-        sort = sortOptions[checkedSort]
+        searchViewModel.sort = searchViewModel.sortOptions[searchViewModel.checkedSort]
 
-//        MobileAds.initialize(requireContext())
-//        val adRequest = AdRequest.Builder().build()
-//        binding.adView.loadAd(adRequest)
-
-        binding.bannerMopubview.apply {
-            setAdUnitId(getString(R.string.mopub_adunit_banner))
-            loadAd()
-        }
-
-        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                queryValue = query.toString()
-                loadNews(queryValue)
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                binding.bannerMopubview.visibility = View.VISIBLE
-                return false
-            }
-
-        })
-
-        binding.sortBy.setOnClickListener {
+        searchViewModel.sortEvent.observe(viewLifecycleOwner) {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.sort_news))
                 .setNeutralButton(resources.getString(android.R.string.cancel)) { dialog, _ ->
                     dialog.dismiss()
                 }
                 .setPositiveButton(resources.getString(android.R.string.ok)) { _, _ ->
-                    if (queryValue != "null") {
-                        loadNews(queryValue)
+                    if (searchViewModel.query.get() != "") {
+                        loadNews(searchViewModel.query.get())
                     }
-
                 }
                 // Single-choice items (initialized with checked item)
-                .setSingleChoiceItems(singleSort, checkedSort) { _, which ->
-                    sort = sortOptions[which]
-                    checkedSort = which
+                .setSingleChoiceItems(singleSort, searchViewModel.checkedSort) { _, which ->
+                    searchViewModel.sort = searchViewModel.sortOptions[which]
+                    searchViewModel.checkedSort = which
                 }
                 .show().apply {
                     getButton(BUTTON_NEGATIVE)
-                        .setTextColor(ResourcesCompat.getColor(resources,
-                            R.color.textPrimary,
-                            null))
+                        .setTextColor(
+                            ResourcesCompat.getColor(
+                                resources,
+                                R.color.textPrimary,
+                                null
+                            )
+                        )
 
                     getButton(BUTTON_POSITIVE)
-                        .setTextColor(ResourcesCompat.getColor(resources,
-                            R.color.textPrimary,
-                            null))
+                        .setTextColor(
+                            ResourcesCompat.getColor(
+                                resources,
+                                R.color.textPrimary,
+                                null
+                            )
+                        )
 
                     getButton(BUTTON_NEUTRAL)
-                        .setTextColor(ResourcesCompat.getColor(resources,
-                            R.color.textPrimary,
-                            null))
+                        .setTextColor(
+                            ResourcesCompat.getColor(
+                                resources,
+                                R.color.textPrimary,
+                                null
+                            )
+                        )
                 }
         }
 
+        searchViewModel.searchEvent.observe(viewLifecycleOwner) {
+            loadNews(it)
+        }
+
+        searchViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
+            navigateTo(
+                SearchFragmentDirections.actionNavMainSearchToNavViewNews(
+                    source = it.source.name, url = it.url, image = it.urlToImage, title = it.title,
+                    content = it.content, description = it.description
+                )
+            )
+        }
     }
 
-
-    @SuppressLint("SetTextI18n")
-    fun loadNews(query: String?) {
+    private fun loadNews(query: String?) {
         val db = Helper.getCountryDatabase(requireContext())
-        val newsResponseList = arrayListOf<Article>()
         val everythingBuilder = EverythingBuilder.Builder()
             .q(query.orEmpty())
-            .sortBy(sort)
+            .sortBy(searchViewModel.sort)
             .language(db.countryDao().getAll().iso)
             .pageSize(100)
             .build()
+
+        requireActivity().currentFocus?.let { view ->
+            val imm = requireActivity()
+                .getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+
         with(setUpNewsClient(requireActivity())) {
-            getEverything(everythingBuilder,
+
+            getEverything(
+                everythingBuilder,
                 object : ArticlesLiveDataResponseCallback {
                     override fun onFailure(throwable: Throwable) {
                         if (throwable.toString() == ErrorMessage.unknownHostException) {
-                            binding.empty.visibility = View.VISIBLE
-                            binding.searchRecycle.visibility = View.GONE
-                            binding.emptyText.visibility = View.VISIBLE
-                            binding.emptyText.text = "Internet Error"
-                            val imm =
-                                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+                            searchViewModel.showEmpty.set(true)
+                            searchViewModel.emptyTextValue.set("Internet Error")
                         }
                     }
 
                     override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
-                        response.observe(viewLifecycleOwner) { newsResponse ->
-                            requireActivity().currentFocus?.let { view ->
-                                val imm =
-                                    requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                                imm?.hideSoftInputFromWindow(view.windowToken, 0)
-
-                                if (newsResponse.totalResults == 0) {
-                                    binding.empty.visibility = View.VISIBLE
-                                    binding.searchRecycle.visibility = View.GONE
-                                    binding.emptyText.visibility = View.VISIBLE
-                                } else {
-                                    binding.empty.visibility = View.GONE
-                                    binding.searchRecycle.visibility = View.VISIBLE
-                                    binding.emptyText.visibility = View.GONE
-
-                                    newsResponseList.addAll(newsResponse.articles)
-                                    val desiredAssets = EnumSet.of(
-                                        RequestParameters.NativeAdAsset.TITLE,
-                                        RequestParameters.NativeAdAsset.TEXT,
-                                        RequestParameters.NativeAdAsset.ICON_IMAGE,
-                                        RequestParameters.NativeAdAsset.MAIN_IMAGE,
-                                        RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT,
-                                        RequestParameters.NativeAdAsset.SPONSORED
-                                    )
-                                    val requestParameters = RequestParameters.Builder()
-                                        .desiredAssets(desiredAssets)
-                                        .build()
-
-                                    val moPubStaticNativeAdRenderer = MoPubStaticNativeAdRenderer(
-                                        ViewBinder.Builder(R.layout.native_ad_list_item)
-                                            .titleId(R.id.native_title)
-                                            .textId(R.id.native_text)
-                                            .mainImageId(R.id.native_main_image)
-                                            .iconImageId(R.id.native_icon_image)
-                                            .callToActionId(R.id.native_cta)
-                                            .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
-                                            .sponsoredTextId(R.id.native_sponsored_text_view)
-                                            .build()
-                                    )
-
-                                    MoPubRecyclerAdapter(
-                                        requireActivity(), AdMobRecyclerView(
-                                            newsResponseList,
-                                            requireActivity(),
-                                            requireActivity()
-                                        )
-                                    ).apply {
-                                        registerAdRenderer(moPubStaticNativeAdRenderer)
-                                    }.also {
-                                        binding.bannerMopubview.visibility = View.GONE
-                                        binding.searchRecycle.apply {
-                                            it.loadAds(getString(R.string.mopub_adunit_native),
-                                                requestParameters)
-                                            adapter = it
-                                            layoutManager = LinearLayoutManager(requireActivity())
-                                        }
-                                    }
-                                }
+                        response.observeForever { newsResponse ->
+                            if (newsResponse.totalResults == 0) {
+                                searchViewModel.showEmpty.set(true)
+                                searchViewModel.emptyTextValue.set(getString(R.string.not_found))
+                            } else {
+                                searchViewModel.showEmpty.set(false)
+                                searchViewModel.showBannerAd.set(false)
+                                searchViewModel.newsList.addAll(newsResponse.articles)
                             }
                         }
                     }
-
-                })
+                }
+            )
         }
     }
 }

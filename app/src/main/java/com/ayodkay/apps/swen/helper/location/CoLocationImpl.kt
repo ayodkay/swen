@@ -8,6 +8,8 @@ import androidx.annotation.RequiresPermission
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.CancellationTokenSource
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -17,9 +19,6 @@ import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-
 
 internal class CoLocationImpl(private val context: Context) : CoLocation {
 
@@ -67,8 +66,10 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
                 }
             }.let(::ClearableLocationCallback) // Needed since we would have memory leaks otherwise
 
-            locationProvider.requestLocationUpdates(locationRequest, callback,
-                Looper.getMainLooper()).apply {
+            locationProvider.requestLocationUpdates(
+                locationRequest, callback,
+                Looper.getMainLooper()
+            ).apply {
                 addOnCanceledListener {
                     callback.clear()
                     cont.resumeWithException(TaskCancelledException(cancelledMessage))
@@ -95,12 +96,16 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
                 }
             }.let(::ClearableLocationCallback) // Needed since we would have memory leaks otherwise
 
-            locationProvider.requestLocationUpdates(locationRequest,
+            locationProvider.requestLocationUpdates(
+                locationRequest,
                 callback,
-                Looper.getMainLooper()).apply {
+                Looper.getMainLooper()
+            ).apply {
                 addOnCanceledListener {
-                    cancel(cancelledMessage,
-                        TaskCancelledException(cancelledMessage))
+                    cancel(
+                        cancelledMessage,
+                        TaskCancelledException(cancelledMessage)
+                    )
                 }
                 addOnFailureListener { cancel("Error requesting location updates", it) }
             }
@@ -128,8 +133,10 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
         }
 
     override suspend fun checkLocationSettings(locationRequest: LocationRequest): CoLocation.SettingsResult =
-        checkLocationSettings(LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-            .build())
+        checkLocationSettings(
+            LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+                .build()
+        )
 
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
     override suspend fun setMockLocation(location: Location) {
@@ -140,7 +147,6 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
     override suspend fun setMockMode(isMockMode: Boolean) {
         locationProvider.setMockMode(isMockMode).await()
     }
-
 }
 
 /** Wraps [callback] so that the reference can be cleared */
@@ -159,5 +165,4 @@ private class ClearableLocationCallback(callback: LocationCallback) : LocationCa
     fun clear() {
         callback = null
     }
-
 }

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.ayodkay.apps.swen.view.search.SearchViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        tools:context=".view.search.SearchFragment">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:contentInsetStart="0dp"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.appcompat.widget.SearchView
+                            android:id="@+id/searchBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toStartOf="@+id/sortBy"
+                            android:focusable="true"
+                            android:layoutDirection="rtl"
+                            app:doOnQueryTextListener="@{viewModel.doOnQueryTextListener}"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:queryBackground="@android:color/transparent"
+                            app:queryHint="@string/search"
+                            tools:targetApi="jelly_bean_mr1" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/sortBy"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:drawableEnd="@drawable/ic_sort"
+                            android:onClick="@{()->viewModel.sort()}"
+                            android:text="@string/sort"
+                            android:textAllCaps="false"
+                            android:textColor="@color/textPrimary" />
+
+
+                    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <RelativeLayout
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:isVisible="@{viewModel.showEmpty}">
+
+                <ImageView
+                    android:id="@+id/empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_undraw_empty_xct9"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/emptyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="70dp"
+                    android:gravity="center"
+                    android:text="@{viewModel.emptyTextValue}"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:textColor="@color/textPrimary"
+                    android:visibility="gone" />
+            </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searchRecycle"
+                bookmarkRoom="@{viewModel.bookMarkRoom}"
+                listener="@{viewModel.listener}"
+                nativeAd="@{viewModel.nativeAd}"
+                nativeAdLoader="@{viewModel.nativeAdLoader}"
+                newsList="@{viewModel.newsList}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:accessibleTouchTarget="@{true}"
+                android:clipToPadding="false"
+                android:paddingBottom="50dp"
+                tools:listitem="@layout/news_list_card">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <com.applovin.mediation.ads.MaxAdView xmlns:maxads="http://schemas.applovin.com/android/1.0"
+                android:id="@+id/maxAdviewBanner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/banner_height"
+                android:layout_alignParentBottom="true"
+                app:isVisible="@{viewModel.showBannerAd}"
+                app:loadBannerAd="@{viewModel.loadAd}"
+                maxads:adUnitId="6d2eada63140e252" />
+        </RelativeLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

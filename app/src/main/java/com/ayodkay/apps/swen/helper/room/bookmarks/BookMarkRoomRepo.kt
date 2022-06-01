@@ -13,7 +13,6 @@ class BookMarkRoomRepo(private val roomDao: BookMarkDao) {
         roomDao.deleteOne(url)
     }
 
-
     fun exist(url: String): Boolean {
         return roomDao.exist(url)
     }

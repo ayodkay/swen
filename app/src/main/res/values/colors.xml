@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#AB3838</color>
-    <color name="colorPrimaryDark">#C84848</color>
-    <color name="colorAccent">#E29C9C</color>
+    <color name="colorPrimaryDark">#760012</color>
+    <color name="colorAccent">#e26862</color>
 
 
     <color name="textPrimary">#DE000000</color>
     <color name="textSecondary">#8A000000</color>
+    <color name="tabTextColor">#fcedf0</color>
 
 
     <color name="toolbar">#ffffff</color>
 
-    <color name="tabColor">#A48D80</color>
+    <color name="tabColor">#e26862</color>
 
 
     <color name="background">#ffffff</color>
+    <color name="adsButtons">#AB3838</color>
     <color name="ads_background">#ffffff</color>
 
     <color name="iconColor">#AB3838</color>
