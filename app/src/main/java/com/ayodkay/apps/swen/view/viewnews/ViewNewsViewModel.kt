@@ -4,9 +4,11 @@ import android.app.Application
 import android.net.Uri
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
+import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.BaseViewModel
 import com.ayodkay.apps.swen.helper.CardClick
 import com.ayodkay.apps.swen.helper.SimpleEvent
+import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.trigger
 import com.github.ayodkay.models.Article
 import com.google.firebase.dynamiclinks.ktx.androidParameters
@@ -24,14 +26,13 @@ class ViewNewsViewModel(application: Application) : BaseViewModel(application), 
 
     private val languageIdentifier = LanguageIdentification.getClient()
     val languageCode = ObservableField("")
-    val showPlayButton = ObservableField(false)
-    val showStopButton = ObservableField(false)
+    val isPlaying = ObservableField(false)
+    val isTalkingDrawable = ObservableField(R.drawable.ic_baseline_play_arrow_24)
     val showLoading = ObservableField(true)
     val showBottomSheet = ObservableField(false)
     val isCollapsed = ObservableField(true)
 
     val playEvent = SimpleEvent()
-    val stopEvent = SimpleEvent()
     val fullArticleEvent = SimpleEvent()
     val shareEvent = SimpleEvent()
     val viewImageEvent = SimpleEvent()
@@ -60,7 +61,7 @@ class ViewNewsViewModel(application: Application) : BaseViewModel(application), 
     }
 
     fun setUpLanguageIdentify() {
-        languageIdentifier.identifyLanguage(title + content.ifEmpty { description })
+        languageIdentifier.identifyLanguage("$title. ${content.ifNull { description }}.")
             .addOnSuccessListener { code ->
                 languageCode.set(code)
             }.addOnFailureListener {}
@@ -68,10 +69,6 @@ class ViewNewsViewModel(application: Application) : BaseViewModel(application), 
 
     fun play() {
         playEvent.trigger()
-    }
-
-    fun stop() {
-        stopEvent.trigger()
     }
 
     override fun onCardClick(article: Article) {

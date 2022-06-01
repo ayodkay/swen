@@ -20,6 +20,9 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessaging
 import com.onesignal.OneSignal
 
+const val ONESIGNAL_PROD = "c029b873-28be-4fa7-9d59-111ea9682596"
+const val ONESIGNAL_DEV = "1b294a36-a306-4117-8d5e-393ee674419d"
+
 class App : Application() {
 
     private val sharedPrefs by lazy { getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
@@ -54,7 +57,7 @@ class App : Application() {
 
         // OneSignal Initialization
         OneSignal.initWithContext(this)
-        OneSignal.setAppId("1b294a36-a306-4117-8d5e-393ee674419d")
+        OneSignal.setAppId(if (BuildConfig.DEBUG) ONESIGNAL_DEV else ONESIGNAL_PROD)
 
         OneSignal.setNotificationOpenedHandler { result ->
             val notification = result.notification

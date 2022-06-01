@@ -85,7 +85,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
-                app:cardBackgroundColor="@color/colorAccent"
+                app:cardBackgroundColor="@color/colorPrimary"
                 app:cardCornerRadius="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -101,8 +101,8 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:contentDescription="@string/bookmarks"
-                        app:imageDrawableId="@{bookmarkID}"
-                        android:src="@drawable/ic_bookmark" />
+                        app:accessibleTouchTarget="@{true}"
+                        app:imageDrawableId="@{bookmarkID}" />
                 </RelativeLayout>
 
             </com.google.android.material.card.MaterialCardView>

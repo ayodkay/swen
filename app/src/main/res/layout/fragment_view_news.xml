@@ -30,7 +30,7 @@
                 android:id="@+id/toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:contentScrim="?attr/colorPrimary"
+                app:contentScrim="?attr/colorPrimaryDark"
                 android:fitsSystemWindows="true"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:toolbarId="@+id/toolbar">
@@ -49,21 +49,14 @@
                         android:scaleType="centerCrop"
                         app:imageUrl="@{viewModel.image}"
                         app:layout_collapseMode="parallax"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        android:fitsSystemWindows="true"
                         app:loadingCallBack="@{viewModel::stopLoading}" />
 
                     <View
                         android:id="@+id/view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/shadow_rect"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:background="@drawable/shadow_rect" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <com.airbnb.lottie.LottieAnimationView
@@ -76,12 +69,11 @@
                     app:lottie_loop="true"
                     app:lottie_rawRes="@raw/bouncy_loader" />
 
-                <androidx.appcompat.widget.Toolbar
+                <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/detail_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
-                    app:popupTheme="@style/Toolbar"
                     app:title="@{viewModel.source}" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -119,103 +111,59 @@
                     app:descriptionText="@{viewModel.description}"
                     app:layout_constraintTop_toBottomOf="@+id/dTitle" />
 
-                <LinearLayout
-                    android:id="@+id/linearLayout"
+                <RelativeLayout
+                    android:id="@+id/deltaRelative"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:orientation="horizontal"
-                    android:weightSum="3"
                     app:layout_constraintTop_toBottomOf="@+id/content">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/full_article"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:insetLeft="0dp"
-                        android:insetTop="0dp"
-                        android:insetRight="0dp"
-                        android:insetBottom="0dp"
                         android:onClick="@{()->viewModel.gotoWebView()}"
                         android:text="@string/full_article"
-                        android:textColor="@color/gnt_white" />
+                        android:textColor="@color/gnt_white"
+                        app:layout_constraintStart_toStartOf="parent" />
 
-                    <RelativeLayout
+                    <ImageView
                         android:id="@+id/shareView"
-                        android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_gravity="start"
-                        android:layout_weight="0.5">
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/full_article"
+                        android:contentDescription="@string/share"
+                        android:onClick="@{()->viewModel.shareNews()}"
+                        android:src="@drawable/ic_share"
+                        app:accessibleTouchTarget="@{true}"
+                        app:layout_constraintStart_toEndOf="@id/full_article" />
 
-                        <ImageView
-                            android:id="@+id/share"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:contentDescription="@string/share"
-                            android:onClick="@{()->viewModel.shareNews()}"
-                            android:src="@drawable/ic_share" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/playView"
-                        android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_gravity="start"
-                        android:layout_weight="0.5"
+                    <ImageView
+                        android:id="@+id/play"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/shareView"
+                        android:contentDescription="@string/play_button_content_description"
                         android:onClick="@{() -> viewModel.play()}"
-                        android:visibility="gone"
-                        app:isVisible="@{viewModel.showPlayButton}">
-
-                        <ImageView
-                            android:id="@+id/play"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:contentDescription="@string/play_button_content_description"
-                            android:src="@drawable/ic_baseline_play_arrow_24" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/stopView"
-                        android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_gravity="start"
-                        android:layout_weight="0.5"
-                        android:onClick="@{() -> viewModel.stop()}"
-                        android:visibility="gone"
-                        app:isVisible="@{viewModel.showStopButton}">
-
-                        <ImageView
-                            android:id="@+id/stop"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_baseline_stop_24" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-                    <com.applovin.mediation.ads.MaxAdView
-                        android:id="@+id/maxAdviewBanner"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/banner_height"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="10dp"
-                        app:loadBannerAd="@{viewModel.loadAd}"
-                        maxads:adUnitId="6d2eada63140e252" />
+                        android:src="@drawable/ic_baseline_play_arrow_24"
+                        app:accessibleTouchTarget="@{true}"
+                        app:imageDrawableId="@{viewModel.isTalkingDrawable}" />
                 </RelativeLayout>
 
+                <com.applovin.mediation.ads.MaxAdView
+                    android:id="@+id/maxAdviewBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/banner_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/deltaRelative"
+                    app:loadBannerAd="@{viewModel.loadAd}"
+                    maxads:adUnitId="6d2eada63140e252" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

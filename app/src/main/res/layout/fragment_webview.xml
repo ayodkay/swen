@@ -31,6 +31,7 @@
                     android:contentDescription="@null"
                     android:onClick="@{()->viewModel.backPressTrigger()}"
                     android:src="@drawable/ic_close"
+                    app:accessibleTouchTarget="@{true}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -59,80 +60,61 @@
                         android:textSize="12sp" />
                 </RelativeLayout>
 
-                <RelativeLayout
+                <ImageView
                     android:id="@+id/openBrowser"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_marginEnd="8dp"
+                    android:contentDescription="@null"
                     android:onClick="@{()->viewModel.openBrowserTrigger()}"
+                    android:src="@drawable/ic_open_in_browser"
+                    app:accessibleTouchTarget="@{true}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/refresh"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_open_in_browser" />
-                </RelativeLayout>
-
-                <RelativeLayout
+                <ImageView
                     android:id="@+id/refresh"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_marginEnd="8dp"
+                    android:contentDescription="@null"
                     android:onClick="@{()->viewModel.refreshTrigger()}"
+                    android:src="@drawable/ic_refresh"
+                    app:accessibleTouchTarget="@{true}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/shareLink"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_refresh" />
-                </RelativeLayout>
-
-                <RelativeLayout
+                <ImageView
                     android:id="@+id/shareLink"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="38dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@null"
                     android:onClick="@{()->viewModel.shareUrlTrigger()}"
+                    android:src="@drawable/ic_share"
+                    app:accessibleTouchTarget="@{true}"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintEnd_toStartOf="@id/removeLink"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_share" />
-                </RelativeLayout>
-
-                <RelativeLayout
+                <ImageView
                     android:id="@+id/removeLink"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@null"
+                    app:accessibleTouchTarget="@{true}"
                     android:layout_marginEnd="8dp"
                     android:onClick="@{()-> viewModel.updateBookmarkTrigger()}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/shareLink"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_bookmarked"
-                        app:imageDrawableId="@{viewModel.bookmarkDrawable}" />
-                </RelativeLayout>
+                    app:imageDrawableId="@{viewModel.bookmarkDrawable}"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 

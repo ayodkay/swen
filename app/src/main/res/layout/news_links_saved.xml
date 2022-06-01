@@ -51,6 +51,7 @@
                     android:layout_centerInParent="true"
                     android:contentDescription="@string/links"
                     android:src="@drawable/ic_bookmark"
+                    app:accessibleTouchTarget="@{true}"
                     app:imageDrawableId="@{drawableId}" />
             </RelativeLayout>
         </LinearLayout>

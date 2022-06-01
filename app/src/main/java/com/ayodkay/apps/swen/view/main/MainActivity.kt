@@ -95,15 +95,6 @@ class MainActivity : AppCompatActivity() {
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
                 )
             }
-            if (destination.id == R.id.nav_view_news) {
-                window.apply {
-                    addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                }
-            } else {
-                window.apply {
-                    clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                }
-            }
             binding.bubbleTabBar.setSelectedWithId(destination.id, false)
         }
     }
@@ -253,6 +244,19 @@ class MainActivity : AppCompatActivity() {
                 .addOnCompleteListener { }
         }
         activityViewModel.stopJob()
+    }
+
+    override fun onDestroy() {
+        // Must destroy native ad or else there will be memory leaks.
+        if (activityViewModel.nativeAd != null) {
+            // Call destroy on the native ad from any native ad loader.
+            activityViewModel.nativeAdLoader.destroy(activityViewModel.nativeAd)
+        }
+
+        // Destroy the actual loader itself
+        activityViewModel.nativeAdLoader.destroy()
+
+        super.onDestroy()
     }
 
     companion object {

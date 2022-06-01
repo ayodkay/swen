@@ -173,15 +173,15 @@ class MaxAdsRecyclerView internal constructor(
             binding.title = title
 
             if (bookMarkRoom.exist(url)) {
-                binding.bookmarkID = R.drawable.ic_bookmarked
+                binding.bookmarkID = R.drawable.ic_round_bookmark_white
             } else {
-                binding.bookmarkID = R.drawable.ic_bookmark
+                binding.bookmarkID = R.drawable.ic_round_bookmark_border_white
             }
 
             binding.bookmarkView.setOnClickListener {
                 if (bookMarkRoom.exist(url)) {
                     bookMarkRoom.deleteOne(url)
-                    binding.bookmarkID = R.drawable.ic_bookmark
+                    binding.bookmarkID = R.drawable.ic_round_bookmark_border_white
                 } else {
                     newsBookMark(binding.root.context)
                     bookMarkRoom.insert(
@@ -191,7 +191,7 @@ class MaxAdsRecyclerView internal constructor(
                             content = content,
                         )
                     )
-                    binding.bookmarkID = R.drawable.ic_bookmarked
+                    binding.bookmarkID = R.drawable.ic_round_bookmark_white
                 }
             }
             binding.root.setOnClickListener {

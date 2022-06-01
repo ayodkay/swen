@@ -110,17 +110,20 @@ class ViewNewsFragment : BaseFragment() {
                     } else {
                         talky!!.language = viewNewsViewModel.languageCode.get()?.let { Locale(it) }
                         talky!!.setSpeechRate(0.8f)
-                        viewNewsViewModel.showPlayButton.set(true)
                         talky!!.setOnUtteranceProgressListener(object :
                                 UtteranceProgressListener() {
                                 override fun onStart(utteranceId: String?) {
-                                    viewNewsViewModel.showPlayButton.set(false)
-                                    viewNewsViewModel.showStopButton.set(true)
+                                    viewNewsViewModel.isPlaying.set(true)
+                                    viewNewsViewModel.isTalkingDrawable.set(
+                                        R.drawable.ic_baseline_stop_24
+                                    )
                                 }
 
                                 override fun onDone(utteranceId: String?) {
-                                    viewNewsViewModel.showPlayButton.set(true)
-                                    viewNewsViewModel.showStopButton.set(false)
+                                    viewNewsViewModel.isPlaying.set(false)
+                                    viewNewsViewModel.isTalkingDrawable.set(
+                                        R.drawable.ic_baseline_play_arrow_24
+                                    )
                                 }
 
                                 override fun onError(utteranceId: String?) {}
@@ -134,17 +137,21 @@ class ViewNewsFragment : BaseFragment() {
 
         viewNewsViewModel.playEvent.observe(viewLifecycleOwner) {
             with(viewNewsViewModel) {
-                talky!!.speak(
-                    "$title. ${content.ifNull { description }}.",
-                    TextToSpeech.QUEUE_FLUSH,
-                    null,
-                    TextToSpeech.ACTION_TTS_QUEUE_PROCESSING_COMPLETED
-                )
+                if (isPlaying.get() == true) {
+                    talky!!.stop()
+                    viewNewsViewModel.isTalkingDrawable.set(
+                        R.drawable.ic_baseline_play_arrow_24
+                    )
+                    viewNewsViewModel.isPlaying.set(false)
+                } else {
+                    talky!!.speak(
+                        "$title. ${content.ifNull { description }}.",
+                        TextToSpeech.QUEUE_FLUSH,
+                        null,
+                        TextToSpeech.ACTION_TTS_QUEUE_PROCESSING_COMPLETED
+                    )
+                }
             }
-        }
-
-        viewNewsViewModel.stopEvent.observe(viewLifecycleOwner) {
-            talky!!.stop()
         }
 
         viewNewsViewModel.shareEvent.observe(viewLifecycleOwner) {

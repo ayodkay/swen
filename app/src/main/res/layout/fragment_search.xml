@@ -108,21 +108,22 @@
                 newsList="@{viewModel.newsList}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:accessibleTouchTarget="@{true}"
                 android:clipToPadding="false"
                 android:paddingBottom="50dp"
                 tools:listitem="@layout/news_list_card">
 
             </androidx.recyclerview.widget.RecyclerView>
-        </RelativeLayout>
 
-        <com.applovin.mediation.ads.MaxAdView xmlns:maxads="http://schemas.applovin.com/android/1.0"
-            android:id="@+id/maxAdviewBanner"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/banner_height"
-            android:layout_gravity="bottom"
-            app:isVisible="@{viewModel.showBannerAd}"
-            app:loadBannerAd="@{viewModel.loadAd}"
-            maxads:adUnitId="6d2eada63140e252" />
+            <com.applovin.mediation.ads.MaxAdView xmlns:maxads="http://schemas.applovin.com/android/1.0"
+                android:id="@+id/maxAdviewBanner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/banner_height"
+                android:layout_alignParentBottom="true"
+                app:isVisible="@{viewModel.showBannerAd}"
+                app:loadBannerAd="@{viewModel.loadAd}"
+                maxads:adUnitId="6d2eada63140e252" />
+        </RelativeLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

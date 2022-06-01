@@ -30,8 +30,8 @@
 
     <style name="Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
         <item name="android:textColorPrimary">@color/textPrimary</item>
-        <item name="colorPrimary">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
