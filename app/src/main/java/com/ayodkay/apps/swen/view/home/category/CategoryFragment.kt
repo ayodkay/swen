@@ -51,6 +51,10 @@ class CategoryFragment : BaseFragment() {
         } catch (e: Exception) {
             navigateTo(R.id.nav_location)
         }
+
+        binding.swipeRefresh.setOnRefreshListener {
+            loadNews()
+        }
         loadNews()
         categoryViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
             navigateTo(

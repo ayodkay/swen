@@ -5,10 +5,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.work.Data
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.App.Companion.scheduleNotification
 import com.ayodkay.apps.swen.helper.onesignal.Notification
 import com.ayodkay.apps.swen.helper.onesignal.OneSignalNotificationSender
 import com.ayodkay.apps.swen.helper.work.NotifyWork
-import com.ayodkay.apps.swen.view.main.MainActivity.Companion.scheduleNotification
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType

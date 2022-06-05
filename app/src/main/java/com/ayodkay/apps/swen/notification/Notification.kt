@@ -22,9 +22,9 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.work.Data
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.App.Companion.context
+import com.ayodkay.apps.swen.helper.App.Companion.scheduleNotification
 import com.ayodkay.apps.swen.helper.work.NotifyWork
 import com.ayodkay.apps.swen.view.main.MainActivity
-import com.ayodkay.apps.swen.view.main.MainActivity.Companion.scheduleNotification
 import com.facebook.appevents.AppEventsLogger
 import com.squareup.picasso.Picasso
 import kotlin.random.Random
@@ -221,13 +221,12 @@ class Notification internal constructor(private val context: Context) {
     }
 
     private fun drawableToBitmap(drawable: Drawable): Bitmap? {
-        var bitmap: Bitmap? = null
         if (drawable is BitmapDrawable) {
             if (drawable.bitmap != null) {
                 return drawable.bitmap
             }
         }
-        bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
+        val bitmap: Bitmap? = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
             Bitmap.createBitmap(
                 1,
                 1,
@@ -240,9 +239,11 @@ class Notification internal constructor(private val context: Context) {
                 Bitmap.Config.ARGB_8888
             )
         }
-        val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, canvas.width, canvas.height)
-        drawable.draw(canvas)
+        val canvas = bitmap?.let { Canvas(it) }
+        if (canvas != null) {
+            drawable.setBounds(0, 0, canvas.width, canvas.height)
+            drawable.draw(canvas)
+        }
         return bitmap
     }
 }
