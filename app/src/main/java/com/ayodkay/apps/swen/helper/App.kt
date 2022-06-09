@@ -16,7 +16,7 @@ import com.applovin.sdk.AppLovinSdk
 import com.ayodkay.apps.swen.BuildConfig
 import com.ayodkay.apps.swen.helper.backend.BootReceiver
 import com.ayodkay.apps.swen.helper.backend.PowerButtonBroadcastReceiver
-import com.ayodkay.apps.swen.helper.extentions.ifNull
+import com.ayodkay.apps.swen.helper.extentions.isNotNull
 import com.ayodkay.apps.swen.helper.work.NotifyWork
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.ayodkay.apps.swen.view.theme.KEY_THEME
@@ -71,7 +71,7 @@ class App : Application() {
             val data = notification.additionalData
             val intent = Intent(context, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }.putExtra("url", data["url"].ifNull { "" } as String)
+            }.putExtra("url", if (data.isNotNull()) data.optString("url") else "")
                 .putExtra("isPush", true)
                 .putExtra("toMain", true)
             startActivity(intent)
@@ -87,6 +87,10 @@ class App : Application() {
         filter.addAction(Intent.ACTION_SCREEN_OFF)
         val mReceiver = PowerButtonBroadcastReceiver()
         registerReceiver(mReceiver, filter)
+    }
+
+    private fun minVersionCode(): Boolean {
+        return BuildConfig.VERSION_CODE > 40
     }
 
     companion object {
