@@ -15,14 +15,13 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="240dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="?attr/colorPrimaryDark"
             android:fitsSystemWindows="true"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -97,7 +96,6 @@
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.title}"
                     android:textAppearance="?attr/textAppearanceHeadline6"
-                    android:textColor="@color/textPrimary"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -106,9 +104,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:textAppearance="?attr/textAppearanceBody1"
-                    android:textColor="@color/textSecondary"
+                    style="@style/Widget.TipTime.TextView"
                     app:contentText="@{viewModel.content}"
                     app:descriptionText="@{viewModel.description}"
+                    android:text="jkhsfkjsdkskdjskdjk"
                     app:layout_constraintTop_toBottomOf="@+id/dTitle" />
 
                 <RelativeLayout

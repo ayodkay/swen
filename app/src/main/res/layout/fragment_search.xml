@@ -13,13 +13,13 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
+        android:background="?android:colorBackground"
         tools:context=".view.search.SearchFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background">
+            android:background="?android:colorBackground">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:layout_width="match_parent"
@@ -30,7 +30,8 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_margin="12dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -59,8 +60,7 @@
                             android:drawableEnd="@drawable/ic_sort"
                             android:onClick="@{()->viewModel.sort()}"
                             android:text="@string/sort"
-                            android:textAllCaps="false"
-                            android:textColor="@color/textPrimary" />
+                            android:textAllCaps="false" />
 
 
                     </RelativeLayout>
@@ -96,24 +96,9 @@
                     android:gravity="center"
                     android:text="@{viewModel.emptyTextValue}"
                     android:textAppearance="?attr/textAppearanceHeadline6"
-                    android:textColor="@color/textPrimary"
                     android:visibility="gone" />
             </RelativeLayout>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/searchRecycle"
-                bookmarkRoom="@{viewModel.bookMarkRoom}"
-                listener="@{viewModel.listener}"
-                nativeAd="@{viewModel.nativeAd}"
-                nativeAdLoader="@{viewModel.nativeAdLoader}"
-                newsList="@{viewModel.newsList}"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:accessibleTouchTarget="@{true}"
-                android:clipToPadding="false"
-                android:paddingBottom="50dp"
-                tools:listitem="@layout/news_list_card">
 
-            </androidx.recyclerview.widget.RecyclerView>
 
             <com.applovin.mediation.ads.MaxAdView xmlns:maxads="http://schemas.applovin.com/android/1.0"
                 android:id="@+id/maxAdviewBanner"
@@ -124,6 +109,22 @@
                 app:loadBannerAd="@{viewModel.loadAd}"
                 maxads:adUnitId="6d2eada63140e252" />
         </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchRecycle"
+            bookmarkRoom="@{viewModel.bookMarkRoom}"
+            listener="@{viewModel.listener}"
+            nativeAd="@{viewModel.nativeAd}"
+            nativeAdLoader="@{viewModel.nativeAdLoader}"
+            newsList="@{viewModel.newsList}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="50dp"
+            app:accessibleTouchTarget="@{true}"
+            tools:listitem="@layout/news_list_card">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

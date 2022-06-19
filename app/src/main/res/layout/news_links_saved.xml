@@ -33,10 +33,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.7"
-                android:text="@{link}"
                 android:textAllCaps="false"
-                android:textAppearance="?attr/textAppearanceCaption"
-                android:textColor="@color/textPrimary" />
+                android:textAppearance="?attr/textAppearanceCaption" />
 
             <RelativeLayout
                 android:id="@+id/saved_link_view"

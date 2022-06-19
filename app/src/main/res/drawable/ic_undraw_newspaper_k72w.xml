@@ -7,7 +7,7 @@
     tools:ignore="VectorRaster">
     <path
         android:pathData="M649,630.158h-485l0.219,-51.422c0.553,-130.115 104.408,-237.329 234.506,-239.542q2.108,-0.036 4.223,-0.036h0a245.336,245.336 0,0 1,85.752 15.406c92.054,34.283 153.841,121.384 157.951,219.528Z"
-        android:fillColor="@color/iconColor" />
+        android:fillColor="?attr/colorPrimary" />
     <path
         android:pathData="M0,630.158h799v2h-799z"
         android:fillColor="#2f2e41" />

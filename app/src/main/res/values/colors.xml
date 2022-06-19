@@ -1,32 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#AB3838</color>
-    <color name="colorPrimaryDark">#760012</color>
-    <color name="colorAccent">#e26862</color>
+    <color name="md_theme_light_primary">#A83636</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#FFDAD7</color>
+    <color name="md_theme_light_onPrimaryContainer">#410005</color>
+    <color name="md_theme_light_secondary">#775654</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#FFDAD7</color>
+    <color name="md_theme_light_onSecondaryContainer">#2C1514</color>
+    <color name="md_theme_light_tertiary">#735B2E</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#FFDEA8</color>
+    <color name="md_theme_light_onTertiaryContainer">#271900</color>
+    <color name="md_theme_light_error">#BA1A1A</color>
+    <color name="md_theme_light_errorContainer">#FFDAD6</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_onErrorContainer">#410002</color>
+    <color name="md_theme_light_background">#FFFBFF</color>
+    <color name="md_theme_light_onBackground">#201A1A</color>
+    <color name="md_theme_light_surface">#FFFBFF</color>
+    <color name="md_theme_light_onSurface">#201A1A</color>
+    <color name="md_theme_light_surfaceVariant">#F4DDDB</color>
+    <color name="md_theme_light_onSurfaceVariant">#534342</color>
+    <color name="md_theme_light_outline">#857371</color>
+    <color name="md_theme_light_inverseOnSurface">#FBEEEC</color>
+    <color name="md_theme_light_inverseSurface">#362F2E</color>
+    <color name="md_theme_light_inversePrimary">#FFB3AF</color>
+    <color name="md_theme_light_shadow">#000000</color>
+    <color name="md_theme_light_colorPrimary">#760012</color>
+    <color name="seed">#ab3838</color>
+    <color name="md_theme_dark_primary">#FFB3AF</color>
+    <color name="md_theme_dark_onPrimary">#67020E</color>
+    <color name="md_theme_dark_primaryContainer">#881E21</color>
+    <color name="md_theme_dark_onPrimaryContainer">#FFDAD7</color>
+    <color name="md_theme_dark_secondary">#E7BDBA</color>
+    <color name="md_theme_dark_onSecondary">#442928</color>
+    <color name="md_theme_dark_secondaryContainer">#5D3F3D</color>
+    <color name="md_theme_dark_onSecondaryContainer">#FFDAD7</color>
+    <color name="md_theme_dark_tertiary">#E2C28C</color>
+    <color name="md_theme_dark_onTertiary">#402D05</color>
+    <color name="md_theme_dark_tertiaryContainer">#594319</color>
+    <color name="md_theme_dark_onTertiaryContainer">#FFDEA8</color>
+    <color name="md_theme_dark_error">#FFB4AB</color>
+    <color name="md_theme_dark_errorContainer">#93000A</color>
+    <color name="md_theme_dark_onError">#690005</color>
+    <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
+    <color name="md_theme_dark_background">#201A1A</color>
+    <color name="md_theme_dark_onBackground">#EDE0DE</color>
+    <color name="md_theme_dark_surface">#201A1A</color>
+    <color name="md_theme_dark_onSurface">#EDE0DE</color>
+    <color name="md_theme_dark_surfaceVariant">#534342</color>
+    <color name="md_theme_dark_onSurfaceVariant">#D8C2C0</color>
+    <color name="md_theme_dark_outline">#A08C8B</color>
+    <color name="md_theme_dark_inverseOnSurface">#201A1A</color>
+    <color name="md_theme_dark_inverseSurface">#EDE0DE</color>
+    <color name="md_theme_dark_inversePrimary">#A83636</color>
+    <color name="md_theme_dark_shadow">#000000</color>
+    <color name="md_theme_dark_colorPrimary">#000000</color>
 
 
     <color name="textPrimary">#DE000000</color>
     <color name="textSecondary">#8A000000</color>
-    <color name="tabTextColor">#fcedf0</color>
-
-
-    <color name="toolbar">#ffffff</color>
-
-    <color name="tabColor">#e26862</color>
-
-
-    <color name="background">#ffffff</color>
-    <color name="adsButtons">#AB3838</color>
-    <color name="ads_background">#ffffff</color>
-
-    <color name="iconColor">#AB3838</color>
-
-
-    <color name="gnt_test_background_color">#00F4F4F4</color>
-    <color name="gnt_white">#FFFFFF</color>
-    <color name="gnt_blue">#4285f4</color>
-    <color name="gnt_ad_green">#3A6728</color>
-    <color name="gnt_gray">#808080</color>
-    <color name="gnt_outline">#E0E0E0</color>
 
 </resources>
