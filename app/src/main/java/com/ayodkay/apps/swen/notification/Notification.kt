@@ -20,9 +20,9 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.work.Data
+import com.ayodkay.apps.swen.App.Companion.context
+import com.ayodkay.apps.swen.App.Companion.scheduleNotification
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.App.Companion.context
-import com.ayodkay.apps.swen.helper.App.Companion.scheduleNotification
 import com.ayodkay.apps.swen.helper.work.NotifyWork
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.facebook.appevents.AppEventsLogger

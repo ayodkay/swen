@@ -1,4 +1,4 @@
-package com.ayodkay.apps.swen.helper
+package com.ayodkay.apps.swen
 
 import android.app.Application
 import android.content.ComponentName
@@ -13,7 +13,6 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.applovin.sdk.AppLovinSdk
-import com.ayodkay.apps.swen.BuildConfig
 import com.ayodkay.apps.swen.helper.backend.BootReceiver
 import com.ayodkay.apps.swen.helper.backend.PowerButtonBroadcastReceiver
 import com.ayodkay.apps.swen.helper.extentions.isNotNull
@@ -75,7 +74,6 @@ class App : Application() {
                 .putExtra("isPush", true)
                 .putExtra("toMain", true)
             startActivity(intent)
-            AppLog.l(data)
         }
 
         OneSignal.setNotificationWillShowInForegroundHandler { notificationReceivedEvent ->
@@ -112,7 +110,7 @@ class App : Application() {
 
             WorkManager.getInstance(context).apply {
                 enqueueUniquePeriodicWork(
-                    NotifyWork.NOTIFICATION_WORK, ExistingPeriodicWorkPolicy.REPLACE,
+                    NotifyWork.NOTIFICATION_WORK, ExistingPeriodicWorkPolicy.KEEP,
                     nWorkerParameters
                 )
             }

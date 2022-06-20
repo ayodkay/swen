@@ -21,9 +21,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.work.Data
+import com.ayodkay.apps.swen.App.Companion.scheduleNotification
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivityMainBinding
-import com.ayodkay.apps.swen.helper.App.Companion.scheduleNotification
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.backend.MyReachability
 import com.ayodkay.apps.swen.helper.location.CoGeocoder

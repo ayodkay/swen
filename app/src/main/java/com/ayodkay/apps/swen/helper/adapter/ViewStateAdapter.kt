@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.ayodkay.apps.swen.App.Companion.context
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.App
 import com.ayodkay.apps.swen.view.home.category.CategoryFragment
 
 internal class ViewStateAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
@@ -29,8 +29,8 @@ internal class ViewStateAdapter(fragmentManager: FragmentManager, lifecycle: Lif
             5 -> CategoryFragment().newInstance("science")
             6 -> CategoryFragment().newInstance("technology")
             7 -> CategoryFragment().newInstance("health", "covid")
-            8 -> CategoryFragment().newInstance("", App.context.getString(R.string.menu_beauty))
-            else -> CategoryFragment().newInstance("", App.context.getString(R.string.politics))
+            8 -> CategoryFragment().newInstance("", context.getString(R.string.menu_beauty))
+            else -> CategoryFragment().newInstance("", context.getString(R.string.politics))
         }
     }
 }
