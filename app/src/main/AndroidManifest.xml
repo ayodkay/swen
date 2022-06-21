@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".helper.App"
+        android:name=".App"
         android:allowBackup="true"
         android:appCategory="news"
         android:hardwareAccelerated="true"

@@ -6,7 +6,14 @@ import android.location.Location
 import android.os.Looper
 import androidx.annotation.RequiresPermission
 import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationAvailability
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.CancellationTokenSource
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -60,7 +67,9 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
             lateinit var callback: ClearableLocationCallback
             callback = object : LocationCallback() {
                 override fun onLocationResult(result: LocationResult) {
-                    cont.resume(result.lastLocation)
+                    result.lastLocation?.let {
+                        cont.resume(it)
+                    }
                     locationProvider.removeLocationUpdates(callback)
                     callback.clear()
                 }
@@ -91,7 +100,9 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
             val callback = object : LocationCallback() {
                 private var counter: Int = 0
                 override fun onLocationResult(result: LocationResult) {
-                    trySendBlocking(result.lastLocation)
+                    result.lastLocation?.let {
+                        trySendBlocking(it)
+                    }
                     if (locationRequest.numUpdates == ++counter) close()
                 }
             }.let(::ClearableLocationCallback) // Needed since we would have memory leaks otherwise

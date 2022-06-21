@@ -21,24 +21,20 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.work.Data
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
+import com.ayodkay.apps.swen.App.Companion.scheduleNotification
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivityMainBinding
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.backend.MyReachability
 import com.ayodkay.apps.swen.helper.location.CoGeocoder
 import com.ayodkay.apps.swen.helper.location.CoLocation
-import com.ayodkay.apps.swen.helper.work.NotifyWork
 import com.ayodkay.apps.swen.helper.work.NotifyWork.Companion.NOTIFICATION_ID
-import com.ayodkay.apps.swen.helper.work.NotifyWork.Companion.NOTIFICATION_WORK
 import com.google.firebase.messaging.FirebaseMessaging
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 private const val REQUEST_CODE = 101
 
+@Suppress("UNCHECKED_CAST")
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val navController get() = findNavController(R.id.nav_host_fragment)
@@ -261,19 +257,5 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val REQUEST_SHOW_SETTINGS = 123
-        fun scheduleNotification(data: Data, context: Context) {
-            val nWorkerParameters =
-                PeriodicWorkRequest.Builder(
-                    NotifyWork::class.java, 2, TimeUnit.HOURS, 20,
-                    TimeUnit.MINUTES
-                ).setInitialDelay(1, TimeUnit.HOURS).setInputData(data).build()
-
-            WorkManager.getInstance(context).apply {
-                enqueueUniquePeriodicWork(
-                    NOTIFICATION_WORK, ExistingPeriodicWorkPolicy.REPLACE,
-                    nWorkerParameters
-                )
-            }
-        }
     }
 }
