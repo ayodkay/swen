@@ -3,7 +3,6 @@ package com.ayodkay.apps.swen.helper.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.applovin.mediation.MaxAd
@@ -142,7 +141,6 @@ class MaxAdsRecyclerView internal constructor(
                         adUnitId: String,
                         maxError: MaxError,
                     ) {
-                        binding.nativeAdLayout.visibility = View.GONE
                         binding.loading = false
                         binding.showError = true
                     }

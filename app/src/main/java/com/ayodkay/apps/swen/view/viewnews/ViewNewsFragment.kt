@@ -119,15 +119,17 @@ class ViewNewsFragment : BaseFragment() {
                                     )
                                 }
 
-                                override fun onDone(utteranceId: String?) {
-                                    viewNewsViewModel.isPlaying.set(false)
-                                    viewNewsViewModel.isTalkingDrawable.set(
-                                        R.drawable.ic_baseline_play_arrow_24
-                                    )
-                                }
+                            override fun onDone(utteranceId: String?) {
+                                viewNewsViewModel.isPlaying.set(false)
+                                viewNewsViewModel.isTalkingDrawable.set(
+                                    R.drawable.ic_baseline_play_arrow_24
+                                )
+                            }
 
-                                override fun onError(utteranceId: String?) {}
-                            })
+                            @Deprecated("Deprecated in Java")
+                            override fun onError(utteranceId: String?) {
+                            }
+                        })
                     }
                 } else {
                     AppLog.l("TTS--> Initialization failed $status")
