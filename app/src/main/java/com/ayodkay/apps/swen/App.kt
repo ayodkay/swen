@@ -100,7 +100,7 @@ class App : Application() {
         fun scheduleNotification(data: Data, context: Context) {
             val nWorkerParameters =
                 PeriodicWorkRequest.Builder(
-                    NotifyWork::class.java, 2, TimeUnit.HOURS, 15,
+                    NotifyWork::class.java, 3, TimeUnit.HOURS, 15,
                     TimeUnit.MINUTES
                 ).apply {
                     setInitialDelay(30, TimeUnit.MINUTES)

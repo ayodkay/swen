@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.ayodkay.apps.swen.databinding.FragmentBookmarksBinding
 import com.ayodkay.apps.swen.helper.BaseFragment
+import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.github.ayodkay.models.Article
 import com.github.ayodkay.models.Source
@@ -46,8 +47,10 @@ class BookmarksFragment : BaseFragment() {
         bookmarksViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
             navigateTo(
                 BookmarksFragmentDirections.actionNavigationBookmarksToNavViewNews(
-                    source = it.source.name, url = it.url, image = it.urlToImage, title = it.title,
-                    content = it.content, description = it.description
+                    source = it.source.name.ifNull { "" }, url = it.url.ifNull { "" },
+                    image = it.urlToImage.ifNull { "" }, title = it.title.ifNull { "" },
+                    content = it.content.ifNull { it.description.ifNull { "" } },
+                    description = it.description.ifNull { "" }
                 )
             )
         }
