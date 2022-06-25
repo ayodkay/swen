@@ -222,8 +222,10 @@ class ViewNewsFragment : BaseFragment() {
         viewNewsViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
             navigateTo(
                 ViewNewsFragmentDirections.actionNavViewNewsSelf(
-                    source = it.source.name, url = it.url, image = it.urlToImage, title = it.title,
-                    content = it.content, description = it.description
+                    source = it.source.name.ifNull { "" }, url = it.url.ifNull { "" },
+                    image = it.urlToImage.ifNull { "" }, title = it.title.ifNull { "" },
+                    content = it.content.ifNull { it.description.ifNull { "" } },
+                    description = it.description.ifNull { "" }
                 )
             )
         }

@@ -1,7 +1,9 @@
 package com.ayodkay.apps.swen.view.search
 
 import android.content.Context
-import android.content.DialogInterface.*
+import android.content.DialogInterface.BUTTON_NEGATIVE
+import android.content.DialogInterface.BUTTON_NEUTRAL
+import android.content.DialogInterface.BUTTON_POSITIVE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +19,7 @@ import com.ayodkay.apps.swen.helper.BaseFragment
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.Helper.setUpNewsClient
 import com.ayodkay.apps.swen.helper.constant.ErrorMessage
+import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.github.ayodkay.builder.EverythingBuilder
 import com.github.ayodkay.models.ArticleResponse
@@ -100,8 +103,10 @@ class SearchFragment : BaseFragment() {
         searchViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
             navigateTo(
                 SearchFragmentDirections.actionNavMainSearchToNavViewNews(
-                    source = it.source.name, url = it.url, image = it.urlToImage, title = it.title,
-                    content = it.content, description = it.description
+                    source = it.source.name.ifNull { "" }, url = it.url.ifNull { "" },
+                    image = it.urlToImage.ifNull { "" }, title = it.title.ifNull { "" },
+                    content = it.content.ifNull { it.description.ifNull { "" } },
+                    description = it.description.ifNull { "" }
                 )
             )
         }

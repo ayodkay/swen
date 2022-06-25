@@ -14,7 +14,7 @@ import com.github.ayodkay.models.Article
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.card.MaterialCardView
 
-@BindingAdapter("newsList", "bookmarkRoom", "nativeAdLoader", "nativeAd", "listener")
+@BindingAdapter(value = ["newsList", "bookmarkRoom", "nativeAdLoader", "nativeAd", "listener"])
 fun RecyclerView.setNewsList(
     newsList: ArrayList<Article>?,
     bookmarkRoom: BookmarkRoomVM,
@@ -41,7 +41,7 @@ fun RecyclerView.setNewsList(
 @BindingAdapter("links", "linkNativeAdLoader", "linkNativeAd", "linkCardClick")
 fun RecyclerView.setLinkList(
     links: ArrayList<Links>?,
-    nativeAdLoader: MaxNativeAdLoader? = null,
+    nativeAdLoader: MaxNativeAdLoader,
     nativeAd: MaxAd? = null,
     linkCardClick: LinkCardClick?,
 ) {
@@ -51,7 +51,7 @@ fun RecyclerView.setLinkList(
             adapter = MaxAdsRecyclerView(
                 arrayListOf(),
                 links = links, nativeAdLoader = nativeAdLoader, nativeAd = nativeAd,
-                linkCardClick = linkCardClick
+                linkCardClick = linkCardClick, bookmarkRoomVM = null
             )
         } else {
             (adapter as MaxAdsRecyclerView).apply {

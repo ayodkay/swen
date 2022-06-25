@@ -61,7 +61,7 @@ class CategoryFragment : BaseFragment() {
                 MainControlDirections.actionToViewNews(
                     source = it.source.name.ifNull { "" }, url = it.url.ifNull { "" },
                     image = it.urlToImage.ifNull { "" }, title = it.title.ifNull { "" },
-                    content = it.content.ifNull { it.description },
+                    content = it.content.ifNull { it.description.ifNull { "" } },
                     description = it.description.ifNull { "" }
                 )
             )

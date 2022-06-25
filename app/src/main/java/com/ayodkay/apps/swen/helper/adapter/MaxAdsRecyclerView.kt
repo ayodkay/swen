@@ -3,6 +3,7 @@ package com.ayodkay.apps.swen.helper.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.applovin.mediation.MaxAd
@@ -34,7 +35,7 @@ class MaxAdsRecyclerView internal constructor(
     var newsList: ArrayList<Article>,
     var links: ArrayList<Links>,
     private var bookmarkRoomVM: BookmarkRoomVM? = null,
-    private var nativeAdLoader: MaxNativeAdLoader? = null,
+    private var nativeAdLoader: MaxNativeAdLoader,
     var nativeAd: MaxAd? = null,
     val listener: CardClick? = null,
     val linkCardClick: LinkCardClick? = null,
@@ -103,7 +104,7 @@ class MaxAdsRecyclerView internal constructor(
     // Banner Ad View Holder
     class MyAdViewHolder(val binding: NativeCustomAdFrameBinding, var nativeAd: MaxAd?) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(nativeAdLoader: MaxNativeAdLoader?) {
+        fun bind(nativeAdLoader: MaxNativeAdLoader) {
             binding.loading = true
             binding.showError = false
             val binder: MaxNativeAdViewBinder =
@@ -117,8 +118,8 @@ class MaxAdsRecyclerView internal constructor(
                     .setCallToActionButtonId(R.id.cta_button)
                     .build()
             val nativeAdView = MaxNativeAdView(binder, binding.root.context)
-            nativeAdLoader?.loadAd(nativeAdView)
-            nativeAdLoader?.setNativeAdListener(object :
+            nativeAdLoader.loadAd(nativeAdView)
+            nativeAdLoader.setNativeAdListener(object :
                     MaxNativeAdListener() {
                     override fun onNativeAdLoaded(
                         nativeAdView: MaxNativeAdView?,
@@ -141,6 +142,7 @@ class MaxAdsRecyclerView internal constructor(
                         adUnitId: String,
                         maxError: MaxError,
                     ) {
+                        binding.nativeAdLayout.visibility = View.GONE
                         binding.loading = false
                         binding.showError = true
                     }
