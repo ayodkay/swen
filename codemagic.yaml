@@ -1,9 +1,6 @@
 workflows:
   swen:
     scripts:
-      - name: Test
-        script: ./gradlew test
-        test_report: app/build/test-results/**/*.xml
       - name: Launch emulator
         script: |
           cd $ANDROID_HOME/tools
