@@ -7,7 +7,5 @@ import com.ayodkay.apps.swen.helper.trigger
 
 class LocationViewModel(application: Application) : BaseViewModel(application) {
     val showDialogEvent = SimpleEvent()
-    fun showDialog() {
-        showDialogEvent.trigger()
-    }
+    fun showDialog() = showDialogEvent.trigger()
 }

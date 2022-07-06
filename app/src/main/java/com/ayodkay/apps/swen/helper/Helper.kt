@@ -71,11 +71,10 @@ object Helper {
         return false
     }
 
-    fun setUpNewsClient(activity: ComponentActivity): NewsApiClientWithObserver {
+    fun setUpNewsClient(activity: ComponentActivity, apiKey: String): NewsApiClientWithObserver {
         NewsApi.init(activity)
         return NewsApiClientWithObserver(
-            "dc0576cde63048f090c121ca1615e03f",
-            NetworkInterceptorModel(), OfflineCacheInterceptorModel()
+            apiKey, NetworkInterceptorModel(), OfflineCacheInterceptorModel()
         )
     }
 }

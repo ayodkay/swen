@@ -1,7 +1,6 @@
 package com.ayodkay.apps.swen.helper.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -20,12 +19,15 @@ import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.LinkCardClick
 import com.ayodkay.apps.swen.helper.extentions.ImageViewCallBack
 import com.ayodkay.apps.swen.helper.extentions.ifNull
+import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookMarkRoom
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.helper.room.links.Links
-import com.facebook.appevents.AppEventsLogger
 import com.github.ayodkay.models.Article
 import java.text.SimpleDateFormat
+import org.json.JSONObject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 private val ITEM_TYPE_COUNTRY by lazy { 0 }
 private val ITEM_TYPE_MAX_AD by lazy { 1 }
@@ -40,7 +42,6 @@ class MaxAdsRecyclerView internal constructor(
     val linkCardClick: LinkCardClick? = null,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     private val isLinkView = links.isNotEmpty()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -102,7 +103,8 @@ class MaxAdsRecyclerView internal constructor(
 
     // Banner Ad View Holder
     class MyAdViewHolder(val binding: NativeCustomAdFrameBinding, var nativeAd: MaxAd?) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), KoinComponent {
+        private val mixpanel: MixPanelInterface by inject()
         fun bind(nativeAdLoader: MaxNativeAdLoader) {
             binding.loading = true
             binding.showError = false
@@ -135,6 +137,8 @@ class MaxAdsRecyclerView internal constructor(
                         // Add ad view to view.
                         binding.nativeAdLayout.removeAllViews()
                         binding.nativeAdLayout.addView(nativeAdView)
+                        val props = JSONObject().put("source", "Native Ads")
+                        mixpanel.track("Show Ads", props)
                     }
 
                     override fun onNativeAdLoadFailed(
@@ -151,7 +155,9 @@ class MaxAdsRecyclerView internal constructor(
     }
 
     class NewsViewHolder(val binding: NewsListCardBinding) :
-        RecyclerView.ViewHolder(binding.root), ImageViewCallBack {
+        RecyclerView.ViewHolder(binding.root), ImageViewCallBack, KoinComponent {
+        private val mixpanel: MixPanelInterface by inject()
+
         @SuppressLint("SimpleDateFormat")
         fun bind(newsPosition: Article, bookMarkRoom: BookmarkRoomVM, listener: CardClick?) {
             binding.loading = true
@@ -183,7 +189,7 @@ class MaxAdsRecyclerView internal constructor(
                     bookMarkRoom.deleteOne(url)
                     binding.bookmarkID = R.drawable.ic_round_bookmark_border_white
                 } else {
-                    newsBookMark(binding.root.context)
+                    newsBookMark()
                     bookMarkRoom.insert(
                         BookMarkRoom(
                             url = url, source = source, author = author, title = title,
@@ -195,18 +201,14 @@ class MaxAdsRecyclerView internal constructor(
                 }
             }
             binding.root.setOnClickListener {
-                cardClick(binding.root.context)
                 listener?.onCardClick(newsPosition)
             }
             binding.executePendingBindings()
         }
 
-        private fun cardClick(context: Context) {
-            AppEventsLogger.newLogger(context).logEvent("cardClick")
-        }
-
-        private fun newsBookMark(context: Context) {
-            AppEventsLogger.newLogger(context).logEvent("newsBookMark")
+        private fun newsBookMark() {
+            val props = JSONObject().put("source", "Category Fragment")
+            mixpanel.track("News BookMark", props)
         }
 
         override fun onLoadingDone() {
@@ -215,7 +217,9 @@ class MaxAdsRecyclerView internal constructor(
     }
 
     class LinkViewHolder(val binding: NewsLinksSavedBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), KoinComponent {
+        private val mixpanel: MixPanelInterface by inject()
+
         @SuppressLint("SimpleDateFormat")
         fun bind(link: Links, listener: LinkCardClick?) {
             binding.link = link.link.ifNull { "" }
@@ -231,25 +235,21 @@ class MaxAdsRecyclerView internal constructor(
                     Helper.getLinksDatabase(binding.root.context).linksDao().deleteOne(link.link)
                     binding.drawableId = R.drawable.ic_bookmark
                 } else {
-                    newsBookMark(binding.root.context)
+                    newsBookMark()
                     Helper.getLinksDatabase(binding.root.context).linksDao()
                         .insertAll(Links(link = link.link))
                     binding.drawableId = R.drawable.ic_bookmarked
                 }
             }
             binding.root.setOnClickListener {
-                cardClick(binding.root.context)
                 listener?.onCardClick(link)
             }
             binding.executePendingBindings()
         }
 
-        private fun cardClick(context: Context) {
-            AppEventsLogger.newLogger(context).logEvent("cardClick")
-        }
-
-        private fun newsBookMark(context: Context) {
-            AppEventsLogger.newLogger(context).logEvent("newsBookMark")
+        private fun newsBookMark() {
+            val props = JSONObject().put("source", "Link Fragment")
+            mixpanel.track("Link Bookmark", props)
         }
     }
 }

@@ -8,6 +8,7 @@ import com.ayodkay.apps.swen.helper.BaseViewModel
 import com.ayodkay.apps.swen.helper.CardClick
 import com.ayodkay.apps.swen.helper.trigger
 import com.github.ayodkay.models.Article
+import org.json.JSONObject
 
 class CategoryViewModel(application: Application) : BaseViewModel(application), CardClick {
     var category = ""
@@ -24,6 +25,8 @@ class CategoryViewModel(application: Application) : BaseViewModel(application), 
     val listener = this
 
     override fun onCardClick(article: Article) {
+        val props = JSONObject().put("source", category)
+        mixpanel.track("Card Click", props)
         goToViewNewsFragment.trigger(article)
     }
 }
