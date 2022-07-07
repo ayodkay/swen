@@ -20,18 +20,20 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.work.Data
-import com.ayodkay.apps.swen.App.Companion.context
 import com.ayodkay.apps.swen.App.Companion.scheduleNotification
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.work.NotifyWork
 import com.ayodkay.apps.swen.view.main.MainActivity
-import com.facebook.appevents.AppEventsLogger
 import com.squareup.picasso.Picasso
 import kotlin.random.Random
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class Notification internal constructor(private val context: Context) {
+class Notification internal constructor() : KoinComponent {
+    val context: Context by inject()
 
-    companion object {
+    companion object : KoinComponent {
+        val context: Context by inject()
         private const val ENGAGE_NOTIFICATION = 101
         private val COUNTRY_NOTIFICATION = Random.nextInt(0, 1000000)
         private val CHANNEL_ID = context.getString(R.string.notification_id)
@@ -47,7 +49,6 @@ class Notification internal constructor(private val context: Context) {
     }
 
     internal fun sendUpdateNotification(message: String) {
-        AppEventsLogger.newLogger(context).logEvent("sentNotification")
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -98,7 +99,6 @@ class Notification internal constructor(private val context: Context) {
     }
 
     internal fun sendEngageNotification(message: String) {
-        AppEventsLogger.newLogger(context).logEvent("sentNotification")
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -158,7 +158,6 @@ class Notification internal constructor(private val context: Context) {
         url: String,
         image: String,
     ) {
-        AppEventsLogger.newLogger(context).logEvent("sentCountryNotification")
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
         }.putExtra("url", url).putExtra("toMain", true)

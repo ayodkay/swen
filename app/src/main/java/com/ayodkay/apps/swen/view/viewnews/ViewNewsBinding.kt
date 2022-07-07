@@ -11,8 +11,6 @@ import com.ayodkay.apps.swen.helper.adapter.MaxAdsRecyclerView
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.helper.room.links.Links
 import com.github.ayodkay.models.Article
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.card.MaterialCardView
 
 @BindingAdapter(value = ["newsList", "bookmarkRoom", "nativeAdLoader", "nativeAd", "listener"])
 fun RecyclerView.setNewsList(
@@ -60,10 +58,4 @@ fun RecyclerView.setLinkList(
             }
         }
     }
-}
-
-@BindingAdapter("app:state")
-fun MaterialCardView.bottomSheetState(state: Int) {
-    val bottomSheetBehavior = BottomSheetBehavior.from(this)
-    bottomSheetBehavior.state = state
 }

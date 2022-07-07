@@ -9,6 +9,7 @@ import com.ayodkay.apps.swen.helper.BaseViewModel
 import com.ayodkay.apps.swen.helper.LinkCardClick
 import com.ayodkay.apps.swen.helper.room.links.Links
 import com.ayodkay.apps.swen.helper.trigger
+import org.json.JSONObject
 
 class LinksViewModel(application: Application) : BaseViewModel(application), LinkCardClick {
     val links = ObservableArrayList<Links>()
@@ -18,6 +19,8 @@ class LinksViewModel(application: Application) : BaseViewModel(application), Lin
     val listener = this
 
     override fun onCardClick(link: Links) {
+        val props = JSONObject().put("source", "Link Fragment")
+        mixpanel.track("Card Click", props)
         goToWebView.trigger(link.link)
     }
 }

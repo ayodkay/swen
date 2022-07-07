@@ -3,8 +3,13 @@ package com.ayodkay.apps.swen.view.search
 import android.app.Application
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
-import com.ayodkay.apps.swen.helper.*
+import com.ayodkay.apps.swen.helper.BaseViewModel
+import com.ayodkay.apps.swen.helper.CardClick
+import com.ayodkay.apps.swen.helper.Event
+import com.ayodkay.apps.swen.helper.SimpleEvent
+import com.ayodkay.apps.swen.helper.trigger
 import com.github.ayodkay.models.Article
+import org.json.JSONObject
 
 class SearchViewModel(application: Application) : BaseViewModel(application), CardClick {
     var checkedSort = 1
@@ -29,11 +34,15 @@ class SearchViewModel(application: Application) : BaseViewModel(application), Ca
     val doOnQueryTextListener = object : SearchViewListener {
         override fun onQueryTextSubmit(s: String) {
             query.set(s)
+            val props = JSONObject().put("search", s)
+            mixpanel.track("Search News", props)
             searchEvent.trigger(s)
         }
     }
 
     override fun onCardClick(article: Article) {
+        val props = JSONObject().put("source", "Search Fragment")
+        mixpanel.track("Card Click", props)
         goToViewNewsFragment.trigger(article)
     }
 }

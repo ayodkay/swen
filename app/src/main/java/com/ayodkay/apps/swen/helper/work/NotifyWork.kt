@@ -6,6 +6,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.Helper
+import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
 import com.ayodkay.apps.swen.helper.onesignal.Notification
 import com.ayodkay.apps.swen.helper.onesignal.OneSignalNotificationSender
 import com.github.ayodkay.builder.TopHeadlinesBuilder
@@ -13,8 +14,13 @@ import com.github.ayodkay.client.NewsApiClient
 import com.github.ayodkay.interfaces.ArticlesResponseCallback
 import com.github.ayodkay.models.Article
 import com.github.ayodkay.models.ArticleResponse
+import org.json.JSONObject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class NotifyWork(private val context: Context, params: WorkerParameters) : Worker(context, params) {
+class NotifyWork(private val context: Context, params: WorkerParameters) :
+    Worker(context, params), KoinComponent {
+    private val mixpanel: MixPanelInterface by inject()
     override fun doWork(): Result {
         getNews(context)
         return success()
@@ -47,6 +53,10 @@ class NotifyWork(private val context: Context, params: WorkerParameters) : Worke
             topHeadlinesBuilder,
             object : ArticlesResponseCallback {
                 override fun onFailure(throwable: Throwable) {
+                    val props = JSONObject()
+                    props.put("source", "Notify Work")
+                    props.put("reason", throwable.toString())
+                    mixpanel.track("onFailure", props)
                     sendNotification(context.getString(R.string.news_update))
                 }
 
@@ -85,7 +95,7 @@ class NotifyWork(private val context: Context, params: WorkerParameters) : Worke
 
     private fun sendNotification(news: Article) {
         OneSignalNotificationSender
-            .sendDeviceNotification(
+            .sendDeviceNotificationWithRequest(
                 Notification(
                     "Breaking News",
                     setNotificationData(news),

@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.FragmentSearchBinding
 import com.ayodkay.apps.swen.helper.BaseFragment
-import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.Helper.setUpNewsClient
 import com.ayodkay.apps.swen.helper.constant.ErrorMessage
 import com.ayodkay.apps.swen.helper.extentions.ifNull
@@ -25,6 +24,7 @@ import com.github.ayodkay.builder.EverythingBuilder
 import com.github.ayodkay.models.ArticleResponse
 import com.github.ayodkay.mvvm.interfaces.ArticlesLiveDataResponseCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import org.json.JSONObject
 
 class SearchFragment : BaseFragment() {
     private val searchViewModel: SearchViewModel by viewModels()
@@ -113,11 +113,11 @@ class SearchFragment : BaseFragment() {
     }
 
     private fun loadNews(query: String?) {
-        val db = Helper.getCountryDatabase(requireContext())
+
         val everythingBuilder = EverythingBuilder.Builder()
             .q(query.orEmpty())
             .sortBy(searchViewModel.sort)
-            .language(db.countryDao().getAll().iso)
+            .language(searchViewModel.getSelectedCountryDao.countryDao().getAll().iso)
             .pageSize(100)
             .build()
 
@@ -127,7 +127,12 @@ class SearchFragment : BaseFragment() {
             imm?.hideSoftInputFromWindow(view.windowToken, 0)
         }
 
-        with(setUpNewsClient(requireActivity())) {
+        with(
+            setUpNewsClient(
+                requireActivity(),
+                searchViewModel.remoteConfig.getString("news_api_key")
+            )
+        ) {
 
             getEverything(
                 everythingBuilder,
@@ -137,6 +142,10 @@ class SearchFragment : BaseFragment() {
                             searchViewModel.showEmpty.set(true)
                             searchViewModel.emptyTextValue.set("Internet Error")
                         }
+                        val props = JSONObject()
+                        props.put("source", "Search Fragment")
+                        props.put("reason", throwable.toString())
+                        searchViewModel.mixpanel.track("onFailure", props)
                     }
 
                     override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
