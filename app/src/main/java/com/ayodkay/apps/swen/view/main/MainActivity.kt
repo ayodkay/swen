@@ -1,12 +1,14 @@
 package com.ayodkay.apps.swen.view.main
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -21,14 +23,14 @@ import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivityMainBinding
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.backend.MyReachability
-import com.ayodkay.apps.swen.helper.room.userlocation.Location as LocationDatabase
+import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.onesignal.OneSignal
 import java.util.*
 import org.json.JSONObject
+import com.ayodkay.apps.swen.helper.room.userlocation.Location as LocationDatabase
 
 private const val REQUEST_CODE = 101
 
-@Suppress("UNCHECKED_CAST")
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val navController get() = findNavController(R.id.nav_host_fragment)
@@ -117,21 +119,32 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_LOCATION_PERMISSION -> {
-                if ((
-                    grantResults.isNotEmpty() &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    )
-                ) {
-                    activityViewModel.fusedLocationClient.lastLocation
-                        .addOnSuccessListener { userLocation: Location? ->
-                            userLocation?.let {
-                                Geocoder(this, Locale.getDefault()).getFromLocation(
-                                    it.latitude, it.longitude, 1
-                                ).firstOrNull()?.let { address ->
-                                    subscribeCountryName(address)
+                with(activityViewModel) {
+                    if ((
+                                grantResults.isNotEmpty() &&
+                                        grantResults[0] == PackageManager.PERMISSION_GRANTED
+                                )
+                    ) {
+                        fusedLocationClient.lastLocation
+                            .addOnSuccessListener { userLocation: Location? ->
+                                userLocation?.let {
+                                    Geocoder(this@MainActivity, Locale.getDefault())
+                                        .getFromLocation(it.latitude, it.longitude, 1)
+                                        .firstOrNull()
+                                        ?.let { address -> subscribeCountryName(address) }
                                 }
                             }
-                        }
+                    } else {
+                        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                        val countryCodeValue = tm.networkCountryIso
+                        subscribeCountryName(
+                            Address(Locale.getDefault()).apply {
+                                latitude = 40.712742
+                                longitude = -74.013382
+                                countryCode = countryCodeValue
+                            }
+                        )
+                    }
                 }
             }
 
@@ -183,11 +196,12 @@ class MainActivity : AppCompatActivity() {
                         activityViewModel.fusedLocationClient.lastLocation
                             .addOnSuccessListener { userLocation: Location? ->
                                 userLocation?.let {
-                                    Geocoder(this, Locale.getDefault()).getFromLocation(
-                                        it.latitude, it.longitude, 1
-                                    ).firstOrNull()?.let { address ->
-                                        subscribeCountryName(address)
-                                    }
+                                    Geocoder(this, Locale.getDefault())
+                                        .getFromLocation(it.latitude, it.longitude, 1)
+                                        .firstOrNull()
+                                        ?.let { address ->
+                                            subscribeCountryName(address)
+                                        }
                                 }
                             }
                     }
@@ -208,7 +222,7 @@ class MainActivity : AppCompatActivity() {
             insertAll(
                 LocationDatabase(
                     latitude = addresses.latitude, longitude = addresses.longitude,
-                    countryCode = addressCode, country = addresses.countryName
+                    countryCode = addressCode, country = addresses.countryName.ifNull { "default" }
                 )
             )
         }

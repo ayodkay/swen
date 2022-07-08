@@ -22,8 +22,8 @@ android {
         applicationId "com.ayodkay.apps.swen"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 43
-        versionName "4.3"
+        versionCode 44
+        versionName "4.4"
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
