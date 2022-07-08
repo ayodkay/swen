@@ -23,7 +23,10 @@ class OneSignalImplementation(private val mixpanel: MixPanelInterface) :
         get() = "1b294a36-a306-4117-8d5e-393ee674419d"
 
     override val basic: String
-        get() = "key"
+        get() = "ZDYzY2NkMWUtMGZkNS00YTJkLWI2NTctNDJjZjVhMTY5ZGE1"
+
+    override val basicProd: String
+        get() = "MjU0MjJhZWItMGU2Yi00ZWY4LWIzNTQtMTc2NTE4MzA0OWUy"
 
     override fun initialize(context: Context) {
         OneSignal.setRequiresUserPrivacyConsent(true)

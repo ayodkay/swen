@@ -1,9 +1,11 @@
 package com.ayodkay.apps.swen.helper.onesignal
 
 import android.content.Context
+import android.telephony.TelephonyManager
 import androidx.core.content.res.ResourcesCompat
 import com.ayodkay.apps.swen.BuildConfig
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.BaseViewModel
 import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
 import com.google.gson.Gson
@@ -80,6 +82,12 @@ object OneSignalNotificationSender : KoinComponent {
 
     fun sendDeviceNotificationWithRequest(notification: Notification, context: Context) {
         val ledColor = ResourcesCompat.getColor(context.resources, R.color.colorPrimary, null)
+        val country = try {
+            baseViewModel.getSelectedLocationDao.getAll().countryCode
+        } catch (e: Exception) {
+            val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            tm.networkCountryIso
+        }
         Thread(
             Runnable {
                 val pos: Int = notification.templatePos
@@ -88,9 +96,10 @@ object OneSignalNotificationSender : KoinComponent {
                     mapOf(
                         Pair("field", "tag"), Pair("key", "country"),
                         Pair("relation", "="),
-                        Pair("value", baseViewModel.getSelectedLocationDao.getAll().countryCode)
+                        Pair("value", country)
                     )
                 )
+                AppLog.l(country.orEmpty())
                 map["app_id"] =
                     if (BuildConfig.DEBUG) oneSignal.debugKey else oneSignal.productionKey
                 map["filters"] = filter
@@ -113,7 +122,8 @@ object OneSignalNotificationSender : KoinComponent {
                     con.doInput = true
                     con.setRequestProperty("Content-Type", "application/json; charset=UTF-8")
                     con.setRequestProperty(
-                        "Authorization", "Basic ${oneSignal.basic}"
+                        "Authorization",
+                        "Basic ${if (BuildConfig.DEBUG) oneSignal.basic else oneSignal.basicProd}"
                     )
                     con.requestMethod = "POST"
                     val strJsonBody = Gson().toJson(map)

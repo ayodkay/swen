@@ -7,6 +7,7 @@ interface OneSignalInterface {
     val productionKey: String
     val debugKey: String
     val basic: String
+    val basicProd: String
     fun initialize(context: Context)
     fun setExternalId(userId: String)
     fun clearNotification()
