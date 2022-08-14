@@ -32,7 +32,7 @@ class SearchFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentSearchBinding.inflate(inflater, container, false).apply {
         viewModel = searchViewModel
         searchViewModel.bookMarkRoom
@@ -103,8 +103,10 @@ class SearchFragment : BaseFragment() {
         searchViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
             navigateTo(
                 SearchFragmentDirections.actionNavMainSearchToNavViewNews(
-                    source = it.source.name.ifNull { "" }, url = it.url.ifNull { "" },
-                    image = it.urlToImage.ifNull { "" }, title = it.title.ifNull { "" },
+                    source = it.source.name.ifNull { "" },
+                    url = it.url.ifNull { "" },
+                    image = it.urlToImage.ifNull { "" },
+                    title = it.title.ifNull { "" },
                     content = it.content.ifNull { it.description.ifNull { "" } },
                     description = it.description.ifNull { "" }
                 )
@@ -113,7 +115,6 @@ class SearchFragment : BaseFragment() {
     }
 
     private fun loadNews(query: String?) {
-
         val everythingBuilder = EverythingBuilder.Builder()
             .q(query.orEmpty())
             .sortBy(searchViewModel.sort)
@@ -130,10 +131,9 @@ class SearchFragment : BaseFragment() {
         with(
             setUpNewsClient(
                 requireActivity(),
-                searchViewModel.remoteConfig.getString("news_api_key")
+                searchViewModel.firebaseInterface.remoteConfig.getString("news_api_key")
             )
         ) {
-
             getEverything(
                 everythingBuilder,
                 object : ArticlesLiveDataResponseCallback {

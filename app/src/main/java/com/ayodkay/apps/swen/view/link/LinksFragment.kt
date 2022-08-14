@@ -15,7 +15,7 @@ class LinksFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentLinksBinding.inflate(inflater, container, false).apply {
         viewModel = linksViewModel
         val getLinks = Helper.getLinksDatabase(requireContext()).linksDao().getAll()

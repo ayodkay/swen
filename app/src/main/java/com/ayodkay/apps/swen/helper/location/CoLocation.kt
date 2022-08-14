@@ -37,7 +37,9 @@ interface CoLocation {
      * Note it's always possible for getLastLocation() to return null even when this method returns true
      * (e.g. location settings were disabled between calls).
      */
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     suspend fun isLocationAvailable(): Boolean
 
     /**
@@ -53,7 +55,9 @@ interface CoLocation {
      *
      * @param priority One the PRIORITY_* in [LocationRequest].
      */
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     suspend fun getCurrentLocation(priority: Int): Location?
 
     /**
@@ -65,7 +69,9 @@ interface CoLocation {
      * This method provides a simplified way to get location. It is particularly well suited for applications that do
      * not require an accurate location and that do not want to maintain extra logic for location updates.
      */
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     suspend fun getLastLocation(): Location?
 
     /**
@@ -75,7 +81,9 @@ interface CoLocation {
      * This call will keep the Google Play services connection active, until the coroutine is cancelled or the location
      * update was returned.
      */
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     suspend fun getLocationUpdate(locationRequest: LocationRequest): Location
 
     /**
@@ -91,7 +99,9 @@ interface CoLocation {
      * explicitly requested size.
      */
     @ExperimentalCoroutinesApi
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     fun getLocationUpdates(
         locationRequest: LocationRequest,
         capacity: Int = Channel.CONFLATED
@@ -106,7 +116,9 @@ interface CoLocation {
      * Care should be taken in specifying the timestamps as many applications require them to be monotonically
      * increasing.
      */
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     suspend fun setMockLocation(location: Location)
 
     /**
@@ -122,7 +134,9 @@ interface CoLocation {
      *
      * Calls are not nested, and mock mode will be set directly regardless of previous calls.
      */
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     suspend fun setMockMode(isMockMode: Boolean)
 
     /** Checks if the relevant system settings are enabled on the device to carry out the desired location requests. */

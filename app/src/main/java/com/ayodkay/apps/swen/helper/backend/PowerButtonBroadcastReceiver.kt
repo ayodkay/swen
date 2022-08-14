@@ -33,11 +33,14 @@ class PowerButtonBroadcastReceiver : BroadcastReceiver() {
                             Notification(
                                 "Update App",
                                 setNotificationData(
-                                    context, context.getString(R.string.update_available)
+                                    context,
+                                    context.getString(R.string.update_available)
                                 ),
                                 "ic_stat_onesignal_default.png",
                                 context.getString(R.string.notification_icon),
-                                "[]", true, 0
+                                "[]",
+                                true,
+                                0
                             ),
                             context
                         )
@@ -49,7 +52,11 @@ class PowerButtonBroadcastReceiver : BroadcastReceiver() {
     private fun setNotificationData(context: Context, message: String): Array<Array<String>> {
         return arrayOf(
             arrayOf(
-                message, "\u200E", context.getString(R.string.ic_logo), "", ""
+                message,
+                "\u200E",
+                context.getString(R.string.ic_logo),
+                "",
+                ""
             )
         )
     }

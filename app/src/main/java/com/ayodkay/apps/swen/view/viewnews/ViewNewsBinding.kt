@@ -18,14 +18,18 @@ fun RecyclerView.setNewsList(
     bookmarkRoom: BookmarkRoomVM,
     nativeAdLoader: MaxNativeAdLoader,
     nativeAd: MaxAd? = null,
-    listener: CardClick?,
+    listener: CardClick?
 ) {
     if (newsList != null) {
         if (adapter == null) {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = MaxAdsRecyclerView(
-                newsList, arrayListOf(), bookmarkRoom, nativeAdLoader,
-                nativeAd, listener
+                newsList,
+                arrayListOf(),
+                bookmarkRoom,
+                nativeAdLoader,
+                nativeAd,
+                listener
             )
         } else {
             (adapter as MaxAdsRecyclerView).apply {
@@ -41,15 +45,18 @@ fun RecyclerView.setLinkList(
     links: ArrayList<Links>?,
     nativeAdLoader: MaxNativeAdLoader,
     nativeAd: MaxAd? = null,
-    linkCardClick: LinkCardClick?,
+    linkCardClick: LinkCardClick?
 ) {
     if (links != null) {
         if (adapter == null) {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = MaxAdsRecyclerView(
                 arrayListOf(),
-                links = links, nativeAdLoader = nativeAdLoader, nativeAd = nativeAd,
-                linkCardClick = linkCardClick, bookmarkRoomVM = null
+                links = links,
+                nativeAdLoader = nativeAdLoader,
+                nativeAd = nativeAd,
+                linkCardClick = linkCardClick,
+                bookmarkRoomVM = null
             )
         } else {
             (adapter as MaxAdsRecyclerView).apply {

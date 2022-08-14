@@ -38,7 +38,13 @@ class NotifyWork(private val context: Context, params: WorkerParameters) :
             "us"
         }
         val category = arrayOf(
-            "general", "entertainment", "sports", "business", "health", "science", "technology",
+            "general",
+            "entertainment",
+            "sports",
+            "business",
+            "health",
+            "science",
+            "technology"
         ).random()
         val newsApiClientWithObserver = setUpNewsClient()
         val topHeadlinesBuilder = TopHeadlinesBuilder.Builder()
@@ -79,7 +85,9 @@ class NotifyWork(private val context: Context, params: WorkerParameters) :
                     setNotificationData(message),
                     "ic_stat_onesignal_default.png",
                     context.getString(R.string.notification_icon),
-                    "[]", true, 0
+                    "[]",
+                    true,
+                    0
                 ),
                 context
             )
@@ -88,7 +96,11 @@ class NotifyWork(private val context: Context, params: WorkerParameters) :
     private fun setNotificationData(message: String): Array<Array<String>> {
         return arrayOf(
             arrayOf(
-                message, "\u200E", context.getString(R.string.ic_logo), "", ""
+                message,
+                "\u200E",
+                context.getString(R.string.ic_logo),
+                "",
+                ""
             )
         )
     }
@@ -101,7 +113,9 @@ class NotifyWork(private val context: Context, params: WorkerParameters) :
                     setNotificationData(news),
                     "ic_stat_onesignal_default.png",
                     context.getString(R.string.notification_icon),
-                    "[]", true, 0
+                    "[]",
+                    true,
+                    0
                 ),
                 context
             )

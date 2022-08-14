@@ -20,7 +20,7 @@ class ThemeFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = ThemeFragmentBinding.inflate(inflater, container, false).apply {
         viewModel = themeViewModel
         themeViewModel.initTheme()

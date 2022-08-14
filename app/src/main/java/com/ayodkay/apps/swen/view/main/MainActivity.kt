@@ -1,6 +1,7 @@
 package com.ayodkay.apps.swen.view.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -24,10 +25,10 @@ import com.ayodkay.apps.swen.databinding.ActivityMainBinding
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.backend.MyReachability
 import com.ayodkay.apps.swen.helper.extentions.ifNull
+import com.ayodkay.apps.swen.helper.room.userlocation.Location as LocationDatabase
 import com.onesignal.OneSignal
 import java.util.*
 import org.json.JSONObject
-import com.ayodkay.apps.swen.helper.room.userlocation.Location as LocationDatabase
 
 private const val REQUEST_CODE = 101
 
@@ -85,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun onNavDestinationSelected(
         itemId: Int,
-        navController: NavController,
+        navController: NavController
     ): Boolean {
         val builder = NavOptions.Builder().setLaunchSingleTop(true)
         if (navController.currentDestination!!.parent!!.findNode(itemId) is
@@ -111,19 +112,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_LOCATION_PERMISSION -> {
                 with(activityViewModel) {
                     if ((
-                                grantResults.isNotEmpty() &&
-                                        grantResults[0] == PackageManager.PERMISSION_GRANTED
-                                )
+                        grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        )
                     ) {
                         fusedLocationClient.lastLocation
                             .addOnSuccessListener { userLocation: Location? ->
@@ -181,12 +183,14 @@ class MainActivity : AppCompatActivity() {
             ) {
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_PERMISSION
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_LOCATION_PERMISSION
                 )
             } else {
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_PERMISSION
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_LOCATION_PERMISSION
                 )
             }
         } else {
@@ -221,8 +225,10 @@ class MainActivity : AppCompatActivity() {
             delete()
             insertAll(
                 LocationDatabase(
-                    latitude = addresses.latitude, longitude = addresses.longitude,
-                    countryCode = addressCode, country = addresses.countryName.ifNull { "default" }
+                    latitude = addresses.latitude,
+                    longitude = addresses.longitude,
+                    countryCode = addressCode,
+                    country = addresses.countryName.ifNull { "default" }
                 )
             )
         }

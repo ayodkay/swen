@@ -19,10 +19,12 @@ class BookmarksFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentBookmarksBinding.inflate(inflater, container, false).apply {
         viewModel = bookmarksViewModel
-        bookmarksViewModel.bookMarkRoom.set(ViewModelProvider(requireActivity())[BookmarkRoomVM::class.java])
+        bookmarksViewModel.bookMarkRoom.set(
+            ViewModelProvider(requireActivity())[BookmarkRoomVM::class.java]
+        )
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,7 +41,7 @@ class BookmarksFragment : BaseFragment() {
                         it[i].url,
                         it[i].urlToImage,
                         it[i].publishedAt,
-                        it[i].content,
+                        it[i].content
                     )
                 )
             }
@@ -47,8 +49,10 @@ class BookmarksFragment : BaseFragment() {
         bookmarksViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
             navigateTo(
                 BookmarksFragmentDirections.actionNavigationBookmarksToNavViewNews(
-                    source = it.source.name.ifNull { "" }, url = it.url.ifNull { "" },
-                    image = it.urlToImage.ifNull { "" }, title = it.title.ifNull { "" },
+                    source = it.source.name.ifNull { "" },
+                    url = it.url.ifNull { "" },
+                    image = it.urlToImage.ifNull { "" },
+                    title = it.title.ifNull { "" },
                     content = it.content.ifNull { it.description.ifNull { "" } },
                     description = it.description.ifNull { "" }
                 )

@@ -80,7 +80,8 @@ class Notification internal constructor() : KoinComponent {
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setAutoCancel(true)
         notificationManager.notify(
-            ENGAGE_NOTIFICATION, builder.build()
+            ENGAGE_NOTIFICATION,
+            builder.build()
         )
 
         when {
@@ -131,7 +132,8 @@ class Notification internal constructor() : KoinComponent {
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setAutoCancel(true)
         notificationManager.notify(
-            ENGAGE_NOTIFICATION, builder.build()
+            ENGAGE_NOTIFICATION,
+            builder.build()
         )
 
         when {
@@ -156,7 +158,7 @@ class Notification internal constructor() : KoinComponent {
         title: String,
         descriptions: String,
         url: String,
-        image: String,
+        image: String
     ) {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
@@ -201,7 +203,8 @@ class Notification internal constructor() : KoinComponent {
         }
 
         notificationManager.notify(
-            COUNTRY_NOTIFICATION, builder.build()
+            COUNTRY_NOTIFICATION,
+            builder.build()
         )
 
         when {

@@ -53,7 +53,7 @@ class ViewNewsFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentViewNewsBinding.inflate(inflater, container, false).apply {
         viewModel = viewNewsViewModel
         with(viewNewsViewModel) {
@@ -94,7 +94,8 @@ class ViewNewsFragment : BaseFragment() {
                     }
                 }
             },
-            viewLifecycleOwner, Lifecycle.State.RESUMED
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED
         )
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
         onBackPressed {
@@ -184,7 +185,6 @@ class ViewNewsFragment : BaseFragment() {
             if (viewNewsViewModel.image.isNotBlank()) {
                 Picasso.get().load(viewNewsViewModel.image).into(object : Target {
                     override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
-
                         shareNews.type = "image/jpeg"
                         shareNews.putExtra(
                             Intent.EXTRA_TEXT,
@@ -193,7 +193,8 @@ class ViewNewsFragment : BaseFragment() {
                         try {
                             val uri = getImageUri(bitmap)
                             shareNews.putExtra(
-                                Intent.EXTRA_STREAM, uri
+                                Intent.EXTRA_STREAM,
+                                uri
                             )
                             startActivity(
                                 Intent.createChooser(
@@ -251,8 +252,10 @@ class ViewNewsFragment : BaseFragment() {
             viewNewsViewModel.mixpanel.track("actionNavViewNewsSelf")
             navigateTo(
                 ViewNewsFragmentDirections.actionNavViewNewsSelf(
-                    source = it.source.name.ifNull { "" }, url = it.url.ifNull { "" },
-                    image = it.urlToImage.ifNull { "" }, title = it.title.ifNull { "" },
+                    source = it.source.name.ifNull { "" },
+                    url = it.url.ifNull { "" },
+                    image = it.urlToImage.ifNull { "" },
+                    title = it.title.ifNull { "" },
                     content = it.content.ifNull { it.description.ifNull { "" } },
                     description = it.description.ifNull { "" }
                 )
@@ -298,7 +301,7 @@ class ViewNewsFragment : BaseFragment() {
             ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ),
+            )
             -> {
             }
             else -> {
@@ -321,7 +324,6 @@ class ViewNewsFragment : BaseFragment() {
     }
 
     private fun loadMore(query: String) {
-
         val everythingBuilder = EverythingBuilder.Builder()
             .q(query)
             .sortBy("publishedAt")
@@ -331,7 +333,7 @@ class ViewNewsFragment : BaseFragment() {
         with(
             Helper.setUpNewsClient(
                 requireActivity(),
-                viewNewsViewModel.remoteConfig.getString("news_api_key")
+                viewNewsViewModel.firebaseInterface.remoteConfig.getString("news_api_key")
             )
         ) {
             getEverything(

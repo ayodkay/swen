@@ -1,6 +1,8 @@
 package com.ayodkay.apps.swen.helper.di
 
 import com.ayodkay.apps.swen.helper.BaseViewModel
+import com.ayodkay.apps.swen.helper.firebase.FirebaseImplementation
+import com.ayodkay.apps.swen.helper.firebase.FirebaseInterface
 import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
 import com.ayodkay.apps.swen.helper.mixpanel.MixpanelImplementation
 import com.ayodkay.apps.swen.helper.onesignal.OneSignalImplementation
@@ -23,7 +25,8 @@ import org.koin.dsl.module
 
 val appModule = module {
     single<MixPanelInterface> { MixpanelImplementation() }
-    single<OneSignalInterface> { OneSignalImplementation(get()) }
+    single<OneSignalInterface> { OneSignalImplementation() }
+    single<FirebaseInterface> { FirebaseImplementation() }
     single { OneSignalNotificationSender }
 
     viewModel { BaseViewModel(get()) }
