@@ -200,12 +200,14 @@ class MainActivity : AppCompatActivity() {
                         activityViewModel.fusedLocationClient.lastLocation
                             .addOnSuccessListener { userLocation: Location? ->
                                 userLocation?.let {
-                                    Geocoder(this, Locale.getDefault())
-                                        .getFromLocation(it.latitude, it.longitude, 1)
-                                        .firstOrNull()
-                                        ?.let { address ->
-                                            subscribeCountryName(address)
-                                        }
+                                    kotlin.runCatching {
+                                        Geocoder(this, Locale.getDefault())
+                                            .getFromLocation(it.latitude, it.longitude, 1)
+                                            .firstOrNull()
+                                            ?.let { address ->
+                                                subscribeCountryName(address)
+                                            }
+                                    }
                                 }
                             }
                     }

@@ -6,7 +6,7 @@ import android.content.Intent
 import androidx.work.Data
 import com.ayodkay.apps.swen.App.Companion.scheduleNotification
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.onesignal.Notification
+import com.ayodkay.apps.swen.helper.onesignal.OneSignalNotification
 import com.ayodkay.apps.swen.helper.onesignal.OneSignalNotificationSender
 import com.ayodkay.apps.swen.helper.work.NotifyWork
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -30,34 +30,17 @@ class PowerButtonBroadcastReceiver : BroadcastReceiver() {
                 ) {
                     OneSignalNotificationSender
                         .sendDeviceNotification(
-                            Notification(
-                                "Update App",
-                                setNotificationData(
-                                    context,
-                                    context.getString(R.string.update_available)
-                                ),
-                                "ic_stat_onesignal_default.png",
+                            OneSignalNotification(
+                                "Update App", context.getString(R.string.update_available),
+                                "\u200E", "ic_stat_onesignal_default.png",
                                 context.getString(R.string.notification_icon),
-                                "[]",
-                                true,
-                                0
+                                context.getString(R.string.ic_logo),
+                                "", "", "[]", true
                             ),
                             context
                         )
                 }
             }
         }
-    }
-
-    private fun setNotificationData(context: Context, message: String): Array<Array<String>> {
-        return arrayOf(
-            arrayOf(
-                message,
-                "\u200E",
-                context.getString(R.string.ic_logo),
-                "",
-                ""
-            )
-        )
     }
 }

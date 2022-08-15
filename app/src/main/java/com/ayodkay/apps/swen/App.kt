@@ -84,7 +84,7 @@ class App : Application() {
             val nWorkerParameters =
                 PeriodicWorkRequest.Builder(
                     NotifyWork::class.java,
-                    4,
+                    6,
                     TimeUnit.HOURS,
                     15,
                     TimeUnit.MINUTES

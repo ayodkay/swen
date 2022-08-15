@@ -24,7 +24,8 @@ object OneSignalNotificationSender : KoinComponent {
     private val mixpanel: MixPanelInterface by inject()
     private val oneSignal: OneSignalInterface by inject()
     private val baseViewModel: BaseViewModel by inject()
-    fun sendDeviceNotification(notification: Notification, context: Context) {
+
+    fun sendDeviceNotification(notification: OneSignalNotification, context: Context) {
         val ledColor = ResourcesCompat.getColor(context.resources, R.color.colorPrimary, null)
         Thread(
             Runnable {
@@ -32,20 +33,19 @@ object OneSignalNotificationSender : KoinComponent {
                 val userId = deviceState?.userId
                 val isSubscribed = deviceState != null && deviceState.isSubscribed
                 if (!isSubscribed) return@Runnable
-                val pos: Int = notification.templatePos
                 try {
                     val map: MutableMap<String?, Any?> = HashMap()
                     map["include_player_ids"] = arrayOf(userId)
-                    map["headings"] = mapOf(Pair("en", notification.getTitle(pos)))
-                    map["contents"] = mapOf(Pair("en", notification.getMessage(pos)))
+                    map["headings"] = mapOf(Pair("en", notification.title))
+                    map["contents"] = mapOf(Pair("en", notification.message))
                     map["small_icon"] = notification.smallIconRes
-                    map["large_icon"] = notification.getLargeIconUrl(pos)
-                    map["big_picture"] = notification.getBigPictureUrl(pos)
+                    map["large_icon"] = notification.largeIconUrl
+                    map["big_picture"] = notification.bigPictureUrl
                     map["android_group"] = notification.group
                     map["buttons"] = emptyArray<String>()
                     map["android_led_color"] = "$ledColor"
                     map["android_accent_color"] = "$ledColor"
-                    map["data"] = mapOf(Pair("url", notification.getUrl(pos)))
+                    map["data"] = mapOf(Pair("url", notification.url))
                     map["android_sound"] = "nil"
                     val json = JSONObject(map)
                     OneSignal.postNotification(
@@ -81,7 +81,7 @@ object OneSignalNotificationSender : KoinComponent {
         ).start()
     }
 
-    fun sendDeviceNotificationWithRequest(notification: Notification, context: Context) {
+    fun sendDeviceNotificationWithRequest(notification: OneSignalNotification, context: Context) {
         val ledColor = ResourcesCompat.getColor(context.resources, R.color.colorPrimary, null)
         val country = try {
             baseViewModel.getSelectedLocationDao.getAll().countryCode
@@ -91,7 +91,6 @@ object OneSignalNotificationSender : KoinComponent {
         }
         Thread(
             Runnable {
-                val pos: Int = notification.templatePos
                 val map: MutableMap<String?, Any?> = HashMap()
                 val filter = arrayListOf(
                     mapOf(
@@ -106,16 +105,16 @@ object OneSignalNotificationSender : KoinComponent {
                         oneSignal.debugKey
                     } else oneSignal.productionKey
                 map["filters"] = filter
-                map["headings"] = mapOf(Pair("en", notification.getTitle(pos)))
-                map["contents"] = mapOf(Pair("en", notification.getMessage(pos)))
+                map["headings"] = mapOf(Pair("en", notification.title))
+                map["contents"] = mapOf(Pair("en", notification.message))
                 map["small_icon"] = notification.smallIconRes
-                map["large_icon"] = notification.getLargeIconUrl(pos)
-                map["big_picture"] = notification.getBigPictureUrl(pos)
+                map["large_icon"] = notification.largeIconUrl
+                map["big_picture"] = notification.bigPictureUrl
                 map["android_group"] = notification.group
                 map["buttons"] = emptyArray<String>()
                 map["android_led_color"] = "$ledColor"
                 map["android_accent_color"] = "$ledColor"
-                map["data"] = mapOf(Pair("url", notification.getUrl(pos)))
+                map["data"] = mapOf(Pair("url", notification.url))
                 map["android_sound"] = "nil"
                 try {
                     val url = URL("https://onesignal.com/api/v1/notifications")
