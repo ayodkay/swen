@@ -8,12 +8,14 @@ import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.telephony.TelephonyManager
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.ActivityNavigator
@@ -48,9 +50,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         permissionCheck()
-//        if (Build.VERSION.SDK_INT > 32) {
-//            permissionToPost()
-//        }
+        if (Build.VERSION.SDK_INT >= 33) {
+            permissionToPost()
+        }
         binding.bubbleTabBar.addBubbleListener { id ->
             onNavDestinationSelected(id, navController)
         }
@@ -129,11 +131,28 @@ class MainActivity : AppCompatActivity() {
                     ) {
                         fusedLocationClient.lastLocation
                             .addOnSuccessListener { userLocation: Location? ->
-                                userLocation?.let {
-                                    Geocoder(this@MainActivity, Locale.getDefault())
-                                        .getFromLocation(it.latitude, it.longitude, 1)
-                                        .firstOrNull()
-                                        ?.let { address -> subscribeCountryName(address) }
+                                userLocation?.let { location ->
+                                    if (Build.VERSION.SDK_INT >= 33) {
+                                        Geocoder(this@MainActivity, Locale.getDefault())
+                                            .getFromLocation(
+                                                location.latitude,
+                                                location.longitude,
+                                                1
+                                            ) {
+                                                it.firstOrNull()?.let { address ->
+                                                    subscribeCountryName(address)
+                                                }
+                                            }
+                                    } else {
+                                        Geocoder(this@MainActivity, Locale.getDefault())
+                                            .getFromLocation(
+                                                location.latitude,
+                                                location.longitude,
+                                                1
+                                            )
+                                            ?.firstOrNull()
+                                            ?.let { address -> subscribeCountryName(address) }
+                                    }
                                 }
                             }
                     } else {
@@ -150,21 +169,25 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-//            REQUEST_POST_PERMISSION -> {}
+            REQUEST_POST_PERMISSION -> {
+                OneSignal.provideUserConsent(true)
+            }
         }
     }
 
+    @RequiresApi(33)
     private fun permissionToPost() {
-//        if (ActivityCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.POST_NOTIFICATIONS
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            ActivityCompat.requestPermissions(
-//                this,
-//                arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQUEST_POST_PERMISSION
-//            )
-//        }
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_POST_PERMISSION
+            )
+        }
     }
 
     private fun permissionCheck() {
@@ -201,12 +224,20 @@ class MainActivity : AppCompatActivity() {
                             .addOnSuccessListener { userLocation: Location? ->
                                 userLocation?.let {
                                     kotlin.runCatching {
-                                        Geocoder(this, Locale.getDefault())
-                                            .getFromLocation(it.latitude, it.longitude, 1)
-                                            .firstOrNull()
-                                            ?.let { address ->
-                                                subscribeCountryName(address)
-                                            }
+                                        if (Build.VERSION.SDK_INT >= 33) {
+                                            Geocoder(this, Locale.getDefault())
+                                                .getFromLocation(it.latitude, it.longitude, 1) {
+                                                    it.firstOrNull()
+                                                        ?.let { address ->
+                                                            subscribeCountryName(address)
+                                                        }
+                                                }
+                                        } else {
+                                            Geocoder(this@MainActivity, Locale.getDefault())
+                                                .getFromLocation(it.latitude, it.longitude, 1)
+                                                ?.firstOrNull()
+                                                ?.let { address -> subscribeCountryName(address) }
+                                        }
                                     }
                                 }
                             }
