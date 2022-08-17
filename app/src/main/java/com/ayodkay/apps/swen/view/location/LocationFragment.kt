@@ -9,10 +9,10 @@ import androidx.fragment.app.viewModels
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.FragmentLocationBinding
 import com.ayodkay.apps.swen.helper.BaseFragment
-import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.countrypicker.CountryPicker
 import com.ayodkay.apps.swen.helper.countrypicker.CountryPickerListener
 import com.ayodkay.apps.swen.helper.room.country.Country
+import org.json.JSONObject
 
 class LocationFragment : BaseFragment() {
     private val locationViewModel: LocationViewModel by viewModels()
@@ -20,7 +20,7 @@ class LocationFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentLocationBinding.inflate(inflater, container, false).apply {
         viewModel = locationViewModel
     }.root
@@ -39,11 +39,14 @@ class LocationFragment : BaseFragment() {
                         name: String,
                         code: String,
                         iso: String,
-                        language: String,
+                        language: String
                     ) {
-                        val db = Helper.getCountryDatabase(requireContext())
-                        db.countryDao().delete()
-                        db.countryDao().insertAll(Country(iso, language))
+                        with(locationViewModel.getSelectedCountryDao.countryDao()) {
+                            delete()
+                            insertAll(Country(iso, language))
+                            val props = JSONObject().put("selected", Country(iso, language))
+                            locationViewModel.mixpanel.track("Country Selected", props)
+                        }
                         dialogFragment?.dismiss()
                         navigateTo(LocationFragmentDirections.actionNavLocationToNavMainSwen())
                     }

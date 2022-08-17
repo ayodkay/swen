@@ -24,6 +24,7 @@ import com.ayodkay.apps.swen.helper.room.links.Links
 import java.util.concurrent.TimeUnit
 import kotlin.math.min
 import kotlin.math.pow
+import org.json.JSONObject
 
 class WebViewFragment : BaseFragment(), MaxAdListener {
     private lateinit var binding: FragmentWebviewBinding
@@ -44,15 +45,16 @@ class WebViewFragment : BaseFragment(), MaxAdListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentWebviewBinding.inflate(inflater, container, false).apply {
         createInterstitialAd()
         viewModel = webViewViewModel
         webViewViewModel.webLink.set(args.link)
         webViewViewModel.navigateToMain = args.navigateToMain
         webViewViewModel.bookmarkDrawable.set(
-            if (Helper.getLinksDatabase(requireContext()).linksDao().exist(args.link))
-                R.drawable.ic_bookmarked else R.drawable.ic_bookmark
+            if (Helper.getLinksDatabase(requireContext()).linksDao().exist(args.link)) {
+                R.drawable.ic_bookmarked
+            } else R.drawable.ic_bookmark
         )
         binding = this
     }.root
@@ -64,18 +66,26 @@ class WebViewFragment : BaseFragment(), MaxAdListener {
         val linkDao = Helper.getLinksDatabase(requireContext()).linksDao()
 
         webViewViewModel.refreshPage.observe(viewLifecycleOwner) {
+            webViewViewModel.mixpanel.track("Refresh Page")
             binding.webViewSuite.refresh()
         }
 
         webViewViewModel.gotBack.observe(viewLifecycleOwner) {
+            webViewViewModel.mixpanel.track("Go Back")
             changeView()
         }
 
         webViewViewModel.shareUrl.observe(viewLifecycleOwner) {
+            val props = JSONObject()
+            props.put("source", "WebView Fragment")
+            props.put("url", webViewViewModel.webLink.get().orEmpty())
+            webViewViewModel.mixpanel.track("Share News", props)
             share(webViewViewModel.webLink.get().orEmpty())
         }
 
         webViewViewModel.openBrowser.observe(viewLifecycleOwner) {
+            val props = JSONObject().put("link", webViewViewModel.webLink.get().orEmpty())
+            webViewViewModel.mixpanel.track("Open In Browser", props)
             val browserIntent =
                 Intent(Intent.ACTION_VIEW, Uri.parse(webViewViewModel.webLink.get().orEmpty()))
             startActivity(browserIntent)
@@ -86,6 +96,8 @@ class WebViewFragment : BaseFragment(), MaxAdListener {
                 linkDao.deleteOne(webViewViewModel.webLink.get().orEmpty())
                 webViewViewModel.bookmarkDrawable.set(R.drawable.ic_bookmark)
             } else {
+                val props = JSONObject().put("source", "WebView Fragment")
+                webViewViewModel.mixpanel.track("Link Bookmark", props)
                 Helper.getLinksDatabase(requireContext()).linksDao()
                     .insertAll(Links(link = webViewViewModel.webLink.get().orEmpty()))
                 webViewViewModel.bookmarkDrawable.set(R.drawable.ic_bookmarked)
@@ -144,7 +156,11 @@ class WebViewFragment : BaseFragment(), MaxAdListener {
         Handler(Looper.getMainLooper()).postDelayed({ interstitialAd.loadAd() }, delayMillis)
     }
 
-    override fun onAdDisplayed(ad: MaxAd?) {}
+    override fun onAdDisplayed(ad: MaxAd?) {
+        val props = JSONObject().put("source", "Interstitial Ad")
+        webViewViewModel.mixpanel.track("Show Ads", props)
+    }
+
     override fun onAdClicked(ad: MaxAd?) {}
     override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {}
 

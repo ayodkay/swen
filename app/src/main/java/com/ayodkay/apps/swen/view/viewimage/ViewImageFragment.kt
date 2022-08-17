@@ -16,7 +16,7 @@ class ViewImageFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentViewImageBinding.inflate(inflater, container, false).apply {
         viewModel = viewImageViewModel
         viewImageViewModel.image = args.image

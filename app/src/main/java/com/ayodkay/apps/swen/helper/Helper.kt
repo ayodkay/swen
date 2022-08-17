@@ -3,6 +3,7 @@ package com.ayodkay.apps.swen.helper
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.room.Room
 import com.ayodkay.apps.swen.R
@@ -31,20 +32,24 @@ object Helper {
     fun getCountryDatabase(context: Context): CountryDatabase {
         return Room.databaseBuilder(
             context,
-            CountryDatabase::class.java, "country"
+            CountryDatabase::class.java,
+            "country"
         ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
     }
 
     fun getLinksDatabase(context: Context): LinksDatabase {
         return Room.databaseBuilder(
-            context, LinksDatabase::class.java, "links"
+            context,
+            LinksDatabase::class.java,
+            "links"
         ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
     }
 
     fun getLocationDatabase(context: Context): LocationDatabase {
         return Room.databaseBuilder(
             context,
-            LocationDatabase::class.java, "location"
+            LocationDatabase::class.java,
+            "location"
         ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
     }
 
@@ -63,7 +68,14 @@ object Helper {
 
     fun topCountries(country: String): Boolean {
         val ac = arrayListOf(
-            "br", "in", "ar", "us", "ng", "de", "fr", "nl"
+            "br",
+            "in",
+            "ar",
+            "us",
+            "ng",
+            "de",
+            "fr",
+            "nl"
         )
         if (ac.contains(country.lowercase(Locale.ROOT))) {
             return true
@@ -71,11 +83,27 @@ object Helper {
         return false
     }
 
-    fun setUpNewsClient(activity: ComponentActivity): NewsApiClientWithObserver {
+    fun setUpNewsClient(activity: ComponentActivity, apiKey: String): NewsApiClientWithObserver {
         NewsApi.init(activity)
         return NewsApiClientWithObserver(
-            "dc0576cde63048f090c121ca1615e03f",
-            NetworkInterceptorModel(), OfflineCacheInterceptorModel()
+            apiKey,
+            NetworkInterceptorModel(),
+            OfflineCacheInterceptorModel()
         )
+    }
+
+    fun isEmulator(): Boolean {
+        return (
+            Build.FINGERPRINT.startsWith("generic") ||
+                Build.FINGERPRINT.startsWith("unknown") ||
+                Build.MODEL.contains("google_sdk") ||
+                Build.MODEL.contains("Emulator") ||
+                Build.MODEL.contains("Android SDK built for x86") ||
+                Build.MANUFACTURER.contains("Genymotion") ||
+                Build.MODEL.startsWith("sdk_") ||
+                Build.DEVICE.startsWith("emulator") ||
+                Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic") ||
+                "google_sdk" == Build.PRODUCT
+            )
     }
 }

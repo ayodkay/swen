@@ -124,7 +124,9 @@
             app:argType="boolean" />
         <action
             android:id="@+id/action_nav_web_view_to_nav_main_swen"
-            app:destination="@id/nav_main_swen" />
+            app:destination="@id/nav_main_swen"
+            app:popUpTo="@+id/main_control"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment

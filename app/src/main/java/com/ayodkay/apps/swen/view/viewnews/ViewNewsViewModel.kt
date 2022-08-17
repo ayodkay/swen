@@ -16,6 +16,7 @@ import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.dynamiclinks.ktx.shortLinkAsync
 import com.google.firebase.ktx.Firebase
 import com.google.mlkit.nl.languageid.LanguageIdentification
+import org.json.JSONObject
 
 private const val DOMAIN_URI_PREFIX = "https://swenio.page.link"
 
@@ -72,6 +73,8 @@ class ViewNewsViewModel(application: Application) : BaseViewModel(application), 
     }
 
     override fun onCardClick(article: Article) {
+        val props = JSONObject().put("source", "View News Fragment")
+        mixpanel.track("Card Click", props)
         goToViewNewsFragment.trigger(article)
     }
 }

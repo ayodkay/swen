@@ -11,23 +11,25 @@ import com.ayodkay.apps.swen.helper.adapter.MaxAdsRecyclerView
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.helper.room.links.Links
 import com.github.ayodkay.models.Article
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.card.MaterialCardView
 
-@BindingAdapter("newsList", "bookmarkRoom", "nativeAdLoader", "nativeAd", "listener")
+@BindingAdapter(value = ["newsList", "bookmarkRoom", "nativeAdLoader", "nativeAd", "listener"])
 fun RecyclerView.setNewsList(
     newsList: ArrayList<Article>?,
     bookmarkRoom: BookmarkRoomVM,
     nativeAdLoader: MaxNativeAdLoader,
     nativeAd: MaxAd? = null,
-    listener: CardClick?,
+    listener: CardClick?
 ) {
     if (newsList != null) {
         if (adapter == null) {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = MaxAdsRecyclerView(
-                newsList, arrayListOf(), bookmarkRoom, nativeAdLoader,
-                nativeAd, listener
+                newsList,
+                arrayListOf(),
+                bookmarkRoom,
+                nativeAdLoader,
+                nativeAd,
+                listener
             )
         } else {
             (adapter as MaxAdsRecyclerView).apply {
@@ -41,17 +43,20 @@ fun RecyclerView.setNewsList(
 @BindingAdapter("links", "linkNativeAdLoader", "linkNativeAd", "linkCardClick")
 fun RecyclerView.setLinkList(
     links: ArrayList<Links>?,
-    nativeAdLoader: MaxNativeAdLoader? = null,
+    nativeAdLoader: MaxNativeAdLoader,
     nativeAd: MaxAd? = null,
-    linkCardClick: LinkCardClick?,
+    linkCardClick: LinkCardClick?
 ) {
     if (links != null) {
         if (adapter == null) {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = MaxAdsRecyclerView(
                 arrayListOf(),
-                links = links, nativeAdLoader = nativeAdLoader, nativeAd = nativeAd,
-                linkCardClick = linkCardClick
+                links = links,
+                nativeAdLoader = nativeAdLoader,
+                nativeAd = nativeAd,
+                linkCardClick = linkCardClick,
+                bookmarkRoomVM = null
             )
         } else {
             (adapter as MaxAdsRecyclerView).apply {
@@ -60,10 +65,4 @@ fun RecyclerView.setLinkList(
             }
         }
     }
-}
-
-@BindingAdapter("app:state")
-fun MaterialCardView.bottomSheetState(state: Int) {
-    val bottomSheetBehavior = BottomSheetBehavior.from(this)
-    bottomSheetBehavior.state = state
 }

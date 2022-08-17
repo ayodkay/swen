@@ -7,7 +7,7 @@ data class Notification(
     val iconUrl: String,
     val buttons: String,
     val shouldShow: Boolean,
-    var pos: Int,
+    var pos: Int
 ) {
     fun getTitle(pos: Int): String {
         return data[pos][0]

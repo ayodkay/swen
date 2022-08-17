@@ -4,9 +4,9 @@ import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
+import java.util.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import java.util.*
 
 internal class CoGeocoderImpl(
     context: Context,
@@ -62,14 +62,20 @@ internal class CoGeocoderImpl(
         locale: Locale,
         maxResults: Int
     ): List<Address> =
-        withContext(dispatcher) { geocoder.getFromLocation(latitude, longitude, maxResults) }
+        withContext(dispatcher) {
+            runCatching { geocoder.getFromLocation(latitude, longitude, maxResults).orEmpty() }
+                .getOrDefault(arrayListOf())
+        }
 
     override suspend fun getAddressListFromLocationName(
         locationName: String,
         locale: Locale,
         maxResults: Int
     ): List<Address> =
-        withContext(dispatcher) { geocoder.getFromLocationName(locationName, maxResults) }
+        withContext(dispatcher) {
+            runCatching { geocoder.getFromLocationName(locationName, maxResults).orEmpty() }
+                .getOrDefault(arrayListOf())
+        }
 
     override suspend fun getAddressListFromLocationName(
         locationName: String,
@@ -80,13 +86,15 @@ internal class CoGeocoderImpl(
         locale: Locale,
         maxResults: Int
     ): List<Address> = withContext(dispatcher) {
-        geocoder.getFromLocationName(
-            locationName,
-            maxResults,
-            lowerLeftLatitude,
-            lowerLeftLongitude,
-            upperRightLatitude,
-            upperRightLongitude
-        )
+        runCatching {
+            geocoder.getFromLocationName(
+                locationName,
+                maxResults,
+                lowerLeftLatitude,
+                lowerLeftLongitude,
+                upperRightLatitude,
+                upperRightLongitude
+            ).orEmpty()
+        }.getOrDefault(arrayListOf())
     }
 }

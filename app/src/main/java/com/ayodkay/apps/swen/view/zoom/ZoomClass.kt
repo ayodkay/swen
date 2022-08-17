@@ -82,13 +82,17 @@ class ZoomClass :
             }
             if (origWidth * mSaveScale <= viewWidth || origHeight * mSaveScale <= viewHeight) {
                 mMatrix!!.postScale(
-                    mScaleFactor, mScaleFactor, viewWidth / 2.toFloat(),
+                    mScaleFactor,
+                    mScaleFactor,
+                    viewWidth / 2.toFloat(),
                     viewHeight / 2.toFloat()
                 )
             } else {
                 mMatrix!!.postScale(
-                    mScaleFactor, mScaleFactor,
-                    detector.focusX, detector.focusY
+                    mScaleFactor,
+                    mScaleFactor,
+                    detector.focusX,
+                    detector.focusY
                 )
             }
             fixTranslation()
@@ -100,8 +104,9 @@ class ZoomClass :
         mSaveScale = 1f
         val scale: Float
         val drawable = drawable
-        if (drawable == null || drawable.intrinsicWidth == 0 || drawable.intrinsicHeight == 0)
+        if (drawable == null || drawable.intrinsicWidth == 0 || drawable.intrinsicHeight == 0) {
             return
+        }
         val imageWidth = drawable.intrinsicWidth
         val imageHeight = drawable.intrinsicHeight
         val scaleX = viewWidth.toFloat() / imageWidth.toFloat()

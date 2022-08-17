@@ -6,7 +6,7 @@ import com.ayodkay.apps.swen.BuildConfig.DEBUG
 object AppLog {
 
     fun l(message: Any) {
-        if (DEBUG) {
+        if (DEBUG || Helper.isEmulator()) {
             Log.d("log", "AppLog: $message")
         }
     }

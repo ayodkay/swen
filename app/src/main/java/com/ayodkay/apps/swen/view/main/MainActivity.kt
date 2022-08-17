@@ -6,35 +6,34 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Address
+import android.location.Geocoder
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.ActivityNavigator
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
-import androidx.work.Data
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.ActivityMainBinding
-import com.ayodkay.apps.swen.helper.App.Companion.scheduleNotification
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.backend.MyReachability
-import com.ayodkay.apps.swen.helper.location.CoGeocoder
-import com.ayodkay.apps.swen.helper.location.CoLocation
-import com.ayodkay.apps.swen.helper.work.NotifyWork.Companion.NOTIFICATION_ID
-import com.google.firebase.messaging.FirebaseMessaging
+import com.ayodkay.apps.swen.helper.extentions.ifNull
+import com.ayodkay.apps.swen.helper.room.userlocation.Location as LocationDatabase
+import com.onesignal.OneSignal
 import java.util.*
+import org.json.JSONObject
 
 private const val REQUEST_CODE = 101
 
-@Suppress("UNCHECKED_CAST")
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val navController get() = findNavController(R.id.nav_host_fragment)
@@ -44,33 +43,25 @@ class MainActivity : AppCompatActivity() {
         Helper.goDark(this)
     }
 
-    private val activityViewModel: MainActivityViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MainActivityViewModel(
-                    CoLocation.from(this@MainActivity),
-                    CoGeocoder.from(this@MainActivity),
-                    this@MainActivity.application
-                ) as T
-            }
-        }
-    }
+    private val activityViewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val data = Data.Builder().putInt(NOTIFICATION_ID, 0).build()
-        scheduleNotification(data, this)
         permissionCheck()
+        if (Build.VERSION.SDK_INT >= 33) {
+            permissionToPost()
+        }
         binding.bubbleTabBar.addBubbleListener { id ->
             onNavDestinationSelected(id, navController)
         }
         val defaultStatusBarColor = window.statusBarColor
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            sendAnalytics(destination.id)
 
-            if (bottomBarIds().contains(destination.id)) {
+            if (activityViewModel.bottomBarIds().contains(destination.id)) {
                 binding.cardview.visibility = View.VISIBLE
             } else {
                 binding.cardview.visibility = View.GONE
@@ -95,16 +86,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun bottomBarIds(): ArrayList<Int> {
-        return arrayListOf(
-            R.id.nav_main_swen, R.id.navigation_bookmarks, R.id.nav_main_search,
-            R.id.nav_main_links, R.id.nav_settings
-        )
-    }
-
     private fun onNavDestinationSelected(
         itemId: Int,
-        navController: NavController,
+        navController: NavController
     ): Boolean {
         val builder = NavOptions.Builder().setLaunchSingleTop(true)
         if (navController.currentDestination!!.parent!!.findNode(itemId) is
@@ -130,39 +114,79 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onAddressUpdate(address: Address?) {
-        if (address != null) {
-            subscribeCountryName(address)
-        }
-    }
-
-    private fun onLocationUpdate(location: Location) {}
-
     @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            REQUEST_SHOW_SETTINGS -> {
-                if ((
-                    grantResults.isNotEmpty() &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    )
-                ) {
-                    lifecycle.addObserver(activityViewModel)
-                    activityViewModel.addressUpdates.observe(this, this::onAddressUpdate)
-                    activityViewModel.locationUpdates.observe(this, this::onLocationUpdate)
-                    activityViewModel.resolveSettingsEvent.observe(this) {
-                        it.resolve(
-                            this,
-                            REQUEST_SHOW_SETTINGS
+            REQUEST_LOCATION_PERMISSION -> {
+                with(activityViewModel) {
+                    if ((
+                        grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        )
+                    ) {
+                        fusedLocationClient.lastLocation
+                            .addOnSuccessListener { userLocation: Location? ->
+                                userLocation?.let { location ->
+                                    if (Build.VERSION.SDK_INT >= 33) {
+                                        Geocoder(this@MainActivity, Locale.getDefault())
+                                            .getFromLocation(
+                                                location.latitude,
+                                                location.longitude,
+                                                1
+                                            ) {
+                                                it.firstOrNull()?.let { address ->
+                                                    subscribeCountryName(address)
+                                                }
+                                            }
+                                    } else {
+                                        Geocoder(this@MainActivity, Locale.getDefault())
+                                            .getFromLocation(
+                                                location.latitude,
+                                                location.longitude,
+                                                1
+                                            )
+                                            ?.firstOrNull()
+                                            ?.let { address -> subscribeCountryName(address) }
+                                    }
+                                }
+                            }
+                    } else {
+                        val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                        val countryCodeValue = tm.networkCountryIso
+                        subscribeCountryName(
+                            Address(Locale.getDefault()).apply {
+                                latitude = 40.712742
+                                longitude = -74.013382
+                                countryCode = countryCodeValue
+                            }
                         )
                     }
                 }
             }
+
+            REQUEST_POST_PERMISSION -> {
+                OneSignal.provideUserConsent(true)
+            }
+        }
+    }
+
+    @RequiresApi(33)
+    private fun permissionToPost() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_POST_PERMISSION
+            )
         }
     }
 
@@ -182,24 +206,41 @@ class MainActivity : AppCompatActivity() {
             ) {
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_SHOW_SETTINGS
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_LOCATION_PERMISSION
                 )
             } else {
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_SHOW_SETTINGS
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_LOCATION_PERMISSION
                 )
             }
         } else {
             Thread {
                 when {
                     MyReachability.hasInternetConnected(this) -> runOnUiThread {
-                        lifecycle.addObserver(activityViewModel)
-                        activityViewModel.addressUpdates.observe(this, this::onAddressUpdate)
-                        activityViewModel.locationUpdates.observe(this, this::onLocationUpdate)
-                        activityViewModel.resolveSettingsEvent.observe(this) {
-                            it.resolve(this, REQUEST_SHOW_SETTINGS)
-                        }
+                        activityViewModel.fusedLocationClient.lastLocation
+                            .addOnSuccessListener { userLocation: Location? ->
+                                userLocation?.let {
+                                    kotlin.runCatching {
+                                        if (Build.VERSION.SDK_INT >= 33) {
+                                            Geocoder(this, Locale.getDefault())
+                                                .getFromLocation(it.latitude, it.longitude, 1) {
+                                                    it.firstOrNull()
+                                                        ?.let { address ->
+                                                            subscribeCountryName(address)
+                                                        }
+                                                }
+                                        } else {
+                                            Geocoder(this@MainActivity, Locale.getDefault())
+                                                .getFromLocation(it.latitude, it.longitude, 1)
+                                                ?.firstOrNull()
+                                                ?.let { address -> subscribeCountryName(address) }
+                                        }
+                                    }
+                                }
+                            }
                     }
                     else -> runOnUiThread {
                         Toast.makeText(this, getString(R.string.internet_lost), Toast.LENGTH_SHORT)
@@ -211,35 +252,48 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun subscribeCountryName(addresses: Address) {
-        val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
-        val isSubscribeToUpdate = sharedPref.getBoolean("isSubscribeToUpdate", false)
-
-        if (!isSubscribeToUpdate) {
-            FirebaseMessaging.getInstance()
-                .subscribeToTopic("update")
-                .addOnCompleteListener {
-                    with(sharedPref.edit()) {
-                        putBoolean("isSubscribeToUpdate", true)
-                        apply()
-                    }
-                }
-        }
-
         val addressCode = addresses.countryCode.lowercase(Locale.ROOT)
-        if (Helper.topCountries(addressCode)) {
-            FirebaseMessaging.getInstance()
-                .unsubscribeFromTopic("engage")
-                .addOnCompleteListener { }
-
-            FirebaseMessaging.getInstance()
-                .subscribeToTopic(addressCode)
-                .addOnCompleteListener {}
-        } else {
-            FirebaseMessaging.getInstance()
-                .subscribeToTopic("engage")
-                .addOnCompleteListener { }
+        OneSignal.sendTag("country", addressCode)
+        with(activityViewModel.getSelectedLocationDao) {
+            delete()
+            insertAll(
+                LocationDatabase(
+                    latitude = addresses.latitude,
+                    longitude = addresses.longitude,
+                    countryCode = addressCode,
+                    country = addresses.countryName.ifNull { "default" }
+                )
+            )
         }
-        activityViewModel.stopJob()
+    }
+
+    private fun sendAnalytics(destination: Int) {
+        when (destination) {
+            R.id.nav_main_swen -> {
+                val props = JSONObject().put("source", "Home Fragment")
+                activityViewModel.mixpanel.track("Tab Click", props)
+            }
+
+            R.id.navigation_bookmarks -> {
+                val props = JSONObject().put("source", "Bookmark Fragment")
+                activityViewModel.mixpanel.track("Tab Click", props)
+            }
+
+            R.id.nav_main_search -> {
+                val props = JSONObject().put("source", "Search Fragment")
+                activityViewModel.mixpanel.track("Tab Click", props)
+            }
+
+            R.id.nav_main_links -> {
+                val props = JSONObject().put("source", "Link Fragment")
+                activityViewModel.mixpanel.track("Tab Click", props)
+            }
+
+            R.id.nav_settings -> {
+                val props = JSONObject().put("source", "Settings Fragment")
+                activityViewModel.mixpanel.track("Tab Click", props)
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -256,6 +310,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val REQUEST_SHOW_SETTINGS = 123
+        private const val REQUEST_LOCATION_PERMISSION = 123
+        private const val REQUEST_POST_PERMISSION = 1244
     }
 }

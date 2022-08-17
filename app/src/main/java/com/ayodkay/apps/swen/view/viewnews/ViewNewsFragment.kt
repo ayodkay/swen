@@ -12,12 +12,17 @@ import android.provider.MediaStore
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -37,6 +42,7 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import java.io.ByteArrayOutputStream
 import java.util.*
+import org.json.JSONObject
 
 class ViewNewsFragment : BaseFragment() {
     var talky: TextToSpeech? = null
@@ -44,15 +50,10 @@ class ViewNewsFragment : BaseFragment() {
     private val args: ViewNewsFragmentArgs by navArgs()
     lateinit var binding: FragmentViewNewsBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentViewNewsBinding.inflate(inflater, container, false).apply {
         viewModel = viewNewsViewModel
         with(viewNewsViewModel) {
@@ -77,6 +78,25 @@ class ViewNewsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewNewsViewModel.loadAd.set(true)
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    // Handle the menu selection
+                    return when (menuItem.itemId) {
+                        android.R.id.home -> {
+                            findNavController().popBackStack()
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            },
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED
+        )
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
         onBackPressed {
             when (bottomSheetBehavior.state) {
@@ -117,6 +137,7 @@ class ViewNewsFragment : BaseFragment() {
                                     viewNewsViewModel.isTalkingDrawable.set(
                                         R.drawable.ic_baseline_stop_24
                                     )
+                                    viewNewsViewModel.mixpanel.track("Play onStart")
                                 }
 
                                 override fun onDone(utteranceId: String?) {
@@ -124,9 +145,12 @@ class ViewNewsFragment : BaseFragment() {
                                     viewNewsViewModel.isTalkingDrawable.set(
                                         R.drawable.ic_baseline_play_arrow_24
                                     )
+                                    viewNewsViewModel.mixpanel.track("Play onDone")
                                 }
 
-                                override fun onError(utteranceId: String?) {}
+                                @Deprecated("Deprecated in Java")
+                                override fun onError(utteranceId: String?) {
+                                }
                             })
                     }
                 } else {
@@ -138,6 +162,7 @@ class ViewNewsFragment : BaseFragment() {
         viewNewsViewModel.playEvent.observe(viewLifecycleOwner) {
             with(viewNewsViewModel) {
                 if (isPlaying.get() == true) {
+                    viewNewsViewModel.mixpanel.track("Play onStop")
                     talky!!.stop()
                     viewNewsViewModel.isTalkingDrawable.set(
                         R.drawable.ic_baseline_play_arrow_24
@@ -160,7 +185,6 @@ class ViewNewsFragment : BaseFragment() {
             if (viewNewsViewModel.image.isNotBlank()) {
                 Picasso.get().load(viewNewsViewModel.image).into(object : Target {
                     override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
-
                         shareNews.type = "image/jpeg"
                         shareNews.putExtra(
                             Intent.EXTRA_TEXT,
@@ -169,7 +193,8 @@ class ViewNewsFragment : BaseFragment() {
                         try {
                             val uri = getImageUri(bitmap)
                             shareNews.putExtra(
-                                Intent.EXTRA_STREAM, uri
+                                Intent.EXTRA_STREAM,
+                                uri
                             )
                             startActivity(
                                 Intent.createChooser(
@@ -177,6 +202,7 @@ class ViewNewsFragment : BaseFragment() {
                                     getString(R.string.share_news)
                                 )
                             )
+                            shareNewAnalytics()
                         } catch (e: Exception) {
                             checkPermission()
                         }
@@ -191,12 +217,14 @@ class ViewNewsFragment : BaseFragment() {
                     Intent.EXTRA_TEXT,
                     "\n\n${viewNewsViewModel.title}\n${viewNewsViewModel.dynamicLink}"
                 )
-
+                shareNewAnalytics()
                 startActivity(Intent.createChooser(shareNews, getString(R.string.share_news)))
             }
         }
 
         viewNewsViewModel.fullArticleEvent.observe(viewLifecycleOwner) {
+            val props = JSONObject().put("url", viewNewsViewModel.url)
+            viewNewsViewModel.mixpanel.track("View Full Article", props)
             navigateTo(
                 ViewNewsFragmentDirections.actionNavViewNewsToNavWebView(
                     link = viewNewsViewModel.url,
@@ -212,6 +240,7 @@ class ViewNewsFragment : BaseFragment() {
         }
 
         viewNewsViewModel.viewImageEvent.observe(viewLifecycleOwner) {
+            viewNewsViewModel.mixpanel.track("View Image")
             navigateTo(
                 ViewNewsFragmentDirections.actionNavViewNewsToNavViewImage(
                     image = viewNewsViewModel.image
@@ -220,15 +249,21 @@ class ViewNewsFragment : BaseFragment() {
         }
 
         viewNewsViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
+            viewNewsViewModel.mixpanel.track("actionNavViewNewsSelf")
             navigateTo(
                 ViewNewsFragmentDirections.actionNavViewNewsSelf(
-                    source = it.source.name, url = it.url, image = it.urlToImage, title = it.title,
-                    content = it.content, description = it.description
+                    source = it.source.name.ifNull { "" },
+                    url = it.url.ifNull { "" },
+                    image = it.urlToImage.ifNull { "" },
+                    title = it.title.ifNull { "" },
+                    content = it.content.ifNull { it.description.ifNull { "" } },
+                    description = it.description.ifNull { "" }
                 )
             )
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
             android.R.id.home -> {
@@ -254,12 +289,19 @@ class ViewNewsFragment : BaseFragment() {
         return Uri.parse(path)
     }
 
+    private fun shareNewAnalytics() {
+        val props = JSONObject()
+        props.put("source", "View News Fragment")
+        props.put("url", viewNewsViewModel.url)
+        viewNewsViewModel.mixpanel.track("Share News", props)
+    }
+
     private fun checkPermission() {
         when (PackageManager.PERMISSION_GRANTED) {
             ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ),
+            )
             -> {
             }
             else -> {
@@ -282,19 +324,27 @@ class ViewNewsFragment : BaseFragment() {
     }
 
     private fun loadMore(query: String) {
-
         val everythingBuilder = EverythingBuilder.Builder()
             .q(query)
             .sortBy("publishedAt")
             .pageSize(100)
             .build()
 
-        with(Helper.setUpNewsClient(requireActivity())) {
+        with(
+            Helper.setUpNewsClient(
+                requireActivity(),
+                viewNewsViewModel.firebaseInterface.remoteConfig.getString("news_api_key")
+            )
+        ) {
             getEverything(
                 everythingBuilder,
                 object : ArticlesLiveDataResponseCallback {
                     override fun onFailure(throwable: Throwable) {
                         viewNewsViewModel.showBottomSheet.set(false)
+                        val props = JSONObject()
+                        props.put("source", "View News Fragment")
+                        props.put("reason", throwable.toString())
+                        viewNewsViewModel.mixpanel.track("onFailure", props)
                     }
 
                     override fun onSuccess(response: MutableLiveData<ArticleResponse>) {

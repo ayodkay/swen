@@ -8,16 +8,16 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.ayodkay.apps.swen.databinding.FragmentSplashBinding
 import com.ayodkay.apps.swen.helper.BaseFragment
-import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.extentions.isNotNull
-import com.facebook.appevents.AppEventsLogger
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
+import org.json.JSONObject
 
 private const val MY_REQUEST_CODE = 1
 private val TAG = SplashFragment::class.java.name
@@ -40,7 +40,7 @@ class SplashFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentSplashBinding.inflate(layoutInflater, container, false).apply {
         viewModel = splashViewModel
     }.root
@@ -52,7 +52,8 @@ class SplashFragment : BaseFragment() {
         if (isPush.isNotNull() && link.toString().isNotEmpty()) {
             navigateTo(
                 SplashFragmentDirections.actionNavSplashToNavWebView(
-                    link = link.toString(), navigateToMain = true
+                    link = link.toString(),
+                    navigateToMain = true
                 )
             )
         } else {
@@ -61,7 +62,9 @@ class SplashFragment : BaseFragment() {
                 .addOnSuccessListener(requireActivity()) { pendingDynamicLinkData ->
                     // Get deep link from result (may be null if no link is found)
                     if (pendingDynamicLinkData != null) {
-                        AppEventsLogger.newLogger(requireContext()).logEvent("dynamicLink")
+                        val props = JSONObject()
+                        props.put("url", pendingDynamicLinkData.link.toString())
+                        splashViewModel.mixpanel.track("Dynamic Link", props)
                         navigateTo(
                             SplashFragmentDirections.actionNavSplashToNavWebView(
                                 link = pendingDynamicLinkData.link.toString(),
@@ -77,8 +80,7 @@ class SplashFragment : BaseFragment() {
                                 UpdateAvailability.UPDATE_AVAILABLE &&
                                 appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
                             ) {
-                                AppEventsLogger
-                                    .newLogger(requireContext()).logEvent("in-appUpdate")
+                                splashViewModel.mixpanel.track("in-appUpdate")
 
                                 splashViewModel.appUpdateManager.apply {
                                     registerListener(splashViewModel.listener)
@@ -119,11 +121,14 @@ class SplashFragment : BaseFragment() {
 
     @Suppress("SENSELESS_COMPARISON")
     private fun nextActivity() {
-        val db = Helper.getCountryDatabase(requireContext())
-        if (db.countryDao().getAll() != null) {
-            navigateTo(SplashFragmentDirections.actionNavSplashToNavMainSwen())
-        } else {
-            navigateTo(SplashFragmentDirections.actionNavSplashToNavLocation())
+        with(splashViewModel.getSelectedCountryDao) {
+            lifecycleScope.launchWhenStarted {
+                if (countryDao().getAll() != null) {
+                    navigateTo(SplashFragmentDirections.actionNavSplashToNavMainSwen())
+                } else {
+                    navigateTo(SplashFragmentDirections.actionNavSplashToNavLocation())
+                }
+            }
         }
     }
 }

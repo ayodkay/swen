@@ -15,15 +15,15 @@ applovin {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.ayodkay.apps.swen"
         minSdkVersion 21
-        targetSdkVersion 32
-        versionCode 40
-        versionName "4.1"
+        targetSdkVersion 33
+        versionCode 45
+        versionName "4.5"
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -49,6 +49,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs += [
+                "-Xopt-in=kotlin.RequiresOptIn",
+                "-Xopt-in=kotlin.OptIn"]
     }
 
 
@@ -66,41 +69,44 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.21'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.7.10'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
-    implementation 'com.google.android.gms:play-services-ads:21.0.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.1'
+    implementation 'com.google.android.gms:play-services-ads:21.1.0'
     implementation 'androidx.preference:preference-ktx:1.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    def lottieVersion = '5.0.3'
+    def lottieVersion = '5.2.0'
     implementation "com.airbnb.android:lottie:$lottieVersion"
 
-    def room_version = "2.4.2"
+    def room_version = "2.4.3"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'com.google.firebase:firebase-perf:20.1.0'
-    implementation 'com.google.firebase:firebase-messaging:23.0.5'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.11'
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.0.0'
-    implementation 'com.google.firebase:firebase-dynamic-links-ktx:21.0.1'
+    implementation 'com.google.code.gson:gson:2.9.1'
+
+    implementation platform('com.google.firebase:firebase-bom:30.3.2')
+    implementation 'com.google.firebase:firebase-config-ktx'
+    implementation 'com.google.firebase:firebase-perf-ktx'
+    implementation 'com.google.firebase:firebase-messaging:23.0.7'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-dynamic-links-ktx'
 
     //picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
@@ -110,7 +116,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6'
 
     //glide
-    implementation 'com.github.bumptech.glide:glide:4.13.1'
+    implementation 'com.github.bumptech.glide:glide:4.13.2'
 
     //retrofit2
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -118,25 +124,28 @@ dependencies {
 
     /// Kotlin syntax
     implementation 'com.google.android.play:core:1.10.3'
-    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
 
     implementation "androidx.work:work-runtime-ktx:2.7.1"
 
-    implementation 'com.facebook.android:facebook-android-sdk:13.1.0'
+    implementation 'com.mixpanel.android:mixpanel-android:6.4.0'
 
-    implementation 'com.applovin:applovin-sdk:11.3.3'
+    implementation 'com.applovin:applovin-sdk:11.4.4'
 
     implementation 'io.ak1:bubbletabbar:1.0.8'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1-native-mt'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.1-native-mt'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4'
 
 
     implementation 'com.github.ayodkay:NewsApiClient-Kotlin:1.0.5'
-    implementation 'com.google.mlkit:language-id:17.0.3'
+    implementation 'com.google.mlkit:language-id:17.0.4'
 
-    implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
+    implementation 'com.onesignal:OneSignal:4.8.2'
 
-    implementation 'org.jsoup:jsoup:1.15.1'
+    implementation 'org.jsoup:jsoup:1.15.2'
+
+    implementation "io.insert-koin:koin-android:3.2.0"
+    implementation "io.insert-koin:koin-core:3.2.0"
 
 }

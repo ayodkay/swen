@@ -6,10 +6,13 @@ import android.os.Parcelable
 class Country : Parcelable, Comparable<Country> {
     @JvmField
     var code: String? = null
+
     @JvmField
     var name: String? = null
+
     @JvmField
     var iso: String? = null
+
     @JvmField
     var language: String? = null
     override fun describeContents(): Int {

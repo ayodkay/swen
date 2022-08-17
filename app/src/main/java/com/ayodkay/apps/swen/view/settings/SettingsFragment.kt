@@ -10,21 +10,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.country.Country
-import com.facebook.appevents.AppEventsLogger
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.review.ReviewManagerFactory
 
 class SettingsFragment : PreferenceFragmentCompat() {
+    private val settingsViewModel: SettingsViewModel by viewModels()
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
-        val db = Helper.getCountryDatabase(this.requireContext())
 
         val availableLanguages = arrayListOf(
             "ar", "de", "en", "es", "fr", "it", "nl", "no", "pt", "ru", "se", "zh"
@@ -36,10 +35,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         var language: String
 
-        var checkedSort = db.countryDao().getAll().position!!
+        var checkedSort = settingsViewModel.getSelectedCountryDao.countryDao().getAll().position!!
         language = availableLanguages[checkedSort]
 
-        val selected = isAvailable(availableLanguages, db.countryDao().getAll().iso)
+        val selected = isAvailable(
+            availableLanguages,
+            settingsViewModel.getSelectedCountryDao.countryDao().getAll().iso
+        )
+
         if (selected > -1) {
             language = availableLanguages[selected]
             checkedSort = selected
@@ -69,7 +72,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
         share?.setOnPreferenceClickListener {
-            AppEventsLogger.newLogger(requireContext()).logEvent("appShare")
+            settingsViewModel.mixpanel.track("Share App")
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(
@@ -89,7 +92,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
         rate?.setOnPreferenceClickListener {
-            AppEventsLogger.newLogger(requireContext()).logEvent("appRate")
+            settingsViewModel.mixpanel.track("Rate App")
             goToPlayStore(requireContext())
             true
         }
@@ -105,15 +108,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     dialog.dismiss()
                 }
                 .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
-                    val countryName = db.countryDao().getAll().country
-                    db.countryDao().delete()
-                    db.countryDao().insertAll(
-                        Country(
-                            countryName,
-                            language,
-                            checkedSort
-                        )
-                    )
+                    with(settingsViewModel.getSelectedCountryDao.countryDao()) {
+                        val countryName = getAll().country
+                        delete()
+                        insertAll(Country(countryName, language, checkedSort))
+                    }
                     dialog.dismiss()
                 }
                 // Single-choice items (initialized with checked item)
@@ -125,7 +124,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
         policy?.setOnPreferenceClickListener {
-
             MaterialAlertDialogBuilder(this.requireContext())
                 .setTitle(resources.getString(R.string.disclaimer))
                 .setMessage(resources.getString(R.string.supporting_text))
@@ -140,7 +138,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
         view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background))

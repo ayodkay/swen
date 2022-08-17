@@ -20,6 +20,7 @@ import com.github.ayodkay.builder.EverythingBuilder
 import com.github.ayodkay.builder.TopHeadlinesBuilder
 import com.github.ayodkay.models.ArticleResponse
 import com.github.ayodkay.mvvm.interfaces.ArticlesLiveDataResponseCallback
+import org.json.JSONObject
 
 class CategoryFragment : BaseFragment() {
     private val args: CategoryFragmentArgs by navArgs()
@@ -29,7 +30,7 @@ class CategoryFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentCategoryBinding.inflate(inflater, container, false).apply {
         viewModel = categoryViewModel
         with(categoryViewModel) {
@@ -42,12 +43,13 @@ class CategoryFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val props = JSONObject().put("source", args.category)
+        categoryViewModel.mixpanel.track("Category Instance", props)
         try {
-            categoryViewModel.country =
-                Helper.getCountryDatabase(requireContext()).countryDao().getAll().country
-
-            categoryViewModel.language =
-                Helper.getCountryDatabase(requireContext()).countryDao().getAll().iso
+            with(categoryViewModel.getSelectedCountryDao.countryDao().getAll()) {
+                categoryViewModel.country = country
+                categoryViewModel.language = iso
+            }
         } catch (e: Exception) {
             navigateTo(R.id.nav_location)
         }
@@ -59,9 +61,11 @@ class CategoryFragment : BaseFragment() {
         categoryViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
             navigateTo(
                 MainControlDirections.actionToViewNews(
-                    source = it.source.name.ifNull { "" }, url = it.url.ifNull { "" },
-                    image = it.urlToImage.ifNull { "" }, title = it.title.ifNull { "" },
-                    content = it.content.ifNull { it.description },
+                    source = it.source.name.ifNull { "" },
+                    url = it.url.ifNull { "" },
+                    image = it.urlToImage.ifNull { "" },
+                    title = it.title.ifNull { "" },
+                    content = it.content.ifNull { it.description.ifNull { "" } },
                     description = it.description.ifNull { "" }
                 )
             )
@@ -69,7 +73,12 @@ class CategoryFragment : BaseFragment() {
     }
 
     private fun loadNews() {
-        with(Helper.setUpNewsClient(requireActivity())) {
+        with(
+            Helper.setUpNewsClient(
+                requireActivity(),
+                categoryViewModel.firebaseInterface.remoteConfig.getString("news_api_key")
+            )
+        ) {
             if (categoryViewModel.category.isEmpty()) {
                 val everythingBuilder = EverythingBuilder.Builder()
                     .q(categoryViewModel.q)
@@ -87,6 +96,10 @@ class CategoryFragment : BaseFragment() {
                             if (throwable.toString() == ErrorMessage.unknownHostException) {
                                 categoryViewModel.emptyText.set("Internet Error")
                             }
+                            val props = JSONObject()
+                            props.put("source", categoryViewModel.category)
+                            props.put("reason", throwable.toString())
+                            categoryViewModel.mixpanel.track("onFailure", props)
                         }
 
                         override fun onSuccess(response: MutableLiveData<ArticleResponse>) {
@@ -119,6 +132,10 @@ class CategoryFragment : BaseFragment() {
                             if (throwable.toString() == ErrorMessage.unknownHostException) {
                                 categoryViewModel.emptyText.set("Internet Error")
                             }
+                            val props = JSONObject()
+                            props.put("source", categoryViewModel.category)
+                            props.put("reason", throwable.toString())
+                            categoryViewModel.mixpanel.track("onFailure", props)
                         }
 
                         override fun onSuccess(response: MutableLiveData<ArticleResponse>) {

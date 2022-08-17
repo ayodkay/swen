@@ -6,7 +6,14 @@ import android.location.Location
 import android.os.Looper
 import androidx.annotation.RequiresPermission
 import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationAvailability
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.CancellationTokenSource
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -33,11 +40,15 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
         locationProvider.flushLocations().await()
     }
 
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     override suspend fun isLocationAvailable(): Boolean =
         locationProvider.locationAvailability.await().isLocationAvailable
 
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     override suspend fun getCurrentLocation(priority: Int): Location? =
         suspendCancellableCoroutine { cont ->
             val cancellationTokenSource = CancellationTokenSource()
@@ -51,23 +62,30 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
             cont.invokeOnCancellation { cancellationTokenSource.cancel() }
         }
 
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     override suspend fun getLastLocation(): Location? = locationProvider.lastLocation.await()
 
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     override suspend fun getLocationUpdate(locationRequest: LocationRequest): Location =
         suspendCancellableCoroutine { cont ->
             lateinit var callback: ClearableLocationCallback
             callback = object : LocationCallback() {
                 override fun onLocationResult(result: LocationResult) {
-                    cont.resume(result.lastLocation)
+                    result.lastLocation?.let {
+                        cont.resume(it)
+                    }
                     locationProvider.removeLocationUpdates(callback)
                     callback.clear()
                 }
             }.let(::ClearableLocationCallback) // Needed since we would have memory leaks otherwise
 
             locationProvider.requestLocationUpdates(
-                locationRequest, callback,
+                locationRequest,
+                callback,
                 Looper.getMainLooper()
             ).apply {
                 addOnCanceledListener {
@@ -82,16 +100,20 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
         }
 
     @ExperimentalCoroutinesApi
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     override fun getLocationUpdates(
         locationRequest: LocationRequest,
-        capacity: Int,
+        capacity: Int
     ): Flow<Location> =
         callbackFlow<Location> {
             val callback = object : LocationCallback() {
                 private var counter: Int = 0
                 override fun onLocationResult(result: LocationResult) {
-                    trySendBlocking(result.lastLocation)
+                    result.lastLocation?.let {
+                        trySendBlocking(it)
+                    }
                     if (locationRequest.numUpdates == ++counter) close()
                 }
             }.let(::ClearableLocationCallback) // Needed since we would have memory leaks otherwise
@@ -138,12 +160,16 @@ internal class CoLocationImpl(private val context: Context) : CoLocation {
                 .build()
         )
 
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     override suspend fun setMockLocation(location: Location) {
         locationProvider.setMockLocation(location).await()
     }
 
-    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+    )
     override suspend fun setMockMode(isMockMode: Boolean) {
         locationProvider.setMockMode(isMockMode).await()
     }

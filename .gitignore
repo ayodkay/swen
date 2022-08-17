@@ -28,3 +28,4 @@
 /app/debug/
 /.idea/
 /.idea/codeStyles/
+/app/src/main/res/xml/remote_config_defaults.xml
