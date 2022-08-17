@@ -124,7 +124,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
         policy?.setOnPreferenceClickListener {
-
             MaterialAlertDialogBuilder(this.requireContext())
                 .setTitle(resources.getString(R.string.disclaimer))
                 .setMessage(resources.getString(R.string.supporting_text))
@@ -139,7 +138,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
         view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background))

@@ -7,7 +7,7 @@ import androidx.work.WorkerParameters
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
-import com.ayodkay.apps.swen.helper.onesignal.Notification
+import com.ayodkay.apps.swen.helper.onesignal.OneSignalNotification
 import com.ayodkay.apps.swen.helper.onesignal.OneSignalNotificationSender
 import com.github.ayodkay.builder.TopHeadlinesBuilder
 import com.github.ayodkay.client.NewsApiClient
@@ -38,7 +38,13 @@ class NotifyWork(private val context: Context, params: WorkerParameters) :
             "us"
         }
         val category = arrayOf(
-            "general", "entertainment", "sports", "business", "health", "science", "technology",
+            "general",
+            "entertainment",
+            "sports",
+            "business",
+            "health",
+            "science",
+            "technology"
         ).random()
         val newsApiClientWithObserver = setUpNewsClient()
         val topHeadlinesBuilder = TopHeadlinesBuilder.Builder()
@@ -74,43 +80,34 @@ class NotifyWork(private val context: Context, params: WorkerParameters) :
     private fun sendNotification(message: String) {
         OneSignalNotificationSender
             .sendDeviceNotification(
-                Notification(
+                OneSignalNotification(
                     "Breaking News",
-                    setNotificationData(message),
+                    message,
+                    "\u200E",
                     "ic_stat_onesignal_default.png",
                     context.getString(R.string.notification_icon),
-                    "[]", true, 0
+                    context.getString(R.string.ic_logo),
+                    "",
+                    "",
+                    "[]",
+                    true
                 ),
                 context
             )
-    }
-
-    private fun setNotificationData(message: String): Array<Array<String>> {
-        return arrayOf(
-            arrayOf(
-                message, "\u200E", context.getString(R.string.ic_logo), "", ""
-            )
-        )
     }
 
     private fun sendNotification(news: Article) {
         OneSignalNotificationSender
             .sendDeviceNotificationWithRequest(
-                Notification(
+                OneSignalNotification(
                     "Breaking News",
-                    setNotificationData(news),
-                    "ic_stat_onesignal_default.png",
-                    context.getString(R.string.notification_icon),
-                    "[]", true, 0
+                    news.title,
+                    news.description, "ic_stat_onesignal_default.png",
+                    news.urlToImage, news.urlToImage, news.url, "", "[]",
+                    true
                 ),
                 context
             )
-    }
-
-    private fun setNotificationData(news: Article): Array<Array<String>> {
-        return arrayOf(
-            arrayOf(news.title, news.description, news.urlToImage, news.urlToImage, news.url)
-        )
     }
 
     companion object {

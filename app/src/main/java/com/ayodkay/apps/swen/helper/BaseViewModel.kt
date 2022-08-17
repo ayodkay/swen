@@ -1,19 +1,18 @@
 package com.ayodkay.apps.swen.helper
 
 import android.app.Application
+import androidx.core.content.ContextCompat
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.nativeAds.MaxNativeAdLoader
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.event.SingleLiveEvent
+import com.ayodkay.apps.swen.helper.firebase.FirebaseInterface
 import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.helper.room.links.Links
 import com.github.ayodkay.models.Article
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -38,16 +37,20 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     val getSelectedCountryDao = Helper.getCountryDatabase(application.applicationContext)
     val getSelectedLocationDao =
         Helper.getLocationDatabase(application.applicationContext).locationDao()
-    val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
+    val firebaseInterface: FirebaseInterface by inject()
 
     init {
         val configSettings = remoteConfigSettings {
             minimumFetchIntervalInSeconds = 3600
         }
-        remoteConfig.setConfigSettingsAsync(configSettings)
-        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
-        remoteConfig.fetchAndActivate()
-            .addOnCompleteListener(application.mainExecutor) { }
+        with(firebaseInterface) {
+            remoteConfig.setConfigSettingsAsync(configSettings)
+            remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+            remoteConfig.fetchAndActivate()
+                .addOnCompleteListener(
+                    ContextCompat.getMainExecutor(application.applicationContext)
+                ) { }
+        }
     }
 }
 

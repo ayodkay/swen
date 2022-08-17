@@ -20,7 +20,7 @@ class LocationFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentLocationBinding.inflate(inflater, container, false).apply {
         viewModel = locationViewModel
     }.root
@@ -39,7 +39,7 @@ class LocationFragment : BaseFragment() {
                         name: String,
                         code: String,
                         iso: String,
-                        language: String,
+                        language: String
                     ) {
                         with(locationViewModel.getSelectedCountryDao.countryDao()) {
                             delete()

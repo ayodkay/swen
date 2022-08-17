@@ -40,7 +40,7 @@ class SplashFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentSplashBinding.inflate(layoutInflater, container, false).apply {
         viewModel = splashViewModel
     }.root
@@ -52,7 +52,8 @@ class SplashFragment : BaseFragment() {
         if (isPush.isNotNull() && link.toString().isNotEmpty()) {
             navigateTo(
                 SplashFragmentDirections.actionNavSplashToNavWebView(
-                    link = link.toString(), navigateToMain = true
+                    link = link.toString(),
+                    navigateToMain = true
                 )
             )
         } else {

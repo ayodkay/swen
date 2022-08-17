@@ -39,7 +39,7 @@ class MaxAdsRecyclerView internal constructor(
     private var nativeAdLoader: MaxNativeAdLoader,
     var nativeAd: MaxAd? = null,
     val listener: CardClick? = null,
-    val linkCardClick: LinkCardClick? = null,
+    val linkCardClick: LinkCardClick? = null
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val isLinkView = links.isNotEmpty()
@@ -83,7 +83,8 @@ class MaxAdsRecyclerView internal constructor(
                 bookmarkRoomVM?.let {
                     holder.bind(
                         newsList.getOrNull(position) ?: return,
-                        it, listener
+                        it,
+                        listener
                     )
                 }
             }
@@ -124,7 +125,7 @@ class MaxAdsRecyclerView internal constructor(
                     MaxNativeAdListener() {
                     override fun onNativeAdLoaded(
                         nativeAdView: MaxNativeAdView?,
-                        ad: MaxAd,
+                        ad: MaxAd
                     ) {
                         binding.loading = false
                         // Cleanup any pre-existing native ad to prevent memory leaks.
@@ -143,7 +144,7 @@ class MaxAdsRecyclerView internal constructor(
 
                     override fun onNativeAdLoadFailed(
                         adUnitId: String,
-                        maxError: MaxError,
+                        maxError: MaxError
                     ) {
                         binding.loading = false
                         binding.showError = true
@@ -192,9 +193,14 @@ class MaxAdsRecyclerView internal constructor(
                     newsBookMark()
                     bookMarkRoom.insert(
                         BookMarkRoom(
-                            url = url, source = source, author = author, title = title,
-                            description = description, urlToImage = urlToImage, publishedAt = date,
-                            content = content,
+                            url = url,
+                            source = source,
+                            author = author,
+                            title = title,
+                            description = description,
+                            urlToImage = urlToImage,
+                            publishedAt = date,
+                            content = content
                         )
                     )
                     binding.bookmarkID = R.drawable.ic_round_bookmark_white

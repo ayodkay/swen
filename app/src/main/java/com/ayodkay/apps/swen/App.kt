@@ -13,6 +13,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.applovin.sdk.AppLovinSdk
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.backend.BootReceiver
 import com.ayodkay.apps.swen.helper.backend.PowerButtonBroadcastReceiver
 import com.ayodkay.apps.swen.helper.di.appModule
@@ -52,7 +53,7 @@ class App : Application() {
             initializeSdk {}
         }
 
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG || Helper.isEmulator()) {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
         }
         when (sharedPrefs.getInt(KEY_THEME, THEME_UNDEFINED)) {
@@ -82,7 +83,10 @@ class App : Application() {
         fun scheduleNotification(data: Data, context: Context) {
             val nWorkerParameters =
                 PeriodicWorkRequest.Builder(
-                    NotifyWork::class.java, 4, TimeUnit.HOURS, 15,
+                    NotifyWork::class.java,
+                    6,
+                    TimeUnit.HOURS,
+                    15,
                     TimeUnit.MINUTES
                 ).apply {
                     setInitialDelay(30, TimeUnit.MINUTES)
@@ -92,7 +96,8 @@ class App : Application() {
 
             WorkManager.getInstance(context).apply {
                 enqueueUniquePeriodicWork(
-                    NotifyWork.NOTIFICATION_WORK, ExistingPeriodicWorkPolicy.KEEP,
+                    NotifyWork.NOTIFICATION_WORK,
+                    ExistingPeriodicWorkPolicy.KEEP,
                     nWorkerParameters
                 )
             }

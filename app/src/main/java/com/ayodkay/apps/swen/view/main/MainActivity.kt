@@ -1,18 +1,21 @@
 package com.ayodkay.apps.swen.view.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.telephony.TelephonyManager
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.ActivityNavigator
@@ -24,10 +27,10 @@ import com.ayodkay.apps.swen.databinding.ActivityMainBinding
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.backend.MyReachability
 import com.ayodkay.apps.swen.helper.extentions.ifNull
+import com.ayodkay.apps.swen.helper.room.userlocation.Location as LocationDatabase
 import com.onesignal.OneSignal
 import java.util.*
 import org.json.JSONObject
-import com.ayodkay.apps.swen.helper.room.userlocation.Location as LocationDatabase
 
 private const val REQUEST_CODE = 101
 
@@ -47,9 +50,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         permissionCheck()
-//        if (Build.VERSION.SDK_INT > 32) {
-//            permissionToPost()
-//        }
+        if (Build.VERSION.SDK_INT >= 33) {
+            permissionToPost()
+        }
         binding.bubbleTabBar.addBubbleListener { id ->
             onNavDestinationSelected(id, navController)
         }
@@ -85,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun onNavDestinationSelected(
         itemId: Int,
-        navController: NavController,
+        navController: NavController
     ): Boolean {
         val builder = NavOptions.Builder().setLaunchSingleTop(true)
         if (navController.currentDestination!!.parent!!.findNode(itemId) is
@@ -111,27 +114,45 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_LOCATION_PERMISSION -> {
                 with(activityViewModel) {
                     if ((
-                                grantResults.isNotEmpty() &&
-                                        grantResults[0] == PackageManager.PERMISSION_GRANTED
-                                )
+                        grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        )
                     ) {
                         fusedLocationClient.lastLocation
                             .addOnSuccessListener { userLocation: Location? ->
-                                userLocation?.let {
-                                    Geocoder(this@MainActivity, Locale.getDefault())
-                                        .getFromLocation(it.latitude, it.longitude, 1)
-                                        .firstOrNull()
-                                        ?.let { address -> subscribeCountryName(address) }
+                                userLocation?.let { location ->
+                                    if (Build.VERSION.SDK_INT >= 33) {
+                                        Geocoder(this@MainActivity, Locale.getDefault())
+                                            .getFromLocation(
+                                                location.latitude,
+                                                location.longitude,
+                                                1
+                                            ) {
+                                                it.firstOrNull()?.let { address ->
+                                                    subscribeCountryName(address)
+                                                }
+                                            }
+                                    } else {
+                                        Geocoder(this@MainActivity, Locale.getDefault())
+                                            .getFromLocation(
+                                                location.latitude,
+                                                location.longitude,
+                                                1
+                                            )
+                                            ?.firstOrNull()
+                                            ?.let { address -> subscribeCountryName(address) }
+                                    }
                                 }
                             }
                     } else {
@@ -148,21 +169,25 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-//            REQUEST_POST_PERMISSION -> {}
+            REQUEST_POST_PERMISSION -> {
+                OneSignal.provideUserConsent(true)
+            }
         }
     }
 
+    @RequiresApi(33)
     private fun permissionToPost() {
-//        if (ActivityCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.POST_NOTIFICATIONS
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            ActivityCompat.requestPermissions(
-//                this,
-//                arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQUEST_POST_PERMISSION
-//            )
-//        }
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_POST_PERMISSION
+            )
+        }
     }
 
     private fun permissionCheck() {
@@ -181,12 +206,14 @@ class MainActivity : AppCompatActivity() {
             ) {
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_PERMISSION
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_LOCATION_PERMISSION
                 )
             } else {
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_PERMISSION
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_LOCATION_PERMISSION
                 )
             }
         } else {
@@ -196,12 +223,22 @@ class MainActivity : AppCompatActivity() {
                         activityViewModel.fusedLocationClient.lastLocation
                             .addOnSuccessListener { userLocation: Location? ->
                                 userLocation?.let {
-                                    Geocoder(this, Locale.getDefault())
-                                        .getFromLocation(it.latitude, it.longitude, 1)
-                                        .firstOrNull()
-                                        ?.let { address ->
-                                            subscribeCountryName(address)
+                                    kotlin.runCatching {
+                                        if (Build.VERSION.SDK_INT >= 33) {
+                                            Geocoder(this, Locale.getDefault())
+                                                .getFromLocation(it.latitude, it.longitude, 1) {
+                                                    it.firstOrNull()
+                                                        ?.let { address ->
+                                                            subscribeCountryName(address)
+                                                        }
+                                                }
+                                        } else {
+                                            Geocoder(this@MainActivity, Locale.getDefault())
+                                                .getFromLocation(it.latitude, it.longitude, 1)
+                                                ?.firstOrNull()
+                                                ?.let { address -> subscribeCountryName(address) }
                                         }
+                                    }
                                 }
                             }
                     }
@@ -221,8 +258,10 @@ class MainActivity : AppCompatActivity() {
             delete()
             insertAll(
                 LocationDatabase(
-                    latitude = addresses.latitude, longitude = addresses.longitude,
-                    countryCode = addressCode, country = addresses.countryName.ifNull { "default" }
+                    latitude = addresses.latitude,
+                    longitude = addresses.longitude,
+                    countryCode = addressCode,
+                    country = addresses.countryName.ifNull { "default" }
                 )
             )
         }

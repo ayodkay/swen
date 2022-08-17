@@ -49,5 +49,7 @@ fun View.accessibleTouchTarget(value: Boolean) {
 // Extension function to convert dp to px.
 fun Context.dpToPx(value: Int) =
     TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, value.toFloat(), resources.displayMetrics
+        TypedValue.COMPLEX_UNIT_DIP,
+        value.toFloat(),
+        resources.displayMetrics
     )

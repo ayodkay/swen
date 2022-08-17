@@ -63,7 +63,8 @@ private fun setEmptyImage(imageView: ImageView) {
         setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
-                R.drawable.ic_undraw_page_not_found_su7k, null
+                R.drawable.ic_undraw_page_not_found_su7k,
+                null
             )
         )
     }

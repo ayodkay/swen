@@ -3,7 +3,9 @@ package com.ayodkay.apps.swen.helper.onesignal
 import android.content.Context
 import android.content.Intent
 import com.ayodkay.apps.swen.BuildConfig
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.extentions.isNotNull
+import com.ayodkay.apps.swen.helper.firebase.FirebaseInterface
 import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
 import com.ayodkay.apps.swen.view.main.MainActivity
 import com.onesignal.OSDeviceState
@@ -12,12 +14,14 @@ import org.json.JSONObject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class OneSignalImplementation(private val mixpanel: MixPanelInterface) :
+class OneSignalImplementation() :
     OneSignalInterface, KoinComponent {
+    private val firebaseInterface: FirebaseInterface by inject()
+    private val mixpanel: MixPanelInterface by inject()
     private val context: Context by inject()
 
     override val productionKey: String
-        get() = "c029b873-28be-4fa7-9d59-111ea9682596"
+        get() = firebaseInterface.remoteConfig.getString("productionKeyOneSignal")
 
     override val debugKey: String
         get() = "1b294a36-a306-4117-8d5e-393ee674419d"
@@ -26,12 +30,14 @@ class OneSignalImplementation(private val mixpanel: MixPanelInterface) :
         get() = "ZDYzY2NkMWUtMGZkNS00YTJkLWI2NTctNDJjZjVhMTY5ZGE1"
 
     override val basicProd: String
-        get() = "MjU0MjJhZWItMGU2Yi00ZWY4LWIzNTQtMTc2NTE4MzA0OWUy"
+        get() = firebaseInterface.remoteConfig.getString("basicProdOneSignal")
 
     override fun initialize(context: Context) {
         OneSignal.setRequiresUserPrivacyConsent(true)
         OneSignal.initWithContext(context)
-        OneSignal.setAppId(if (BuildConfig.DEBUG) debugKey else productionKey)
+        OneSignal.setAppId(
+            if (BuildConfig.DEBUG || Helper.isEmulator()) debugKey else productionKey
+        )
         OneSignal.provideUserConsent(true)
         mixpanel.setMixpanelIdInOneSignal()
     }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 internal class CoGeocoderImpl(
     context: Context,
     locale: Locale,
-    private val dispatcher: CoroutineDispatcher,
+    private val dispatcher: CoroutineDispatcher
 ) : CoGeocoder {
 
     private val geocoder: Geocoder by lazy { Geocoder(context, locale) }
@@ -22,13 +22,13 @@ internal class CoGeocoderImpl(
     override suspend fun getAddressFromLocation(
         latitude: Double,
         longitude: Double,
-        locale: Locale,
+        locale: Locale
     ): Address? =
         getAddressListFromLocation(latitude, longitude, locale, 1).firstOrNull()
 
     override suspend fun getAddressFromLocationName(
         locationName: String,
-        locale: Locale,
+        locale: Locale
     ): Address? =
         getAddressListFromLocationName(locationName, locale, 1).firstOrNull()
 
@@ -38,7 +38,7 @@ internal class CoGeocoderImpl(
         lowerLeftLongitude: Double,
         upperRightLatitude: Double,
         upperRightLongitude: Double,
-        locale: Locale,
+        locale: Locale
     ): Address? = getAddressListFromLocationName(
         locationName,
         lowerLeftLatitude,
@@ -52,7 +52,7 @@ internal class CoGeocoderImpl(
     override suspend fun getAddressListFromLocation(
         location: Location,
         locale: Locale,
-        maxResults: Int,
+        maxResults: Int
     ): List<Address> =
         getAddressListFromLocation(location.latitude, location.longitude, locale, maxResults)
 
@@ -60,7 +60,7 @@ internal class CoGeocoderImpl(
         latitude: Double,
         longitude: Double,
         locale: Locale,
-        maxResults: Int,
+        maxResults: Int
     ): List<Address> =
         withContext(dispatcher) {
             runCatching { geocoder.getFromLocation(latitude, longitude, maxResults).orEmpty() }
@@ -70,7 +70,7 @@ internal class CoGeocoderImpl(
     override suspend fun getAddressListFromLocationName(
         locationName: String,
         locale: Locale,
-        maxResults: Int,
+        maxResults: Int
     ): List<Address> =
         withContext(dispatcher) {
             runCatching { geocoder.getFromLocationName(locationName, maxResults).orEmpty() }
@@ -84,7 +84,7 @@ internal class CoGeocoderImpl(
         upperRightLatitude: Double,
         upperRightLongitude: Double,
         locale: Locale,
-        maxResults: Int,
+        maxResults: Int
     ): List<Address> = withContext(dispatcher) {
         runCatching {
             geocoder.getFromLocationName(

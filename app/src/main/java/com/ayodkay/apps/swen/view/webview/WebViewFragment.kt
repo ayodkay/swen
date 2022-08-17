@@ -45,15 +45,16 @@ class WebViewFragment : BaseFragment(), MaxAdListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentWebviewBinding.inflate(inflater, container, false).apply {
         createInterstitialAd()
         viewModel = webViewViewModel
         webViewViewModel.webLink.set(args.link)
         webViewViewModel.navigateToMain = args.navigateToMain
         webViewViewModel.bookmarkDrawable.set(
-            if (Helper.getLinksDatabase(requireContext()).linksDao().exist(args.link))
-                R.drawable.ic_bookmarked else R.drawable.ic_bookmark
+            if (Helper.getLinksDatabase(requireContext()).linksDao().exist(args.link)) {
+                R.drawable.ic_bookmarked
+            } else R.drawable.ic_bookmark
         )
         binding = this
     }.root

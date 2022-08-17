@@ -30,7 +30,7 @@ class CategoryFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View = FragmentCategoryBinding.inflate(inflater, container, false).apply {
         viewModel = categoryViewModel
         with(categoryViewModel) {
@@ -61,8 +61,10 @@ class CategoryFragment : BaseFragment() {
         categoryViewModel.goToViewNewsFragment.observe(viewLifecycleOwner) {
             navigateTo(
                 MainControlDirections.actionToViewNews(
-                    source = it.source.name.ifNull { "" }, url = it.url.ifNull { "" },
-                    image = it.urlToImage.ifNull { "" }, title = it.title.ifNull { "" },
+                    source = it.source.name.ifNull { "" },
+                    url = it.url.ifNull { "" },
+                    image = it.urlToImage.ifNull { "" },
+                    title = it.title.ifNull { "" },
                     content = it.content.ifNull { it.description.ifNull { "" } },
                     description = it.description.ifNull { "" }
                 )
@@ -74,7 +76,7 @@ class CategoryFragment : BaseFragment() {
         with(
             Helper.setUpNewsClient(
                 requireActivity(),
-                categoryViewModel.remoteConfig.getString("news_api_key")
+                categoryViewModel.firebaseInterface.remoteConfig.getString("news_api_key")
             )
         ) {
             if (categoryViewModel.category.isEmpty()) {

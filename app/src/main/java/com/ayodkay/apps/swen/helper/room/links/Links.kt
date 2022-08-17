@@ -6,5 +6,5 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "links")
 data class Links(
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
-    var link: String,
+    var link: String
 )

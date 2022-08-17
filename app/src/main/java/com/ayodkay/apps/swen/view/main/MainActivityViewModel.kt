@@ -20,8 +20,11 @@ class MainActivityViewModel(application: Application) : BaseViewModel(applicatio
 
     fun bottomBarIds(): ArrayList<Int> {
         return arrayListOf(
-            R.id.nav_main_swen, R.id.navigation_bookmarks, R.id.nav_main_search,
-            R.id.nav_main_links, R.id.nav_settings
+            R.id.nav_main_swen,
+            R.id.navigation_bookmarks,
+            R.id.nav_main_search,
+            R.id.nav_main_links,
+            R.id.nav_settings
         )
     }
 }

@@ -5,8 +5,8 @@ import android.telephony.TelephonyManager
 import androidx.core.content.res.ResourcesCompat
 import com.ayodkay.apps.swen.BuildConfig
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.AppLog
 import com.ayodkay.apps.swen.helper.BaseViewModel
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
 import com.google.gson.Gson
 import com.onesignal.OneSignal
@@ -24,7 +24,8 @@ object OneSignalNotificationSender : KoinComponent {
     private val mixpanel: MixPanelInterface by inject()
     private val oneSignal: OneSignalInterface by inject()
     private val baseViewModel: BaseViewModel by inject()
-    fun sendDeviceNotification(notification: Notification, context: Context) {
+
+    fun sendDeviceNotification(notification: OneSignalNotification, context: Context) {
         val ledColor = ResourcesCompat.getColor(context.resources, R.color.colorPrimary, null)
         Thread(
             Runnable {
@@ -32,20 +33,19 @@ object OneSignalNotificationSender : KoinComponent {
                 val userId = deviceState?.userId
                 val isSubscribed = deviceState != null && deviceState.isSubscribed
                 if (!isSubscribed) return@Runnable
-                val pos: Int = notification.templatePos
                 try {
                     val map: MutableMap<String?, Any?> = HashMap()
                     map["include_player_ids"] = arrayOf(userId)
-                    map["headings"] = mapOf(Pair("en", notification.getTitle(pos)))
-                    map["contents"] = mapOf(Pair("en", notification.getMessage(pos)))
+                    map["headings"] = mapOf(Pair("en", notification.title))
+                    map["contents"] = mapOf(Pair("en", notification.message))
                     map["small_icon"] = notification.smallIconRes
-                    map["large_icon"] = notification.getLargeIconUrl(pos)
-                    map["big_picture"] = notification.getBigPictureUrl(pos)
+                    map["large_icon"] = notification.largeIconUrl
+                    map["big_picture"] = notification.bigPictureUrl
                     map["android_group"] = notification.group
                     map["buttons"] = emptyArray<String>()
                     map["android_led_color"] = "$ledColor"
                     map["android_accent_color"] = "$ledColor"
-                    map["data"] = mapOf(Pair("url", notification.getUrl(pos)))
+                    map["data"] = mapOf(Pair("url", notification.url))
                     map["android_sound"] = "nil"
                     val json = JSONObject(map)
                     OneSignal.postNotification(
@@ -55,6 +55,7 @@ object OneSignalNotificationSender : KoinComponent {
                                 val props = JSONObject().apply {
                                     put("source", "sendDeviceNotification")
                                     put("sender", oneSignal.deviceState()?.userId)
+                                    put("json", json)
                                     put("state", "sent")
                                 }
                                 mixpanel.track("Push Notification", props)
@@ -80,7 +81,7 @@ object OneSignalNotificationSender : KoinComponent {
         ).start()
     }
 
-    fun sendDeviceNotificationWithRequest(notification: Notification, context: Context) {
+    fun sendDeviceNotificationWithRequest(notification: OneSignalNotification, context: Context) {
         val ledColor = ResourcesCompat.getColor(context.resources, R.color.colorPrimary, null)
         val country = try {
             baseViewModel.getSelectedLocationDao.getAll().countryCode
@@ -90,29 +91,30 @@ object OneSignalNotificationSender : KoinComponent {
         }
         Thread(
             Runnable {
-                val pos: Int = notification.templatePos
                 val map: MutableMap<String?, Any?> = HashMap()
                 val filter = arrayListOf(
                     mapOf(
-                        Pair("field", "tag"), Pair("key", "country"),
+                        Pair("field", "tag"),
+                        Pair("key", "country"),
                         Pair("relation", "="),
                         Pair("value", country)
                     )
                 )
-                AppLog.l(country.orEmpty())
                 map["app_id"] =
-                    if (BuildConfig.DEBUG) oneSignal.debugKey else oneSignal.productionKey
+                    if (BuildConfig.DEBUG || Helper.isEmulator()) {
+                        oneSignal.debugKey
+                    } else oneSignal.productionKey
                 map["filters"] = filter
-                map["headings"] = mapOf(Pair("en", notification.getTitle(pos)))
-                map["contents"] = mapOf(Pair("en", notification.getMessage(pos)))
+                map["headings"] = mapOf(Pair("en", notification.title))
+                map["contents"] = mapOf(Pair("en", notification.message))
                 map["small_icon"] = notification.smallIconRes
-                map["large_icon"] = notification.getLargeIconUrl(pos)
-                map["big_picture"] = notification.getBigPictureUrl(pos)
+                map["large_icon"] = notification.largeIconUrl
+                map["big_picture"] = notification.bigPictureUrl
                 map["android_group"] = notification.group
                 map["buttons"] = emptyArray<String>()
                 map["android_led_color"] = "$ledColor"
                 map["android_accent_color"] = "$ledColor"
-                map["data"] = mapOf(Pair("url", notification.getUrl(pos)))
+                map["data"] = mapOf(Pair("url", notification.url))
                 map["android_sound"] = "nil"
                 try {
                     val url = URL("https://onesignal.com/api/v1/notifications")
@@ -123,7 +125,7 @@ object OneSignalNotificationSender : KoinComponent {
                     con.setRequestProperty("Content-Type", "application/json; charset=UTF-8")
                     con.setRequestProperty(
                         "Authorization",
-                        "Basic ${if (BuildConfig.DEBUG) oneSignal.basic else oneSignal.basicProd}"
+                        "Basic ${if (BuildConfig.DEBUG || Helper.isEmulator()) oneSignal.basic else oneSignal.basicProd}"
                     )
                     con.requestMethod = "POST"
                     val strJsonBody = Gson().toJson(map)
@@ -138,6 +140,7 @@ object OneSignalNotificationSender : KoinComponent {
                         val scanner = Scanner(con.inputStream, "UTF-8")
                         val props = JSONObject().apply {
                             put("source", "sendDeviceNotificationWithRequest")
+                            put("json", strJsonBody)
                             put("sender", oneSignal.deviceState()?.userId)
                             put("state", "sent")
                         }
