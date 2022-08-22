@@ -5,10 +5,10 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.ayodkay.apps.swen.helper.BaseViewModel
-import com.ayodkay.apps.swen.helper.LinkCardClick
 import com.ayodkay.apps.swen.helper.room.links.Links
-import com.ayodkay.apps.swen.helper.trigger
+import com.ayodkay.apps.swen.view.BaseViewModel
+import com.ayodkay.apps.swen.view.LinkCardClick
+import com.ayodkay.apps.swen.view.trigger
 import org.json.JSONObject
 
 class LinksViewModel(application: Application) : BaseViewModel(application), LinkCardClick {

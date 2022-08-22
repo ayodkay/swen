@@ -4,9 +4,9 @@ import android.app.Application
 import android.widget.Toast
 import androidx.databinding.ObservableBoolean
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.BaseViewModel
-import com.ayodkay.apps.swen.helper.SimpleEvent
-import com.ayodkay.apps.swen.helper.trigger
+import com.ayodkay.apps.swen.view.BaseViewModel
+import com.ayodkay.apps.swen.view.SimpleEvent
+import com.ayodkay.apps.swen.view.trigger
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.InstallStateUpdatedListener

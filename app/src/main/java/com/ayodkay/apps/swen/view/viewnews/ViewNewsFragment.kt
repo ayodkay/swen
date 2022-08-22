@@ -30,10 +30,10 @@ import androidx.navigation.fragment.navArgs
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.FragmentViewNewsBinding
 import com.ayodkay.apps.swen.helper.AppLog
-import com.ayodkay.apps.swen.helper.BaseFragment
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
+import com.ayodkay.apps.swen.view.BaseFragment
 import com.github.ayodkay.builder.EverythingBuilder
 import com.github.ayodkay.models.ArticleResponse
 import com.github.ayodkay.mvvm.interfaces.ArticlesLiveDataResponseCallback
@@ -333,7 +333,7 @@ class ViewNewsFragment : BaseFragment() {
         with(
             Helper.setUpNewsClient(
                 requireActivity(),
-                viewNewsViewModel.firebaseInterface.remoteConfig.getString("news_api_key")
+                viewNewsViewModel.remoteConfig.getInstance().getString("news_api_key")
             )
         ) {
             getEverything(

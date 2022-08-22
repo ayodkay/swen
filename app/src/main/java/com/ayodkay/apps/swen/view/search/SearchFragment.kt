@@ -15,11 +15,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.FragmentSearchBinding
-import com.ayodkay.apps.swen.helper.BaseFragment
 import com.ayodkay.apps.swen.helper.Helper.setUpNewsClient
 import com.ayodkay.apps.swen.helper.constant.ErrorMessage
 import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
+import com.ayodkay.apps.swen.view.BaseFragment
 import com.github.ayodkay.builder.EverythingBuilder
 import com.github.ayodkay.models.ArticleResponse
 import com.github.ayodkay.mvvm.interfaces.ArticlesLiveDataResponseCallback
@@ -131,7 +131,7 @@ class SearchFragment : BaseFragment() {
         with(
             setUpNewsClient(
                 requireActivity(),
-                searchViewModel.firebaseInterface.remoteConfig.getString("news_api_key")
+                searchViewModel.remoteConfig.getInstance().getString("news_api_key")
             )
         ) {
             getEverything(

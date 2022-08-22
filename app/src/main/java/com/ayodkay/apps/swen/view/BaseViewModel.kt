@@ -1,4 +1,4 @@
-package com.ayodkay.apps.swen.helper
+package com.ayodkay.apps.swen.view
 
 import android.app.Application
 import androidx.core.content.ContextCompat
@@ -7,8 +7,9 @@ import androidx.lifecycle.AndroidViewModel
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.nativeAds.MaxNativeAdLoader
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.event.SingleLiveEvent
-import com.ayodkay.apps.swen.helper.firebase.FirebaseInterface
+import com.ayodkay.apps.swen.helper.firebase.config.ConfigInterface
 import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.helper.room.links.Links
@@ -20,6 +21,7 @@ import org.koin.core.component.inject
 open class BaseViewModel(application: Application) : AndroidViewModel(application), KoinComponent {
     val nativeAdLoader = MaxNativeAdLoader("08f93b640def0007", application.applicationContext)
     val mixpanel: MixPanelInterface by inject()
+    val remoteConfig: ConfigInterface by inject()
     var nativeAd: MaxAd? = null
 
     var source = ""
@@ -37,20 +39,17 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     val getSelectedCountryDao = Helper.getCountryDatabase(application.applicationContext)
     val getSelectedLocationDao =
         Helper.getLocationDatabase(application.applicationContext).locationDao()
-    val firebaseInterface: FirebaseInterface by inject()
 
     init {
         val configSettings = remoteConfigSettings {
             minimumFetchIntervalInSeconds = 3600
         }
-        with(firebaseInterface) {
-            remoteConfig.setConfigSettingsAsync(configSettings)
-            remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
-            remoteConfig.fetchAndActivate()
-                .addOnCompleteListener(
-                    ContextCompat.getMainExecutor(application.applicationContext)
-                ) { }
-        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        remoteConfig.fetchAndActivate()
+            .addOnCompleteListener(
+                ContextCompat.getMainExecutor(application.applicationContext)
+            ) { }
     }
 }
 

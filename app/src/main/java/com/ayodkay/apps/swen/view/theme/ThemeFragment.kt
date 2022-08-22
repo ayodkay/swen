@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.ayodkay.apps.swen.databinding.ThemeFragmentBinding
-import com.ayodkay.apps.swen.helper.BaseFragment
+import com.ayodkay.apps.swen.view.BaseFragment
 
 const val PREFS_NAME = "theme_prefs"
 const val KEY_THEME = "prefs.theme"

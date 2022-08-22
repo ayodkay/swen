@@ -14,15 +14,15 @@ import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.NativeCustomAdFrameBinding
 import com.ayodkay.apps.swen.databinding.NewsLinksSavedBinding
 import com.ayodkay.apps.swen.databinding.NewsListCardBinding
-import com.ayodkay.apps.swen.helper.CardClick
 import com.ayodkay.apps.swen.helper.Helper
-import com.ayodkay.apps.swen.helper.LinkCardClick
 import com.ayodkay.apps.swen.helper.extentions.ImageViewCallBack
 import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookMarkRoom
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.helper.room.links.Links
+import com.ayodkay.apps.swen.view.CardClick
+import com.ayodkay.apps.swen.view.LinkCardClick
 import com.github.ayodkay.models.Article
 import java.text.SimpleDateFormat
 import org.json.JSONObject

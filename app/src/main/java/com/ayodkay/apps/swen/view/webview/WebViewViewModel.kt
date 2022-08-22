@@ -3,9 +3,9 @@ package com.ayodkay.apps.swen.view.webview
 import android.app.Application
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
-import com.ayodkay.apps.swen.helper.BaseViewModel
-import com.ayodkay.apps.swen.helper.SimpleEvent
-import com.ayodkay.apps.swen.helper.trigger
+import com.ayodkay.apps.swen.view.BaseViewModel
+import com.ayodkay.apps.swen.view.SimpleEvent
+import com.ayodkay.apps.swen.view.trigger
 
 class WebViewViewModel(application: Application) : BaseViewModel(application) {
     var bookmarkDrawable = ObservableInt()

@@ -5,11 +5,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.nativeAds.MaxNativeAdLoader
-import com.ayodkay.apps.swen.helper.CardClick
-import com.ayodkay.apps.swen.helper.LinkCardClick
 import com.ayodkay.apps.swen.helper.adapter.MaxAdsRecyclerView
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.helper.room.links.Links
+import com.ayodkay.apps.swen.view.CardClick
+import com.ayodkay.apps.swen.view.LinkCardClick
 import com.github.ayodkay.models.Article
 
 @BindingAdapter(value = ["newsList", "bookmarkRoom", "nativeAdLoader", "nativeAd", "listener"])

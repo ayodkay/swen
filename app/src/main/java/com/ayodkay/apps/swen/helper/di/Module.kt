@@ -1,13 +1,17 @@
 package com.ayodkay.apps.swen.helper.di
 
-import com.ayodkay.apps.swen.helper.BaseViewModel
 import com.ayodkay.apps.swen.helper.firebase.FirebaseImplementation
 import com.ayodkay.apps.swen.helper.firebase.FirebaseInterface
+import com.ayodkay.apps.swen.helper.firebase.config.ConfigImplementation
+import com.ayodkay.apps.swen.helper.firebase.config.ConfigInterface
 import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
 import com.ayodkay.apps.swen.helper.mixpanel.MixpanelImplementation
+import com.ayodkay.apps.swen.helper.network.NetworkImplementation
+import com.ayodkay.apps.swen.helper.network.NetworkInterface
 import com.ayodkay.apps.swen.helper.onesignal.OneSignalImplementation
 import com.ayodkay.apps.swen.helper.onesignal.OneSignalInterface
 import com.ayodkay.apps.swen.helper.onesignal.OneSignalNotificationSender
+import com.ayodkay.apps.swen.view.BaseViewModel
 import com.ayodkay.apps.swen.view.bookmarks.BookmarksViewModel
 import com.ayodkay.apps.swen.view.home.HomeViewModel
 import com.ayodkay.apps.swen.view.link.LinksViewModel
@@ -27,6 +31,8 @@ val appModule = module {
     single<MixPanelInterface> { MixpanelImplementation() }
     single<OneSignalInterface> { OneSignalImplementation() }
     single<FirebaseInterface> { FirebaseImplementation() }
+    single<NetworkInterface> { NetworkImplementation() }
+    single<ConfigInterface> { ConfigImplementation() }
     single { OneSignalNotificationSender }
 
     viewModel { BaseViewModel(get()) }

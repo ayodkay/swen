@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.work.Data
 import com.ayodkay.apps.swen.App.Companion.scheduleNotification
+import com.ayodkay.apps.swen.BuildConfig
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.firebase.config.ConfigInterface
 import com.ayodkay.apps.swen.helper.onesignal.OneSignalNotification
 import com.ayodkay.apps.swen.helper.onesignal.OneSignalNotificationSender
 import com.ayodkay.apps.swen.helper.work.NotifyWork
@@ -13,8 +15,11 @@ import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class BootReceiver : BroadcastReceiver() {
+class BootReceiver : BroadcastReceiver(), KoinComponent {
+    val remoteConfig: ConfigInterface by inject()
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == "android.intent.action.BOOT_COMPLETED" ||
             intent.action == "android.intent.action.QUICKBOOT_POWERON"
@@ -30,19 +35,27 @@ class BootReceiver : BroadcastReceiver() {
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
                     appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
                 ) {
-                    OneSignalNotificationSender
-                        .sendDeviceNotification(
-                            OneSignalNotification(
-                                "Update App", context.getString(R.string.update_available),
-                                "\u200E", "ic_stat_onesignal_default.png",
-                                context.getString(R.string.notification_icon),
-                                context.getString(R.string.ic_logo),
-                                "", "", "[]", true
-                            ),
-                            context
-                        )
+                    send(context)
+                } else if (remoteConfig.getInstance().getString("versionCode") !=
+                    BuildConfig.VERSION_CODE.toString()
+                ) {
+                    send(context)
                 }
             }
         }
+    }
+
+    private fun send(context: Context) {
+        OneSignalNotificationSender
+            .sendDeviceNotification(
+                OneSignalNotification(
+                    "Update App", context.getString(R.string.update_available),
+                    "\u200E", "ic_stat_onesignal_default.png",
+                    context.getString(R.string.notification_icon),
+                    context.getString(R.string.ic_logo),
+                    "", "", "[]", true
+                ),
+                context
+            )
     }
 }

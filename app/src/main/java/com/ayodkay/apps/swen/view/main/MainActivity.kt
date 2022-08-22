@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        permissionCheck()
         if (Build.VERSION.SDK_INT >= 33) {
             permissionToPost()
         }
@@ -84,6 +83,18 @@ class MainActivity : AppCompatActivity() {
             }
             binding.bubbleTabBar.setSelectedWithId(destination.id, false)
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            activityViewModel.isNetworkConnected.observe(this) {
+                if (it) {
+                    fusedLocationSetup()
+                } else {
+                    Toast.makeText(this, getString(R.string.internet_lost), Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+        permissionCheck()
     }
 
     private fun onNavDestinationSelected(
@@ -217,38 +228,52 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         } else {
-            Thread {
-                when {
-                    MyReachability.hasInternetConnected(this) -> runOnUiThread {
-                        activityViewModel.fusedLocationClient.lastLocation
-                            .addOnSuccessListener { userLocation: Location? ->
-                                userLocation?.let {
-                                    kotlin.runCatching {
-                                        if (Build.VERSION.SDK_INT >= 33) {
-                                            Geocoder(this, Locale.getDefault())
-                                                .getFromLocation(it.latitude, it.longitude, 1) {
-                                                    it.firstOrNull()
-                                                        ?.let { address ->
-                                                            subscribeCountryName(address)
-                                                        }
-                                                }
-                                        } else {
-                                            Geocoder(this@MainActivity, Locale.getDefault())
-                                                .getFromLocation(it.latitude, it.longitude, 1)
-                                                ?.firstOrNull()
-                                                ?.let { address -> subscribeCountryName(address) }
-                                        }
-                                    }
-                                }
-                            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (activityViewModel.isNetworkConnected.value == true) {
+                    fusedLocationSetup()
+                }
+            } else {
+                Thread {
+                    when {
+                        MyReachability.hasInternetConnected(this) -> runOnUiThread {
+                            fusedLocationSetup()
+                        }
+                        else -> runOnUiThread {
+                            Toast.makeText(
+                                this,
+                                getString(R.string.internet_lost),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-                    else -> runOnUiThread {
-                        Toast.makeText(this, getString(R.string.internet_lost), Toast.LENGTH_SHORT)
-                            .show()
+                }.start()
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun fusedLocationSetup() {
+        activityViewModel.fusedLocationClient.lastLocation
+            .addOnSuccessListener { userLocation: Location? ->
+                userLocation?.let {
+                    kotlin.runCatching {
+                        if (Build.VERSION.SDK_INT >= 33) {
+                            Geocoder(this@MainActivity, Locale.getDefault())
+                                .getFromLocation(it.latitude, it.longitude, 1) {
+                                    it.firstOrNull()
+                                        ?.let { address ->
+                                            subscribeCountryName(address)
+                                        }
+                                }
+                        } else {
+                            Geocoder(this@MainActivity, Locale.getDefault())
+                                .getFromLocation(it.latitude, it.longitude, 1)
+                                ?.firstOrNull()
+                                ?.let { address -> subscribeCountryName(address) }
+                        }
                     }
                 }
-            }.start()
-        }
+            }
     }
 
     private fun subscribeCountryName(addresses: Address) {

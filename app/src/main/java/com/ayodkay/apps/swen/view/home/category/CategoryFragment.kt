@@ -11,11 +11,11 @@ import androidx.navigation.fragment.navArgs
 import com.ayodkay.apps.swen.MainControlDirections
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.FragmentCategoryBinding
-import com.ayodkay.apps.swen.helper.BaseFragment
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.constant.ErrorMessage
 import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
+import com.ayodkay.apps.swen.view.BaseFragment
 import com.github.ayodkay.builder.EverythingBuilder
 import com.github.ayodkay.builder.TopHeadlinesBuilder
 import com.github.ayodkay.models.ArticleResponse
@@ -76,7 +76,7 @@ class CategoryFragment : BaseFragment() {
         with(
             Helper.setUpNewsClient(
                 requireActivity(),
-                categoryViewModel.firebaseInterface.remoteConfig.getString("news_api_key")
+                categoryViewModel.remoteConfig.getInstance().getString("news_api_key")
             )
         ) {
             if (categoryViewModel.category.isEmpty()) {

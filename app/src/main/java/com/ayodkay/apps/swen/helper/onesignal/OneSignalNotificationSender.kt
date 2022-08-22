@@ -5,9 +5,9 @@ import android.telephony.TelephonyManager
 import androidx.core.content.res.ResourcesCompat
 import com.ayodkay.apps.swen.BuildConfig
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.BaseViewModel
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
+import com.ayodkay.apps.swen.view.BaseViewModel
 import com.google.gson.Gson
 import com.onesignal.OneSignal
 import com.onesignal.OneSignal.PostNotificationResponseHandler
