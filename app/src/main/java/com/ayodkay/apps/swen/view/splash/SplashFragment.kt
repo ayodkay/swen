@@ -9,9 +9,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.FragmentSplashBinding
-import com.ayodkay.apps.swen.helper.BaseFragment
 import com.ayodkay.apps.swen.helper.extentions.isNotNull
+import com.ayodkay.apps.swen.view.BaseFragment
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
@@ -126,7 +127,7 @@ class SplashFragment : BaseFragment() {
                 if (countryDao().getAll() != null) {
                     navigateTo(SplashFragmentDirections.actionNavSplashToNavMainSwen())
                 } else {
-                    navigateTo(SplashFragmentDirections.actionNavSplashToNavLocation())
+                    navigateTo(R.id.action_nav_splash_to_nav_location, null)
                 }
             }
         }

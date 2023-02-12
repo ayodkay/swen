@@ -18,9 +18,9 @@ import com.applovin.mediation.MaxError
 import com.applovin.mediation.ads.MaxInterstitialAd
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.FragmentWebviewBinding
-import com.ayodkay.apps.swen.helper.BaseFragment
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.links.Links
+import com.ayodkay.apps.swen.view.BaseFragment
 import java.util.concurrent.TimeUnit
 import kotlin.math.min
 import kotlin.math.pow

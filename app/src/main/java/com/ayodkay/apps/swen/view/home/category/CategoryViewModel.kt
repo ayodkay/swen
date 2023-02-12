@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
-import com.ayodkay.apps.swen.helper.BaseViewModel
-import com.ayodkay.apps.swen.helper.CardClick
-import com.ayodkay.apps.swen.helper.trigger
+import com.ayodkay.apps.swen.view.BaseViewModel
+import com.ayodkay.apps.swen.view.CardClick
+import com.ayodkay.apps.swen.view.trigger
 import com.github.ayodkay.models.Article
 import org.json.JSONObject
 

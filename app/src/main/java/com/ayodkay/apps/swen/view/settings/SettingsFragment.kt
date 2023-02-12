@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.ayodkay.apps.swen.BuildConfig
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.helper.room.country.Country
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -25,113 +26,125 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
-        val availableLanguages = arrayListOf(
-            "ar", "de", "en", "es", "fr", "it", "nl", "no", "pt", "ru", "se", "zh"
-        )
-        val singleSort = arrayOf(
-            "Arabic", "German", "English", "Spanish", "French", "Italian", "Dutch",
-            "Norwegian", "Portuguese", "Russian", "Swedish", "Chinese"
-        )
-
-        var language: String
-
         var checkedSort = settingsViewModel.getSelectedCountryDao.countryDao().getAll().position!!
-        language = availableLanguages[checkedSort]
+        var language = settingsViewModel.availableLanguages[checkedSort]
 
         val selected = isAvailable(
-            availableLanguages,
+            settingsViewModel.availableLanguages,
             settingsViewModel.getSelectedCountryDao.countryDao().getAll().iso
         )
 
         if (selected > -1) {
-            language = availableLanguages[selected]
+            language = settingsViewModel.availableLanguages[selected]
             checkedSort = selected
         }
 
-        val feedback: EditTextPreference? = findPreference("feedback")
-        val country: Preference? = findPreference("country")
-        val share: Preference? = findPreference("share")
-        val rate: Preference? = findPreference("rate")
-        val color: Preference? = findPreference("color")
-        val policy: Preference? = findPreference("policy")
-        val search: Preference? = findPreference("search")
-
-        feedback?.setOnPreferenceChangeListener { _, newValue ->
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "message/rfc822"
-            intent.putExtra(Intent.EXTRA_TEXT, newValue.toString())
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedback_suggestions))
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("ayodelekayode51@yahoo.com"))
-            val mailer = Intent.createChooser(intent, null)
-            startActivity(mailer)
-            true
-        }
-        country?.setOnPreferenceClickListener {
-            findNavController()
-                .navigate(SettingsFragmentDirections.actionNavSettingsToNavLocation())
-            true
-        }
-        share?.setOnPreferenceClickListener {
-            settingsViewModel.mixpanel.track("Share App")
-            val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(
-                    Intent.EXTRA_TEXT,
-                    "${resources.getString(R.string.share_app)}\n${
-                    resources.getString(
-                        R.string.google_play
-                    )
-                    }"
-                )
-                type = "text/plain"
+        findPreference<Preference?>("rate")?.let {
+            it.setOnPreferenceClickListener {
+                settingsViewModel.mixpanel.track("Rate App")
+                goToPlayStore(requireContext())
+                true
             }
-
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
-
-            true
         }
-        rate?.setOnPreferenceClickListener {
-            settingsViewModel.mixpanel.track("Rate App")
-            goToPlayStore(requireContext())
-            true
+        findPreference<Preference?>("color")?.let {
+            it.setOnPreferenceClickListener {
+                findNavController()
+                    .navigate(SettingsFragmentDirections.actionNavSettingsToNavThemeFragment())
+                true
+            }
         }
-        color?.setOnPreferenceClickListener {
-            findNavController()
-                .navigate(SettingsFragmentDirections.actionNavSettingsToNavThemeFragment())
-            true
-        }
-        search?.setOnPreferenceClickListener {
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(getString(R.string.search_language))
-                .setNeutralButton(resources.getString(android.R.string.cancel)) { dialog, _ ->
-                    dialog.dismiss()
+        findPreference<Preference?>("share")?.let {
+            it.setOnPreferenceClickListener {
+                settingsViewModel.mixpanel.track("Share App")
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(
+                        Intent.EXTRA_TEXT,
+                        "${resources.getString(R.string.share_app)}\n${
+                        resources.getString(
+                            R.string.google_play
+                        )
+                        }"
+                    )
+                    type = "text/plain"
                 }
-                .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
-                    with(settingsViewModel.getSelectedCountryDao.countryDao()) {
-                        val countryName = getAll().country
-                        delete()
-                        insertAll(Country(countryName, language, checkedSort))
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
+
+                true
+            }
+        }
+        findPreference<Preference?>("update")?.let {
+            if (settingsViewModel.remoteConfig.getInstance().getString("versionCode") !=
+                BuildConfig.VERSION_CODE.toString()
+            ) {
+                with(it) {
+                    isVisible = true
+                    setOnPreferenceClickListener {
+                        goToPlayStore(requireContext())
+                        true
                     }
-                    dialog.dismiss()
                 }
-                // Single-choice items (initialized with checked item)
-                .setSingleChoiceItems(singleSort, checkedSort) { _, which ->
-                    language = availableLanguages[which]
-                    checkedSort = which
-                }
-                .show()
-            true
+            }
         }
-        policy?.setOnPreferenceClickListener {
-            MaterialAlertDialogBuilder(this.requireContext())
-                .setTitle(resources.getString(R.string.disclaimer))
-                .setMessage(resources.getString(R.string.supporting_text))
-                .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-            true
+        findPreference<Preference?>("search")?.let {
+            it.setOnPreferenceClickListener {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(getString(R.string.search_language))
+                    .setNeutralButton(resources.getString(android.R.string.cancel)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
+                        with(settingsViewModel.getSelectedCountryDao.countryDao()) {
+                            val countryName = getAll().country
+                            delete()
+                            insertAll(Country(countryName, language, checkedSort))
+                        }
+                        dialog.dismiss()
+                    }
+                    // Single-choice items (initialized with checked item)
+                    .setSingleChoiceItems(settingsViewModel.singleSort, checkedSort) { _, which ->
+                        language = settingsViewModel.availableLanguages[which]
+                        checkedSort = which
+                    }
+                    .show()
+                true
+            }
+        }
+        findPreference<Preference?>("policy")?.let {
+            it.setOnPreferenceClickListener {
+                MaterialAlertDialogBuilder(this.requireContext())
+                    .setTitle(resources.getString(R.string.disclaimer))
+                    .setMessage(resources.getString(R.string.supporting_text))
+                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+                true
+            }
+        }
+        findPreference<Preference?>("version")?.let {
+            it.summary = "v${BuildConfig.VERSION_NAME}"
+        }
+        findPreference<Preference?>("country")?.let {
+            it.setOnPreferenceClickListener {
+                findNavController()
+                    .navigate(SettingsFragmentDirections.actionNavSettingsToNavLocation())
+                true
+            }
+        }
+        findPreference<EditTextPreference?>("feedback")?.let {
+            it.setOnPreferenceChangeListener { _, newValue ->
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "message/rfc822"
+                intent.putExtra(Intent.EXTRA_TEXT, newValue.toString())
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedback_suggestions))
+                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("ayodelekayode51@yahoo.com"))
+                val mailer = Intent.createChooser(intent, null)
+                startActivity(mailer)
+                true
+            }
         }
     }
 

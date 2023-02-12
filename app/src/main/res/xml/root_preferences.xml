@@ -34,6 +34,14 @@
             app:key="policy"
             app:title="@string/disclaimer" />
 
+        <Preference
+            app:key="update"
+            app:title="@string/update_available"
+            app:isPreferenceVisible="false"/>
+
+        <Preference
+            app:key="version"/>
+
         <com.ayodkay.apps.swen.view.settings.AdsPreference
             app:key="@string/ad"
             app:title="@string/ad"

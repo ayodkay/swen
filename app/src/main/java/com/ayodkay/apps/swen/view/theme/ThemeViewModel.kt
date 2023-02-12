@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.ObservableBoolean
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.BaseViewModel
+import com.ayodkay.apps.swen.view.BaseViewModel
 
 class ThemeViewModel(application: Application) : BaseViewModel(application) {
     private val sharedPrefs by lazy {

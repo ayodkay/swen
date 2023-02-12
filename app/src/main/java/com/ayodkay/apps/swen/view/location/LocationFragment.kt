@@ -8,10 +8,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.FragmentLocationBinding
-import com.ayodkay.apps.swen.helper.BaseFragment
 import com.ayodkay.apps.swen.helper.countrypicker.CountryPicker
 import com.ayodkay.apps.swen.helper.countrypicker.CountryPickerListener
 import com.ayodkay.apps.swen.helper.room.country.Country
+import com.ayodkay.apps.swen.view.BaseFragment
 import org.json.JSONObject
 
 class LocationFragment : BaseFragment() {

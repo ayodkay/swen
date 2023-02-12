@@ -84,7 +84,7 @@
                     android:id="@+id/empty"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_undraw_empty_xct9"
+                    android:src="@drawable/undraw_dog_walking_re_l61p"
                     tools:ignore="ContentDescription" />
 
                 <TextView

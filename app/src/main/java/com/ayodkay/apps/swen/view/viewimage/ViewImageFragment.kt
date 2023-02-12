@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.ayodkay.apps.swen.databinding.FragmentViewImageBinding
-import com.ayodkay.apps.swen.helper.BaseFragment
+import com.ayodkay.apps.swen.view.BaseFragment
 
 class ViewImageFragment : BaseFragment() {
     private val viewImageViewModel: ViewImageViewModel by viewModels()

@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.ayodkay.apps.swen.databinding.FragmentLinksBinding
-import com.ayodkay.apps.swen.helper.BaseFragment
 import com.ayodkay.apps.swen.helper.Helper
 import com.ayodkay.apps.swen.helper.room.links.Links
+import com.ayodkay.apps.swen.view.BaseFragment
 
 class LinksFragment : BaseFragment() {
     private val linksViewModel: LinksViewModel by viewModels()

@@ -1,9 +1,12 @@
-package com.ayodkay.apps.swen.helper
+package com.ayodkay.apps.swen.view
 
+import android.os.Bundle
 import androidx.activity.addCallback
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
+import com.ayodkay.apps.swen.helper.extentions.navigateSafe
 
 open class BaseFragment : Fragment() {
 
@@ -21,7 +24,7 @@ open class BaseFragment : Fragment() {
         NavHostFragment.findNavController(this).navigate(direction)
     }
 
-    protected fun navigateTo(destination: Int) {
-        NavHostFragment.findNavController(this).navigate(destination)
+    protected fun navigateTo(@IdRes resId: Int, args: Bundle? = null) {
+        NavHostFragment.findNavController(this).navigateSafe(resId, args)
     }
 }

@@ -5,11 +5,11 @@ import android.net.Uri
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import com.ayodkay.apps.swen.R
-import com.ayodkay.apps.swen.helper.BaseViewModel
-import com.ayodkay.apps.swen.helper.CardClick
-import com.ayodkay.apps.swen.helper.SimpleEvent
 import com.ayodkay.apps.swen.helper.extentions.ifNull
-import com.ayodkay.apps.swen.helper.trigger
+import com.ayodkay.apps.swen.view.BaseViewModel
+import com.ayodkay.apps.swen.view.CardClick
+import com.ayodkay.apps.swen.view.SimpleEvent
+import com.ayodkay.apps.swen.view.trigger
 import com.github.ayodkay.models.Article
 import com.google.firebase.dynamiclinks.ktx.androidParameters
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks

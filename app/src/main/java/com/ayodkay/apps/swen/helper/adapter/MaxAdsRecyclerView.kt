@@ -14,15 +14,15 @@ import com.ayodkay.apps.swen.R
 import com.ayodkay.apps.swen.databinding.NativeCustomAdFrameBinding
 import com.ayodkay.apps.swen.databinding.NewsLinksSavedBinding
 import com.ayodkay.apps.swen.databinding.NewsListCardBinding
-import com.ayodkay.apps.swen.helper.CardClick
 import com.ayodkay.apps.swen.helper.Helper
-import com.ayodkay.apps.swen.helper.LinkCardClick
 import com.ayodkay.apps.swen.helper.extentions.ImageViewCallBack
 import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.mixpanel.MixPanelInterface
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookMarkRoom
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
 import com.ayodkay.apps.swen.helper.room.links.Links
+import com.ayodkay.apps.swen.view.CardClick
+import com.ayodkay.apps.swen.view.LinkCardClick
 import com.github.ayodkay.models.Article
 import java.text.SimpleDateFormat
 import org.json.JSONObject
@@ -39,7 +39,7 @@ class MaxAdsRecyclerView internal constructor(
     private var nativeAdLoader: MaxNativeAdLoader,
     var nativeAd: MaxAd? = null,
     val listener: CardClick? = null,
-    val linkCardClick: LinkCardClick? = null
+    val linkCardClick: LinkCardClick? = null,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val isLinkView = links.isNotEmpty()
@@ -84,7 +84,7 @@ class MaxAdsRecyclerView internal constructor(
                     holder.bind(
                         newsList.getOrNull(position) ?: return,
                         it,
-                        listener
+                        listener, position
                     )
                 }
             }
@@ -122,36 +122,36 @@ class MaxAdsRecyclerView internal constructor(
             val nativeAdView = MaxNativeAdView(binder, binding.root.context)
             nativeAdLoader.loadAd(nativeAdView)
             nativeAdLoader.setNativeAdListener(object :
-                    MaxNativeAdListener() {
-                    override fun onNativeAdLoaded(
-                        nativeAdView: MaxNativeAdView?,
-                        ad: MaxAd
-                    ) {
-                        binding.loading = false
-                        // Cleanup any pre-existing native ad to prevent memory leaks.
-                        if (nativeAd != null) {
-                            nativeAdLoader.destroy(nativeAd)
-                        }
-
-                        // Save ad for cleanup.
-                        nativeAd = ad
-                        // Add ad view to view.
-                        binding.nativeAdLayout.removeAllViews()
-                        binding.nativeAdLayout.addView(nativeAdView)
-                        val props = JSONObject().put("source", "Native Ads")
-                        mixpanel.track("Show Ads", props)
+                MaxNativeAdListener() {
+                override fun onNativeAdLoaded(
+                    nativeAdView: MaxNativeAdView?,
+                    ad: MaxAd,
+                ) {
+                    binding.loading = false
+                    // Cleanup any pre-existing native ad to prevent memory leaks.
+                    if (nativeAd != null) {
+                        nativeAdLoader.destroy(nativeAd)
                     }
 
-                    override fun onNativeAdLoadFailed(
-                        adUnitId: String,
-                        maxError: MaxError
-                    ) {
-                        binding.loading = false
-                        binding.showError = true
-                    }
+                    // Save ad for cleanup.
+                    nativeAd = ad
+                    // Add ad view to view.
+                    binding.nativeAdLayout.removeAllViews()
+                    binding.nativeAdLayout.addView(nativeAdView)
+                    val props = JSONObject().put("source", "Native Ads")
+                    mixpanel.track("Show Ads", props)
+                }
 
-                    override fun onNativeAdClicked(ad: MaxAd) {}
-                })
+                override fun onNativeAdLoadFailed(
+                    adUnitId: String,
+                    maxError: MaxError,
+                ) {
+                    binding.loading = false
+                    binding.showError = true
+                }
+
+                override fun onNativeAdClicked(ad: MaxAd) {}
+            })
         }
     }
 
@@ -160,7 +160,12 @@ class MaxAdsRecyclerView internal constructor(
         private val mixpanel: MixPanelInterface by inject()
 
         @SuppressLint("SimpleDateFormat")
-        fun bind(newsPosition: Article, bookMarkRoom: BookmarkRoomVM, listener: CardClick?) {
+        fun bind(
+            newsPosition: Article,
+            bookMarkRoom: BookmarkRoomVM,
+            listener: CardClick?,
+            position: Int,
+        ) {
             binding.loading = true
             binding.loadingCallback = this
             val url = newsPosition.url.ifNull { "" }

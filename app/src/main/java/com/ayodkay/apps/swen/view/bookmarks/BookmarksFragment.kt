@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.ayodkay.apps.swen.databinding.FragmentBookmarksBinding
-import com.ayodkay.apps.swen.helper.BaseFragment
 import com.ayodkay.apps.swen.helper.extentions.ifNull
 import com.ayodkay.apps.swen.helper.room.bookmarks.BookmarkRoomVM
+import com.ayodkay.apps.swen.view.BaseFragment
 import com.github.ayodkay.models.Article
 import com.github.ayodkay.models.Source
 

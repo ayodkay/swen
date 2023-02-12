@@ -32,7 +32,7 @@
                 android:layout_height="match_parent"
                 app:contentScrim="?attr/colorPrimaryDark"
                 android:fitsSystemWindows="true"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
                 app:toolbarId="@+id/toolbar">
 
 
