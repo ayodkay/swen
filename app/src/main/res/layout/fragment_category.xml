@@ -31,7 +31,6 @@
                     nativeAd="@{viewModel.nativeAd}"
                     nativeAdLoader="@{viewModel.nativeAdLoader}"
                     newsList="@{viewModel.newsResponseList}"
-                    scrollToPosition="@{viewModel.prevPosition}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
