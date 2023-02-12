@@ -88,7 +88,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
             }
         }
-        findPreference<Preference?>("policy")?.let {
+        findPreference<Preference?>("search")?.let {
             it.setOnPreferenceClickListener {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(getString(R.string.search_language))
@@ -112,7 +112,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 true
             }
         }
-        findPreference<Preference?>("search")?.let {
+        findPreference<Preference?>("policy")?.let {
             it.setOnPreferenceClickListener {
                 MaterialAlertDialogBuilder(this.requireContext())
                     .setTitle(resources.getString(R.string.disclaimer))

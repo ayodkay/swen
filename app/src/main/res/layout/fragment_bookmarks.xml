@@ -32,9 +32,9 @@
 
         <ImageView
             android:id="@+id/no_saved"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_undraw_empty_xct9"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/undraw_dog_walking_re_l61p"
             app:isVisible="@{viewModel.news.size() == 0}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

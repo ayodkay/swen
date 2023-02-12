@@ -5,6 +5,7 @@ import androidx.lifecycle.asLiveData
 import androidx.work.Data
 import com.ayodkay.apps.swen.App
 import com.ayodkay.apps.swen.R
+import com.ayodkay.apps.swen.helper.extentions.PreferenceExtension
 import com.ayodkay.apps.swen.helper.network.NetworkInterface
 import com.ayodkay.apps.swen.helper.work.NotifyWork
 import com.ayodkay.apps.swen.view.BaseViewModel
@@ -15,8 +16,10 @@ class MainActivityViewModel(application: Application) : BaseViewModel(applicatio
     private val networkInterface: NetworkInterface by inject()
     val isNetworkConnected = networkInterface.netWorkConnected().asLiveData()
     val data = Data.Builder().putInt(NotifyWork.NOTIFICATION_ID, 0).build()
+    var prevPosition: Int by PreferenceExtension(application.applicationContext, "prevPosition", 0)
 
     init {
+        prevPosition = 0
         App.scheduleNotification(data, application.applicationContext)
     }
 

@@ -12,13 +12,17 @@ import com.ayodkay.apps.swen.view.CardClick
 import com.ayodkay.apps.swen.view.LinkCardClick
 import com.github.ayodkay.models.Article
 
-@BindingAdapter(value = ["newsList", "bookmarkRoom", "nativeAdLoader", "nativeAd", "listener"])
+@BindingAdapter(
+    value = ["newsList", "bookmarkRoom", "nativeAdLoader", "nativeAd", "listener", "scrollToPosition"],
+    requireAll = false
+)
 fun RecyclerView.setNewsList(
     newsList: ArrayList<Article>?,
     bookmarkRoom: BookmarkRoomVM,
     nativeAdLoader: MaxNativeAdLoader,
     nativeAd: MaxAd? = null,
-    listener: CardClick?
+    listener: CardClick?,
+    scrollToPosition: Int = 0,
 ) {
     if (newsList != null) {
         if (adapter == null) {
@@ -31,9 +35,11 @@ fun RecyclerView.setNewsList(
                 nativeAd,
                 listener
             )
+            this.scrollToPosition(scrollToPosition)
         } else {
             (adapter as MaxAdsRecyclerView).apply {
                 this.newsList = newsList
+                this@setNewsList.scrollToPosition(scrollToPosition)
                 notifyDataSetChanged()
             }
         }
